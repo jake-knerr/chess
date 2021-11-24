@@ -2165,7 +2165,7 @@ Example - Using a utility to nudge a button. Without the utility moving the butt
 
 #### Utilities are used to add styles, not override.
 
-Since utilities only use a single class selector, their specificity will not be enough to override conflicts in components. Only use them to add styles that will not conflict with other rules.
+Since utilities only use a single class selector, their specificity may not be enough to override conflicts in components. Only use them to add styles that will not conflict with other rules.
 
 ```html
 <a class="btn _red">Click Me</a>
@@ -2186,7 +2186,7 @@ Since utilities only use a single class selector, their specificity will not be 
 
 Only use utilities to make small changes to components.
 
-> Why not? The greatest advantage of components is the mental mapping between the component's classes and the corresponding HTML. Requiring outside styles, like utilities, breaks down this mental mapping, and using the component becomes clunky.
+> Why not make utilities required? The greatest advantage of components is the mental mapping between the component's classes and the corresponding HTML. Requiring outside styles, like utilities, breaks down this mental mapping, and using components becomes clunky.
 
 **[⬆ Table of Contents](#toc)**
 
@@ -2251,7 +2251,7 @@ Extensions in this section can change the styling for any section that came befo
 
 ### Documenting Components
 
-#### (Optional) Document a component above its defining rule by writing out its HTML structure and style classes.
+#### (Optional) Consider documenting a component above its defining rule by writing out its HTML structure and style classes.
 
 Place possible style classes on the nodes that they appear. Only write the opening tag and leave out any attributes. Nested elements can go on the same line or next line.
 
@@ -2263,8 +2263,6 @@ Place possible style classes on the nodes that they appear. Only write the openi
     <div>
       <a hero--selected>
         <img>
-      <a>
-        <img>
 */
 ```
 
@@ -2274,7 +2272,7 @@ Place possible style classes on the nodes that they appear. Only write the openi
 /* 
   <div homepage>
     <div>
-      <div hero> --> notice no inner structure for the nested hero component
+      <div hero> --> notice no inner structure documented for the nested hero component
     <div>
     <footer>
 */
@@ -2330,7 +2328,7 @@ Yes, be as flexible as necessary. An inflexible approach towards CSS is doomed t
 
 > What about id selectors, e.g., `#image`?
 
-Avoid id selectors for styling because their specificity is so high that CHESS's class-selector-based methodology falls apart.
+Avoid id selectors for styling because their specificity is so high that CHESS's class-selector based methodology falls apart.
 
 > How does one solve CSS specificity problems?
 
