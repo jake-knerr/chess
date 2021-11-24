@@ -1584,6 +1584,28 @@ In other words, the existence of a fragment does not mean it must be applied to 
 
 #### If it is difficult to select child content due to deep nesting or any other issue, consider breaking up the component into smaller components.
 
+#### A content element can only have a single fragment applied to it.
+
+In other words, multiple fragments cannot be applied to the same content.
+
+> Why? The composition of fragments leads to confusion.
+
+```css
+/* avoid - multiple fragments will target the same content */
+.btn svg {
+}
+
+.btn > * {
+}
+```
+
+```html
+<div class="btn">
+  <!-- avoid - multiple fragments applied to svg -->
+  <svg></svg>
+</div>
+```
+
 **[⬆ Table of Contents](#toc)**
 
 ---
@@ -1673,6 +1695,51 @@ Thus, modifiers for the defining rule go below the defining rule and modifiers f
 /* modifier - use same selectors as fragment being modified */
 .-btn-highlight > table thead tr:first-child td {
 }
+```
+
+#### Multiple modifiers can be applied to the same content.
+
+```css
+.btn {
+}
+
+.-btn-theme > svg {
+}
+
+.-btn-head > svg {
+}
+```
+
+```html
+<!-- allowed - multiple modifiers can be applied to the same content -->
+<button class="btn -btn-head -btn-theme">
+  Click Me
+  <svg></svg>
+</button>
+```
+
+#### In HTML, prefer to apply modifiers after the defining rule or fragments. If multiple modifiers are applied, sort them by the name of the modifiers alphanumerically, left-to-right.
+
+```css
+/* component */
+.btn {
+}
+
+.-btn-theme > svg {
+}
+
+.-btn-head > svg {
+}
+```
+
+```html
+<!-- 
+  avoid - modifiers listed before defining rule and not sorted alphanumerically
+-->
+<div class="-btn-theme -btn-head btn"></div>
+
+<!-- good -->
+<div class="btn -btn-head -btn-theme"></div>
 ```
 
 **[⬆ Table of Contents](#toc)**
@@ -1838,7 +1905,7 @@ If a state can be applied to multiple places in the component, then define it in
   avoid - states listed before defining rule and button--selected listed before
   button--error
 -->
-<div class="btn btn--selected btn--error"></div>
+<div class="btn--selected btn--error btn"></div>
 
 <!-- good -->
 <div class="btn btn--error btn--selected"></div>
@@ -1981,7 +2048,9 @@ Also, if they extend styles from another rule, define them below the rule they a
 
 ### Overlapping Components and Outer Components Extending Inner Components
 
-#### A single content element can only have one component or fragment applied to it.
+#### A single HTML element can not have classes applied to it from more than one component.
+
+This prohibition includes fragments, states, modifiers, and the defining rules.
 
 > Why a single component? If multiple components are applied to a single element, it may be unclear which component's styles will be applied.
 
@@ -1991,15 +2060,26 @@ Also, if they extend styles from another rule, define them below the rule they a
   background: red;
 }
 
+.btn > svg {
+}
+
 /* component */
 .image {
   background: blue;
+}
+
+.image > svg {
 }
 ```
 
 ```html
 <!-- avoid - two components applied to the same node -->
-<div class="btn image">Click Me</div>
+<div class="btn image">
+  Click Me
+
+  <!-- avoid - fragments from two components applied to the same node -->
+  <svg></svg>
+</div>
 ```
 
 #### Outer components can extend inner components by targeting and extending the inner component's style rules.
