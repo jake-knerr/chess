@@ -1636,7 +1636,10 @@ In other words, modifiers are only applied to a component's top-level node, just
 ```
 
 ```html
-<!-- modifier applied alongside the defining rule to the top-level node -->
+<!-- 
+  modifier applied alongside the defining rule to the top-level node even 
+  though the modifier is modifying a fragment
+-->
 <button class="btn -btn-no-icon">
   <svg></svg>
 </button>
@@ -1667,7 +1670,7 @@ Thus, modifiers for the defining rule go below the defining rule and modifiers f
 .btn > table thead tr:first-child td {
 }
 
-/* modifier - use same selectors */
+/* modifier - use same selectors as fragment being modified */
 .-btn-highlight > table thead tr:first-child td {
 }
 ```
@@ -1714,9 +1717,7 @@ States are intended to accommodate change.
 .btn-toggle {
 }
 
-/* 
-  state - added or removed based on whether the button is selected
-*/
+/* state - added or removed based on whether the button is selected*/
 .btn-toggle--selected {
 }
 ```
@@ -1762,7 +1763,7 @@ States are intended to accommodate change.
 
 Use whatever is more convenient. Sometimes applying the state directly to inner content will be necessary.
 
-Example - Applying the state to the defining rule and targeting the inner component with selectors.
+Example - Applying the state to the defining rule and targeting the inner content with selectors.
 
 ```css
 .btn--selected svg {
@@ -1794,7 +1795,7 @@ Example - Applying the state directly to the child content.
 
 #### Prefer to define states in the order they are applied to the component's HTML structure. Define states below other style rules that target the same content.
 
-If a state can be applied to multiple places in the component, then define it in the first place.
+If a state can be applied to multiple places in the component, then define it in the first place it may be applied.
 
 ```css
 .btn {
@@ -1900,15 +1901,24 @@ Logical break-points are `640px` `768px` `1024px` and `1280px`.
 @media (min-width: 640px) {
   .btn {
   }
+
+  .btn:focus {
+  }
 }
 
 @media (min-width: 768px) {
   .btn {
   }
+
+  .btn:focus {
+  }
 }
 
 @media (min-width: 1024px) {
   .btn {
+  }
+
+  .btn:focus {
   }
 }
 
@@ -1971,7 +1981,7 @@ Also, if they extend styles from another rule, define them below the rule they a
 
 ### Overlapping Components and Outer Components Extending Inner Components
 
-#### A single content element can only have one component applied to it.
+#### A single content element can only have one component or fragment applied to it.
 
 > Why a single component? If multiple components are applied to a single element, it may be unclear which component's styles will be applied.
 
