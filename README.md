@@ -988,31 +988,37 @@ body {
 
 ### CSS General Design
 
-#### Prefer class names to be as short as possible but as long as necessary. Clarity is king when naming class selectors.
+#### Prefer class names to be as short as possible but as long as necessary. Aim for intuitive names that are also descriptive.
 
-Prefer shorter names over longer ones, but do not be afraid to use a longer name if it is significantly more precise and clear.
+Clarity is king when naming class selectors.
 
-Be phonetic and see if you can drop any letters without a loss of clarity. Think about it from another person's perspective: what might another person imagine the shortened name means?
+> Remember that readers may not be fluent in English. Do not show off your dictionary/thesaurus skills.
+
+> What is an intuitive name? It is a name that other developers will recognize and know its meaning.
+
+> What is a descriptive name? It is a name that provides adequate detail.
 
 ```css
-/* discouraged */
-.chr {
+/* discouraged - not intuitive */
+.pulchritudinous-button {
 }
 
 /* preferred */
-.cmp-header {
+.pretty-btn {
 }
 
-/* acceptable */
-.button {
+/* discouraged - not descriptive */
+.asset {
 }
 
-/* also acceptable - still clear */
-.btn {
+/* preferred */
+.icon {
 }
 ```
 
 #### Prefer abbreviations if they are clear.
+
+Be phonetic and see if you can drop any letters without a loss of clarity. Think about it from another person's perspective: what might another person imagine the shortened name means?
 
 Think: `lg (large)`, `md (medium)`, `sm (small)`, `btn (button)`, `sum (summary)`, `el (element)`, `a (link)`, `ico (icon)`, `txt (text)`.
 
@@ -1031,6 +1037,14 @@ Think: `lg (large)`, `md (medium)`, `sm (small)`, `btn (button)`, `sum (summary)
 
 /* acceptable - readers know NASA */
 .nasa {
+}
+
+/* acceptable */
+.button {
+}
+
+/* also acceptable - still clear */
+.btn {
 }
 ```
 
