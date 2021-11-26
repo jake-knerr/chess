@@ -52,7 +52,7 @@ _This document focuses on more than merely aesthetic issues like formatting. It 
   - [States](#states)
   - [Animations](#animations)
   - [Media Queries](#media-queries)
-  - [Overlapping Components and Outer Components Extending Inner Components](#overlapping-components-and-outer-components-extending-inner-components)
+  - [Outer Components Extending Inner Components](#outer-components-extending-inner-components)
   - [Utilities](#utilities)
   - [Extensions](#extensions)
   - [Documenting Components](#documenting-components)
@@ -1397,6 +1397,28 @@ The defining rule must be applied to content, even if it doesn't apply any styli
 <div class="button">Click</div>
 ```
 
+#### A content element can only have a single component applied to it.
+
+In other words, multiple components cannot be applied to the same content.
+
+> Why? The composition of components leads to confusion.
+
+```css
+/* avoid */
+.btn {
+}
+
+.btn-error {
+}
+```
+
+```html
+<!-- avoid - multiple components applied -->
+<div class="btn btn-error">
+  <svg></svg>
+</div>
+```
+
 #### Breaking up the styles of a document into components is an excellent way to reduce styling complexity and encourage style reuse.
 
 ```html
@@ -1437,7 +1459,7 @@ For example, instead of `red-button` or `user-name-input`, consider `button-red`
 
 However, it still must be applied to HTML content.
 
-> Why apply a non-existent CSS rule? Even if the defining rule does not exist in CSS, it still functions as a selector when targeting fragments or other component rules.
+> Why apply a non-existent CSS rule? Even if the defining rule does not exist in CSS, it still functions as a target for selectors used by other component rules.
 
 ```css
 /* component "btn" - no defining rule */
@@ -1480,11 +1502,11 @@ Namespacing via a prefix is particularly useful for component libraries since th
 
 Fragments are rules that style a component's child content.
 
-#### Fragments style a component's child/inner content. By default, start a fragment with the component's defining rule class selector and then use additional selectors and combinators to select the child content.
+#### Fragments style a component's child/inner content. By default, start a fragment with the component's defining rule class selector and then use additional selectors to select the child content.
 
-Prefer to use the simplest selectors/combinators possible that will not overmatch. Each rule should only use one class selector, which is typically the defining rule class selector.
+Prefer to use the simplest selectors possible that will not overmatch. Each rule should only use one class selector, which is typically the defining rule class selector.
 
-> Isn't this madness? The prevailing wisdom is that using child combinators leads to specificity problems and unmanageable CSS. In my experience, as long as components are well designed, selecting inner content via type selectors, combinators, and pseudo-classes results in far less work, code, and complexity. The risk of overmatching is real. But, since CSS gives us a huge array of selectors, we can use them to be very specific as to what we select. Instead of ignoring all of the tools CSS gives us, we should embrace and use them.
+> Isn't this madness? The prevailing wisdom is that using child combinators leads to specificity problems and unmanageable CSS. In my experience, as long as components are well designed, selecting inner content via type simple selectors, combinators, and pseudo-classes results in far less work, code, and complexity. The risk of overmatching is real. But, since CSS gives us a huge array of selectors, we can use them to be very specific as to what we select. Instead of ignoring all of the tools CSS gives us, we should embrace and use them.
 
 ```html
 <div class="btn">
@@ -1503,7 +1525,7 @@ Prefer to use the simplest selectors/combinators possible that will not overmatc
 
 #### If overmatching is a problem, use specific type selectors, child/sibling combinators, and/or pseudo-classes.
 
-Being very precise with selectors, combinators, and pseudo-classes should negate overmatching.
+Being very precise with type selectors, combinators, and pseudo-classes should negate overmatching.
 
 ```html
 <table class="footer">
@@ -1596,11 +1618,9 @@ In other words, the existence of a fragment does not mean it must be applied to 
 </div>
 ```
 
-#### If it is difficult to select child content due to deep nesting or any other issue, consider breaking up the component into smaller components.
-
 #### A content element can only have a single fragment applied to it.
 
-In other words, multiple fragments cannot be applied to the same content.
+In other words, multiple fragments cannot be applied to the same content. This prohibition applies to fragments from the same component or multiple components.
 
 > Why? The composition of fragments leads to confusion.
 
@@ -1619,6 +1639,8 @@ In other words, multiple fragments cannot be applied to the same content.
   <svg></svg>
 </div>
 ```
+
+#### If it is difficult to select child content due to deep nesting or any other issue, consider breaking up the component into smaller components.
 
 **[⬆ Table of Contents](#toc)**
 
@@ -1642,7 +1664,7 @@ The modifier class selector replaces the component's defining rule (class select
 .btn {
 }
 
-/* modifier for the defining rule */
+/* modifier for the defining rule above */
 .-btn-form {
   color: red;
 }
@@ -1683,7 +1705,7 @@ In other words, modifiers are only applied to a component's top-level node, just
 
 #### Define modifiers below the rules they are modifying.
 
-Thus, modifiers for the defining rule go below the defining rule and modifiers for fragments go below fragments.
+Therefore, modifiers for the defining rule go below the defining rule and modifiers for fragments go below fragments.
 
 > Why? This makes it easier to see what modifiers are modifying, and it gives the modifier rule greater specificity than the rule it is modifying.
 
@@ -1769,7 +1791,7 @@ Example: `.btn--error`
 
 #### States:
 
-- **States are style rules that change the appearance, behavior, or any other aspect of a component or a component's child content.**
+- **States are style rules that change the appearance, behavior or any other aspect of a component or a component's child content.**
 - **Prefer to define state rules using a single class selector named by adding two parts to the component name: (1) two hyphens and (2) a state identifier. The state identifier should be a verbal or adjectival word.**
 - **Rules that use pseudo-classes (like `:hover`) are considered state rules.**
 
@@ -1844,7 +1866,7 @@ States are intended to accommodate change.
 
 Use whatever is more convenient. Sometimes applying the state directly to inner content will be necessary.
 
-Example - Applying the state to the defining rule and targeting the inner content with selectors.
+Example - Applying the state to the defining rule and targeting inner content with selectors.
 
 ```css
 .btn--selected svg {
@@ -1967,7 +1989,7 @@ Most rules that use animations will be states.
 
 Logical break-points are `640px` `768px` `1024px` and `1280px`.
 
-> Why mobile-first? Mobile-first break-points are more intuitive than desktop break-points.
+> Why mobile-first? Writing break-points in ascending order is more intuitive than descending order.
 
 ```css
 .btn {
@@ -2060,47 +2082,13 @@ Also, if they extend styles from another rule, define them below the rule they a
 
 ---
 
-### Overlapping Components and Outer Components Extending Inner Components
-
-#### A single HTML element can not have classes applied to it from more than one component.
-
-This prohibition includes fragments, states, modifiers, and the defining rules.
-
-> Why a single component? If multiple components are applied to a single element, it may be unclear which component's styles will be applied.
-
-```css
-/* component */
-.btn {
-  background: red;
-}
-
-.btn > svg {
-}
-
-/* component */
-.image {
-  background: blue;
-}
-
-.image > svg {
-}
-```
-
-```html
-<!-- avoid - two components applied to the same node -->
-<div class="btn image">
-  Click Me
-
-  <!-- avoid - fragments from two components applied to the same node -->
-  <svg></svg>
-</div>
-```
+### Outer Components Extending Inner Components
 
 #### Outer components can extend inner components by targeting and extending the inner component's style rules.
 
-An outer component extends inner components by creating style rules that use a class selector for the outer component's defining rule and the selectors for the inner component's rule that is being overridden. Such rules will have two class selectors.
+An outer component extends inner components by creating style rules that use the class selector for the outer component's defining rule and the selectors for the inner component's rule that is being extended. Such rules will have two class selectors.
 
-> Why use two class selectors? Using two class selectors should have sufficient specificity to override the styling for any content targeted by a single component.
+> Why use two class selectors? Using two class selectors should have sufficient specificity to override style conflicts with the styles being extended.
 
 ```css
 .outer {
@@ -2342,7 +2330,7 @@ Yes, be as flexible as necessary. An inflexible approach towards CSS is doomed t
 
 > What about id selectors, e.g., `#image`?
 
-Avoid id selectors for styling because their specificity is so high that CHESS's class-selector based methodology falls apart.
+Avoid id selectors for styling because their specificity is so high that CHESS's class-selector-based methodology falls apart.
 
 > How does one solve CSS specificity problems?
 
