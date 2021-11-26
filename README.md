@@ -1735,6 +1735,8 @@ Therefore, modifiers for the defining rule go below the defining rule and modifi
 
 #### Multiple modifiers can be applied to the same content.
 
+> Why allow multiple modifiers when only a single fragment is allowed? Fragments are default styling, and default styling should be defined in a single location.
+
 ```css
 .btn {
 }
