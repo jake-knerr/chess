@@ -2084,7 +2084,7 @@ Also, if they extend styles from another rule, define them below the rule they a
 
 ### Outer Components Extending Inner Components
 
-#### Outer components can extend inner components by targeting and extending the inner component's style rules.
+#### Outer components can extend an inner components style rules.
 
 An outer component extends inner components by creating style rules that use the class selector for the outer component's defining rule and the selectors for the inner component's rule that is being extended. Such rules will have two class selectors.
 
