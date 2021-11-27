@@ -1393,7 +1393,7 @@ The defining rule must be applied to content, even if it doesn't apply any styli
 ```
 
 ```html
-<!-- component is being applied to the div below -->
+<!-- component is being applied to the content below -->
 <div class="button">Click</div>
 ```
 
@@ -1404,7 +1404,6 @@ In other words, multiple components cannot be applied to the same content.
 > Why? The composition of components leads to confusion.
 
 ```css
-/* avoid */
 .btn {
 }
 
@@ -1419,7 +1418,7 @@ In other words, multiple components cannot be applied to the same content.
 </div>
 ```
 
-#### Breaking up the styles of a document into components is an excellent way to reduce styling complexity and encourage style reuse.
+#### Breaking up a document into components is an excellent way to reduce styling complexity and encourage style reuse.
 
 ```html
 <!-- component - form-container -->
@@ -1476,7 +1475,7 @@ However, it still must be applied to HTML content.
 </div>
 ```
 
-#### (Optional) Consider adding a namespace prefix to a component's class selectors to help avoid style collisions with other components, libraries, and any other styling present in the document.
+#### (Optional) Consider adding a namespace prefix to a component's class names to help avoid style collisions with other components, libraries, and any other styling present in the document.
 
 Namespacing via a prefix is particularly useful for component libraries since the styles in a library may be used across large numbers of documents.
 
@@ -1518,7 +1517,7 @@ Prefer to use the simplest selectors possible that will not overmatch. Each rule
 .btn {
 }
 
-/* simple selector to target the svg fragment */
+/* fragment - type selector and combinator to target the svg */
 .btn svg {
 }
 ```
@@ -1542,7 +1541,7 @@ Being very precise with type selectors, combinators, and pseudo-classes should n
 .footer {
 }
 
-/* very specific rule to match exactly - only uses a single class selector */
+/* fragment - very specific to match exactly - uses a single class selector */
 .footer > tbody > tr > td:first-of-type {
 }
 ```
@@ -1735,7 +1734,7 @@ Therefore, modifiers for the defining rule go below the defining rule and modifi
 
 #### Multiple modifiers can be applied to the same content.
 
-> Why allow multiple modifiers when only a single fragment is allowed? Fragments are default styling, and default styling should be defined in a single location.
+> Why allow multiple modifiers when only a single fragment is allowed? Fragments are default styling, and default styling should be defined in a single rule.
 
 ```css
 .btn {
@@ -1819,16 +1818,16 @@ States can be applied to any content in a component, whether the content is alre
 States are intended to accommodate change.
 
 ```css
-.btn-toggle {
+.btn {
 }
 
 /* state - added or removed based on whether the button is selected*/
-.btn-toggle--selected {
+.btn--selected {
 }
 ```
 
 ```html
-<div class="btn-toggle btn-toggle--selected">Click to select</div>
+<div class="btn btn--selected">Click to select</div>
 ```
 
 #### States rules have the `!important` keyword appended to all property values.
@@ -1864,11 +1863,11 @@ States are intended to accommodate change.
 }
 ```
 
-#### When applying a state to a component's inner content, states can be applied to the defining rule and then use selectors to match the inner content, or they can be applied directly to the child content.
+#### When applying a state to a component's inner content, states can be applied alongside the defining rule and then use selectors to match the inner content, or they can be applied directly to the child content.
 
 Use whatever is more convenient. Sometimes applying the state directly to inner content will be necessary.
 
-Example - Applying the state to the defining rule and targeting inner content with selectors.
+Example - Applying the state alongside the defining rule and targeting inner content with selectors.
 
 ```css
 .btn--selected svg {
@@ -2028,7 +2027,7 @@ Logical break-points are `640px` `768px` `1024px` and `1280px`.
 }
 
 /* highest resolution break-point - ascending order */
-@media (min-width: 1280ps) {
+@media (min-width: 1280px) {
   .btn {
   }
 
