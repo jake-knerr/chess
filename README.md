@@ -1755,7 +1755,7 @@ Therefore, modifiers for the defining rule go below the defining rule and modifi
 </button>
 ```
 
-#### In HTML, prefer to apply modifiers after the defining rule or fragments. If multiple modifiers are applied, sort them by the name of the modifiers alphanumerically, left-to-right.
+#### In HTML, prefer to write modifiers after the defining rule or fragments. If multiple modifiers are applied, sort them by the name of the modifiers alphanumerically, left-to-right.
 
 ```css
 /* component */
@@ -1921,7 +1921,7 @@ If a state can be applied to multiple places in the component, then define it in
 }
 ```
 
-#### In HTML, prefer to apply states after other classes. If multiple states are applied, sort them by the name of the states alphanumerically, left-to-right.
+#### In HTML, prefer to write states after other classes. If multiple states are applied, sort them by the name of the states alphanumerically, left-to-right.
 
 ```css
 /* component */
@@ -2219,6 +2219,8 @@ Do not place default styling in this section.
   color: var(--button-color);
 }
 
+/* extensions */
+
 /* new blue sub-theme */
 :root {
   --button-color: blue;
@@ -2281,7 +2283,7 @@ Place possible style classes on the nodes that they appear. Only write the openi
 */
 ```
 
-#### Prefer to use regular expressions symbols `*?+{}()` to denote repeating structure or possible structure.
+#### Prefer to use regular expressions syntax `*?+{}()|` to denote repeating structure or possible structure.
 
 ```css
 /*
