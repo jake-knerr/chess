@@ -1804,12 +1804,19 @@ States can be applied to any content in a component, whether the content is alre
 .btn {
 }
 
+.-btn-error {
+}
+
 /* state */
 .btn--selected {
 }
 
 /* state */
 .btn:focus {
+}
+
+/* state */
+.btn--selected.-btn-error {
 }
 ```
 
