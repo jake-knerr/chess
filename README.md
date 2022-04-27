@@ -15,7 +15,7 @@ _This document focuses on more than merely aesthetic issues like formatting. It 
 
 ## Copyright <!-- omit in toc -->
 
-© Jake Knerr at Blotli
+Jake Knerr © Ardisia Labs LLC
 
 ---
 
