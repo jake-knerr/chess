@@ -1,15 +1,3 @@
-- add frag rule .df_frag "named fragment"
-  - only class not applied to the top-level node
-  - ok to select sub-content under it like .df_frag input
-  - A mod that alters a named frag will require :where() so a parent compoentn can create an extensions. .-mod > :where(.frag) so .outer > .frag will win
-  - `:where` whenever more than 1 class rule? unless extension
-- Guidelines for creating a component
-  - (1) Write DF
-  - (2) Write fragments
-  - (3) Add mods below what they modify - mods include mods added via non-width media queries
-  - (4) Add states below what they modify - mods include mods added via non-width media queries
-  - (5) Add width media queries at bottom in ascending order
-
 # CHESS <!-- omit in toc -->
 
 _CSS and HTML Encompassing Style System_ (CHESS) is a set of style and design rules for frontend component-based web development.
@@ -58,21 +46,21 @@ Jake Knerr © Ardisia Labs LLC
   - [Resets](#resets)
   - [Globals](#globals)
   - [Vendor](#vendor)
+  - [Utilities](#utilities)
   - [Components](#components)
-  - [Fragments](#fragments)
-  - [Modifiers](#modifiers)
-  - [States](#states)
+  - [Components - Fragments](#components---fragments)
+  - [Components - Modifiers](#components---modifiers)
+  - [Components - States](#components---states)
+  - [Components - Inheritance: Extensions](#components---inheritance-extensions)
+  - [Components - Overrides: Outer Components Overriding Inner Components](#components---overrides-outer-components-overriding-inner-components)
+  - [Components - Documenting Components](#components---documenting-components)
+  - [App Overrides](#app-overrides)
   - [Animations](#animations)
   - [Media Queries](#media-queries)
-  - [Overrides: Outer Components Overriding Inner Components](#overrides-outer-components-overriding-inner-components)
-  - [Inheritance: Extensions](#inheritance-extensions)
-  - [Utilities](#utilities)
-  - [App Overrides](#app-overrides)
-  - [Documenting Components](#documenting-components)
-  - [Shadow DOM](#shadow-dom)
 - [Miscellaneous](#miscellaneous)
   - [F.A.Q.](#faq)
   - [Comparison To BEM](#comparison-to-bem)
+  - [Comparison to Tailwind.](#comparison-to-tailwind)
 - [Epilogue](#epilogue)
 
 ---
@@ -1034,7 +1022,7 @@ Clarity is king when naming class selectors.
 
 Be phonetic and see if you can drop any letters without a loss of clarity. Think about it from another person's perspective: what might another person imagine the shortened name means?
 
-Think: `lg (large)`, `md (medium)`, `sm (small)`, `btn (button)`, `sum (summary)`, `el (element)`, `a (link)`, `ico (icon)`, `txt (text)`.
+Think: `l (large)`, `md (medium)`, `sm (small)`, `btn (button)`, `sum (summary)`, `el (element)`, `a (link)`, `ico (icon)`, `txt (text)`.
 
 ```css
 /* discouraged */
@@ -1042,7 +1030,7 @@ Think: `lg (large)`, `md (medium)`, `sm (small)`, `btn (button)`, `sum (summary)
 }
 
 /* preferred */
-.btn-lg {
+.btn-l {
 }
 
 /* discouraged - very large array; readers probably do not know this acronym */
@@ -1111,13 +1099,37 @@ In other words, prefer using names that describe the purpose of the class instea
 
 #### Prefer to use `REM` for font sizes (or anything that should scale with fonts) and use `px` for everything else.
 
-Do not change the default `font-size`.
+Do not change the browser's default `font-size`.
 
 > Why? This way, users can change the font size of your document without affecting the layout.
+
+```css
+/* avoid */
+html,
+body {
+  font-size: 16px;
+}
+
+/* good */
+html,
+body {
+  font-size: 100%;
+}
+```
 
 #### Avoid using the `@layer` at-rule.
 
 > Why? CHESS already specifies the order of different sections of a document's styles, making `@layer` redundant.
+
+#### For the time being, avoid the Shadow DOM.
+
+Shadow DOM is a great concept, but implementation considerations argue against its use.
+
+> Why? The shadow DOM requires JavaScript, which is unsuitable for many content-focused projects.
+
+> I am building a SPA. Why not use the Shadow DOM? Every element using a shadow DOM requires a style tag or a link to a preloaded stylesheet. Parsing a stylesheet for every component has negative performance implications. A solution named 'adopted stylesheets' aims to fix this problem, but Safari has not implemented it.
+
+> Any other reasons? Shadow DOM prevents parent elements from extending child fragments.
 
 #### Avoid becoming obsessive over DRY and reusability with CSS.
 
@@ -1379,6 +1391,74 @@ input[type="email"] {
 
 ---
 
+### Utilities
+
+**.\_utility**<br>
+Example: `._error`
+
+This section describes style rules that are not tied to specific content.
+
+- **Utilities are rules that use a single class selector and can be applied to any content in the document.**
+- **Prefer to define utilities by adding a \_ prefix to an identifier for a single class selector.**
+
+> Why use utilities? They are a useful technique to avoid repeating the same styles over and over. Also, they can be useful to make small changes to a component without having to create a modifier.
+
+```css
+._no-sel {
+  user-select: none;
+}
+
+._err {
+  font-weight: bold;
+  color: red;
+}
+```
+
+Example - Using a utility to nudge a button. Without the utility moving the button would require a modifier class or an outer component.
+
+```css
+._pad-top-1 {
+  padding-top: 1rem;
+}
+```
+
+```html
+  <div class="grid">
+    <button class="btn">
+    <button class="btn">
+    <button class="btn _pad-top-1">
+  </div>
+```
+
+#### Utilities are used to add styles, not override.
+
+Since utilities only use a single class selector, their specificity may not be enough to override conflicts in components. Only use them to add styles that will not conflict with other rules.
+
+```html
+<a class="btn _red">Click Me</a>
+```
+
+```css
+/* avoid - utility is overriding a rule */
+.btn {
+  color: blue;
+}
+
+._red {
+  color: red;
+}
+```
+
+#### Do not make utilities required classes in a component.
+
+Only use utilities to make small changes to components.
+
+> Why not make utilities required? The greatest advantage of components is the mental mapping between the component's classes and the corresponding HTML. Requiring outside styles, like utilities, breaks down this mental mapping, and using components becomes clunky.
+
+**[⬆ Table of Contents](#toc)**
+
+---
+
 ### Components
 
 **.(component)**<br>
@@ -1537,7 +1617,7 @@ Namespacing via a prefix is particularly useful for component libraries since th
 
 ---
 
-### Fragments
+### Components - Fragments
 
 Fragments are rules that style a component's child content.
 
@@ -1583,6 +1663,51 @@ Being very precise with type selectors, combinators, and pseudo-classes should n
 
 /* fragment - very specific to match exactly - uses a single class selector */
 .footer > tbody > tr > td:first-of-type {
+}
+```
+
+#### Alternatively, a fragment may be defined with a single class selector formed by combining (1) the component name, (2) an underscore "\_", and (3) a fragment identifier.
+
+Such fragments are called "named fragments."
+
+Note, named fragments rules are the only component rules that are not applied to the top-level component HTML element.
+
+> Why use a named fragment? Sometimes, it may not be possible or convenient to select sub-structure using child selectors.
+
+```html
+<button class="fancy-button">
+  <span class="fancy-button_icon"><svg></svg></span>
+</button>
+```
+
+```css
+.fancy-button {
+}
+
+/* named fragment */
+.fancy-button_icon {
+}
+```
+
+#### Named fragments can use additional selectors to select the child content.
+
+In this way, a fragment is a type of sub-component.
+
+```html
+<button class="fancy-button">
+  <span class="fancy-button_icon"><svg></svg></span>
+</button>
+```
+
+```css
+.fancy-button {
+}
+
+.fancy-button_icon {
+}
+
+/* acceptable */
+.fancy-button_icon > svg {
 }
 ```
 
@@ -1685,7 +1810,7 @@ In other words, multiple fragments cannot be applied to the same content. This p
 
 ---
 
-### Modifiers
+### Components - Modifiers
 
 This section describes modifier rules.
 
@@ -1823,7 +1948,7 @@ Therefore, modifiers for the defining rule go below the defining rule and modifi
 
 ---
 
-### States
+### Components - States
 
 This section describes the portion of a component's style rules that are states.
 
@@ -1999,144 +2124,69 @@ If a state can be applied to multiple places in the component, then define it in
 
 ---
 
-### Animations
+### Components - Inheritance: Extensions
 
-#### Prefer to give animation definitions the same name as the rule that uses them. Define the animation immediately following the rule that uses it. If more than one rule uses the animation then define the animation after the first rule that uses it.
+**.(extended-component)-(super-component)**<br>
+Example: `.toggle-btn`
 
-Most rules that use animations will be states.
+#### An "extended component" — or simply "extension" — inherits the styling of the component being extended, the super component.
+
+- **Define an extension's defining rule by combining (1) a descriptive name for the extension, (2) a single hyphen, and (3) the component name for the component being extended.**
+- **Create new style rules — rules that don't override styling in the super component — like a typical component.**
+- **When overriding super component styling, combine the extension's defining rule with the rule being overridden.**
+- **Apply the defining rules for the extension and the super component together to document content.**
+
+> Why use extensions? When creating an extension prevents writing significant amounts of redundant styling. Don't abuse the concept though for the same reasons we avoid god objects in programming.
 
 ```css
-/* discouraged */
-@keyframes spinning {
+/* super component */
+.btn {
 }
 
-.btn--spinning {
-  animation-name: spinning;
+.btn > span:first-child {
 }
 
-/* preferred */
-.btn--spinning {
-  animation-name: btn--spinning;
+.btn_icon {
 }
 
-/* 
-  animation has the same name as the rule using it and is defined after the 
-  rule using it 
-*/
-@keyframes btn--spinning {
+.btn--hover {
 }
+
+/* extended component */
+.fancy-btn.btn {
+}
+
+/* new rule - not overriding */
+.fancy-btn::before {
+}
+
+/* overriding fragment */
+.fancy-btn.btn > span:first-child {
+}
+
+/* overriding named fragment */
+.fancy-btn .btn_icon {
+}
+
+/* overriding state */
+.fancy-btn.btn--hover {
+}
+```
+
+```html
+<!-- apply extension and super component defining rule -->
+<button class="fancy-btn btn"><span></span></button>
 ```
 
 **[⬆ Table of Contents](#toc)**
 
 ---
 
-### Media Queries
-
-#### Media break-points are defined at the bottom of a component's styles. Use a mobile-first strategy by writing break-points in ascending `min-width:` order.
-
-Logical break-points are `640px` `768px` `1024px` and `1280px`.
-
-> Why mobile-first? Writing break-points in ascending order is more intuitive than descending order.
-
-```css
-.btn {
-}
-
-.btn:focus {
-}
-
-/* after all component rules define break-points */
-
-/* lowest resolution break-point */
-@media (min-width: 640px) {
-  .btn {
-  }
-
-  .btn:focus {
-  }
-}
-
-@media (min-width: 768px) {
-  .btn {
-  }
-
-  .btn:focus {
-  }
-}
-
-@media (min-width: 1024px) {
-  .btn {
-  }
-
-  .btn:focus {
-  }
-}
-
-/* highest resolution break-point - ascending order */
-@media (min-width: 1280px) {
-  .btn {
-  }
-
-  .btn:focus {
-  }
-}
-```
-
-#### Prefer to define non-break-point media query rules in the order they are applied to the component's HTML structure.
-
-Also, if they extend styles from another rule, define them below the rule they are extending.
-
-```css
-.btn {
-}
-
-/* define below the rule being extended */
-@media (hover: hover) {
-  .btn:hover {
-    background: yellow;
-  }
-}
-
-.btn > div a {
-}
-
-/* define below the rule being extended */
-@media only screen and (orientation: landscape) {
-  .btn > div a {
-  }
-}
-
-.btn svg {
-}
-```
-
-#### When extending a style rule in a media query, write the extended rule exactly as it appeared earlier.
-
-> Why? This ensures that the specificity of the media query rule will be greater than the rule it is extending.
-
-```css
-.btn div > div > div:first-of-type {
-}
-
-@media (min-width: 1024px) {
-  /* write the rule being extended exactly as above */
-  .btn div > div > div:first-of-type {
-  }
-}
-```
-
-**[⬆ Table of Contents](#toc)**
-
----
-
-### Overrides: Outer Components Overriding Inner Components
+### Components - Overrides: Outer Components Overriding Inner Components
 
 #### Outer components can override inner components style rules.
 
-An outer component overrides inner components by creating style rules that use the class selector for the outer component's defining rule and the selectors for the inner component's rule that is being overridden. Such rules will have two class selectors.
-
-> Why use two class selectors? Using two class selectors should have sufficient specificity to override style conflicts with the styles being overridden.
+An outer component overrides inner components by creating style rules that use the class selector for the outer component's defining rule and the selectors for the inner component's rule that is being overridden. Such rules will typically — but not always — have two class selectors.
 
 ```css
 .outer {
@@ -2174,6 +2224,12 @@ An outer component overrides inner components by creating style rules that use t
 
 This is expected and a common use-case for overrides.
 
+```html
+<div class="parent">
+  <div class="child"></div>
+</div>
+```
+
 ```css
 .parent {
 }
@@ -2191,193 +2247,7 @@ This is expected and a common use-case for overrides.
 
 ---
 
-### Inheritance: Extensions
-
-#### An extended component inherits the styling of the component being extended (super component).
-
-#### Create an extended component by affixing a name
-
-- **Define extensions by creating a name by by combining (1) a word, (2) a single hyphen, and (3) the a modifier identifier.**
-
-#### An extended component consist of four types of style rules:
-
-- **The defining rule.**
-- **Component fragments, which apply default styling to child content.**
-- **Component modifiers, which change default styling.**
-- **Component states, which apply dynamic styling to content.**
-
-These types will be described later in this document.
-
-#### The _defining rule_:
-
-- **Each component has at least one style rule, the _defining rule_.**
-- **The defining rule uses a class selector with a unique name.**
-- **The unique name is the _component name_.**
-- **The component name should be nounal.**
-- **The defining rule is applied to document content to trigger component styling.**
-- **When listing the style rules for a component, list the defining rule first.**
-
-For the component name, the use of gerunds, infinitives, and participles are discouraged because even though they can function as nouns/adjectives in a sentence, they are typically perceived as verbs.
-
-> Why is the _component name_ unique? The component name serves as a namespace to group all of the component's style rules, and its uniqueness helps reduce name collisions with other style rules.
-
-> Why prefer nounal names? Components are _things_, just like nouns. They represent content on the page.
-
-```css
-/* defining rule for component */
-.btn {
-}
-```
-
-#### A component is _applied_ to document content by adding the component's defining rule to the content's class attribute.
-
-The defining rule must be applied to content, even if it doesn't apply any styling.
-
-```css
-/* component - defining rule */
-.btn {
-}
-```
-
-```html
-<!-- component is being applied to the content below -->
-<div class="button">Click</div>
-```
-
-- extended components should include name of all extended components: E.G. header-btn and btn
-
-**[⬆ Table of Contents](#toc)**
-
----
-
-### Utilities
-
-**.\_utility**<br>
-Example: `._error`
-
-This section describes style rules that are not tied to specific content.
-
-- **Utilities are rules that use a single class selector and can be applied to any content in the document.**
-- **Prefer to define utilities by adding a \_ prefix to an identifier for a single class selector.**
-
-> Why use utilities? They are a useful technique to avoid repeating the same styles over and over. Also, they can be useful to make small changes to a component without having to create a modifier.
-
-```css
-._no-sel {
-  user-select: none;
-}
-
-._err {
-  font-weight: bold;
-  color: red;
-}
-```
-
-Example - Using a utility to nudge a button. Without the utility moving the button would require a modifier class or an outer component.
-
-```css
-._pad-top-1 {
-  padding-top: 1rem;
-}
-```
-
-```html
-  <div class="grid">
-    <button class="btn">
-    <button class="btn">
-    <button class="btn _pad-top-1">
-  </div>
-```
-
-#### Utilities are used to add styles, not override.
-
-Since utilities only use a single class selector, their specificity may not be enough to override conflicts in components. Only use them to add styles that will not conflict with other rules.
-
-```html
-<a class="btn _red">Click Me</a>
-```
-
-```css
-/* avoid - utility is overriding a rule */
-.btn {
-  color: blue;
-}
-
-._red {
-  color: red;
-}
-```
-
-#### Do not make utilities required classes in a component.
-
-Only use utilities to make small changes to components.
-
-> Why not make utilities required? The greatest advantage of components is the mental mapping between the component's classes and the corresponding HTML. Requiring outside styles, like utilities, breaks down this mental mapping, and using components becomes clunky.
-
-**[⬆ Table of Contents](#toc)**
-
----
-
-### App Overrides
-
-This section is for defining style rules that are designed to add or override style properties that were defined earlier. They `override` the earlier-defined styles at an application level.
-
-#### App overrides are intended to be used by the people assembling an application, not for libraries or default styles. In other words, app overrides are application-specific.
-
-Do not place default styling in this section.
-
-> Why not? Default styling often requires changes or extending. Since styling in this section is not intended to be extended, default styling in this section should be avoided.
-
-#### App overrides can be useful to change variable values defined earlier in the variables section.
-
-> Why? This can be useful to create application-specific themes without changing default variable values. Perhaps, the developer cannot change the default values.
-
-```css
-/* default variables */
-:root {
-  --button-color: red;
-}
-
-.btn {
-  color: var(--button-color);
-}
-
-/* app overrides */
-
-/* new blue sub-theme */
-:root {
-  --button-color: blue;
-}
-```
-
-#### App overrides can override existing styles or add additional styles. In other words, style rules in this section use the same selectors as the rule they are overriding and apply new styles by either overriding existing styles or adding new ones.
-
-App overrides in this section can change the styling for any section that came before: resets, globals, components, utilities, and everything else are available for overriding in this section. App overrides can also be used to theme an application.
-
-> When are app overrides appropriate? When one cannot change the HTML or CSS for a document or library, or creating new components is not an option. In such a case, app overrides are the only way to change the styling of the document. Library code with hard-coded HTML and CSS is a good use case for when app overrides are appropriate.
-
-> Why not just use CSS custom properties? While custom properties work to create themes, it can become oppressive, verbose, and inflexible to add a custom property for every style that may need to change. Also, CSS custom properties can not be used to add styles that are not already defined, unlike app overrides that can add styles that were not anticipated earlier.
-
-```css
-/* component: button */
-.btn {
-  color: red;
-}
-
-/* app overrides section */
-.btn {
-  color: blue; /* overriding color */
-  text-align: center; /* app overrides can also add new styles like text-align */
-}
-```
-
-#### App overrides can also be used to style content that was not previously styled. In other words, app overrides can create new fragments, states, modifiers, etc.
-
-**[⬆ Table of Contents](#toc)**
-
----
-
-### Documenting Components
+### Components - Documenting Components
 
 #### (Optional) Consider documenting a component above its defining rule by writing out its HTML structure and style classes.
 
@@ -2446,17 +2316,191 @@ This is often the case with rules that have pseudo-classes.
 
 ---
 
-### Shadow DOM
+### App Overrides
 
-#### For the time being, avoid the Shadow DOM.
+This section is for defining style rules that are designed to add or override style properties that were defined earlier. They `override` the earlier-defined styles at an application level.
 
-Shadow DOM is a great concept, but implementation considerations argue against its use.
+#### App overrides are intended to be used by the people assembling an application, not for libraries or default styles. In other words, app overrides are application-specific.
 
-> Why? The shadow DOM requires JavaScript, which is unsuitable for many content-focused projects.
+Do not place default styling in this section.
 
-> I am building a SPA. Why not use the Shadow DOM? Every element using a shadow DOM requires a style tag or a link to a preloaded stylesheet. Parsing a stylesheet for every component has negative performance implications. A solution named 'adopted stylesheets' aims to fix this problem, but Safari has not implemented it.
+> Why not? Default styling often requires changes or extending. Since styling in this section is not intended to be extended, default styling in this section should be avoided.
 
-> Any other reasons? Shadow DOM prevents parent elements from extending child fragments.
+#### App overrides can be useful to change variable values defined earlier in the variables section.
+
+> Why? This can be useful to create application-specific themes without changing default variable values. Perhaps, the developer cannot change the default values.
+
+```css
+/* default variables */
+:root {
+  --button-color: red;
+}
+
+.btn {
+  color: var(--button-color);
+}
+
+/* app overrides */
+
+/* new blue sub-theme */
+:root {
+  --button-color: blue;
+}
+```
+
+#### App overrides can override existing styles or add additional styles. In other words, style rules in this section use the same selectors as the rule they are overriding and apply new styles by either overriding existing styles or adding new ones.
+
+App overrides in this section can change the styling for any section that came before: resets, globals, components, utilities, and everything else are available for overriding in this section. App overrides can also be used to theme an application.
+
+> When are app overrides appropriate? When one cannot change the HTML or CSS for a document or library, or creating new components is not an option. In such a case, app overrides are the only way to change the styling of the document. Library code with hard-coded HTML and CSS is a good use case for when app overrides are appropriate.
+
+> Why not just use CSS custom properties? While custom properties work to create themes, it can become oppressive, verbose, and inflexible to add a custom property for every style that may need to change. Also, CSS custom properties can not be used to add styles that are not already defined, unlike app overrides that can add styles that were not anticipated earlier.
+
+```css
+/* component: button */
+.btn {
+  color: red;
+}
+
+/* app overrides section */
+.btn {
+  color: blue; /* overriding color */
+  text-align: center; /* app overrides can also add new styles like text-align */
+}
+```
+
+#### App overrides can also be used to style content that was not previously styled. In other words, app overrides can create new fragments, states, modifiers, etc.
+
+**[⬆ Table of Contents](#toc)**
+
+---
+
+### Animations
+
+#### Prefer to give animation definitions the same name as the rule that uses them. Define the animation immediately following the rule that uses it. If more than one rule uses the animation then define the animation after the first rule that uses it.
+
+Most rules that use animations will be component states.
+
+```css
+/* discouraged */
+@keyframes spinning {
+}
+
+.btn--spinning {
+  animation-name: spinning;
+}
+
+/* preferred */
+.btn--spinning {
+  animation-name: btn--spinning;
+}
+
+/* 
+  animation has the same name as the rule using it and is defined after the 
+  rule using it 
+*/
+@keyframes btn--spinning {
+}
+```
+
+**[⬆ Table of Contents](#toc)**
+
+---
+
+### Media Queries
+
+#### Media break-points are defined at the bottom of a component's styles. Use a mobile-first strategy by writing break-points in ascending `min-width:` order.
+
+Logical break-points are `640px` `768px` `1024px` `1280px` and `1440px`.
+
+> Why mobile-first? Writing break-points in ascending order is more intuitive than descending order.
+
+```css
+.btn {
+}
+
+.btn:focus {
+}
+
+/* after all component rules define break-points */
+
+/* lowest resolution break-point */
+@media (min-width: 640px) {
+  .btn {
+  }
+
+  .btn:focus {
+  }
+}
+
+@media (min-width: 768px) {
+  .btn {
+  }
+
+  .btn:focus {
+  }
+}
+
+@media (min-width: 1024px) {
+  .btn {
+  }
+
+  .btn:focus {
+  }
+}
+
+/* ascending order */
+@media (min-width: 1280px) {
+  .btn {
+  }
+
+  .btn:focus {
+  }
+}
+```
+
+#### Prefer to define non-break-point media query rules in the order they are applied to the component's HTML structure.
+
+Also, if they override styles from another rule, define them below the rule they are overriding.
+
+```css
+.btn {
+}
+
+/* define below the rule */
+@media (hover: hover) {
+  .btn:hover {
+    background: yellow;
+  }
+}
+
+.btn > div a {
+}
+
+/* define below the rule being overridden */
+@media only screen and (orientation: landscape) {
+  .btn > div a {
+  }
+}
+
+.btn svg {
+}
+```
+
+#### When overriding a style rule in a media query, write the overridden rule exactly as it appeared earlier.
+
+> Why? This ensures that the specificity of the media query rule will be greater than the rule it is extending.
+
+```css
+.btn div > div > div:first-of-type {
+}
+
+@media (min-width: 1024px) {
+  /* write the rule being overridden exactly as above */
+  .btn div > div > div:first-of-type {
+  }
+}
+```
 
 **[⬆ Table of Contents](#toc)**
 
@@ -2505,7 +2549,7 @@ Prominent differences between CHESS and BEM:
 
 Initially, CHESS used the BEM terms _block_ and _element_. Ultimately, CHESS dropped these terms because they were confusing since block and element already have special meaning in CSS, HTML, and JavaScript. See block ([HTML](https://developer.mozilla.org/en-US/docs/Web/HTML/Block-level_elements), [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS/Syntax#CSS_declaration_blocks), [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/block)) and element ([HTML](https://developer.mozilla.org/en-US/docs/Web/HTML/Element)).
 
-#### Comparison to Tailwind.
+### Comparison to Tailwind.
 
 Tailwind is a utility-first paradigm that eschews component-based design.
 
