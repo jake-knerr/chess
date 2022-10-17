@@ -51,7 +51,7 @@ Jake Knerr © Ardisia Labs LLC
   - [Components - Fragments](#components---fragments)
   - [Components - Modifiers](#components---modifiers)
   - [Components - States](#components---states)
-  - [Components - Inheritance: Extensions](#components---inheritance-extensions)
+  - [Components - Inheritance: Composites](#components---inheritance-composites)
   - [Components - Overrides: Outer Components Overriding Inner Components](#components---overrides-outer-components-overriding-inner-components)
   - [Components - Documenting Components](#components---documenting-components)
   - [App Overrides](#app-overrides)
@@ -1129,7 +1129,7 @@ Shadow DOM is a great concept, but implementation considerations argue against i
 
 > I am building a SPA. Why not use the Shadow DOM? Every element using a shadow DOM requires a style tag or a link to a preloaded stylesheet. Parsing a stylesheet for every component has negative performance implications. A solution named 'adopted stylesheets' aims to fix this problem, but Safari has not implemented it.
 
-> Any other reasons? Shadow DOM prevents parent elements from extending child fragments.
+> Any other reasons? Shadow DOM prevents parent elements from overriding child fragments.
 
 #### Avoid becoming obsessive over DRY and reusability with CSS.
 
@@ -2124,19 +2124,19 @@ If a state can be applied to multiple places in the component, then define it in
 
 ---
 
-### Components - Inheritance: Extensions
+### Components - Inheritance: Composites
 
-**.(extended-component)-(super-component)**<br>
+**.(composite-component)-(super-component)**<br>
 Example: `.toggle-btn`
 
-#### An "extended component" — or simply "extension" — inherits the styling of the component being extended, the super component.
+#### An "composite component" — or simply "composite" — inherits the styling of the component being extended, the super component.
 
-- **Define an extension's defining rule by combining (1) a descriptive name for the extension, (2) a single hyphen, and (3) the component name for the component being extended.**
+- **Define a composite's defining rule by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the component being extended.**
 - **Create new style rules — rules that don't override styling in the super component — like a typical component.**
-- **When overriding super component styling, combine the extension's defining rule with the rule being overridden.**
-- **Apply the defining rules for the extension and the super component together to document content.**
+- **When overriding super component styling, combine the composite's defining rule with the rule being overridden.**
+- **Apply the defining rules for the composite and the super component together to document content.**
 
-> Why use extensions? When creating an extension prevents writing significant amounts of redundant styling. Don't abuse the concept though for the same reasons we avoid god objects in programming.
+> Why use composite? When creating a composite prevents defining significant amounts of redundant styling. Don't abuse the concept though for the same reasons we avoid god objects in programming.
 
 ```css
 /* super component */
@@ -2152,7 +2152,7 @@ Example: `.toggle-btn`
 .btn--hover {
 }
 
-/* extended component */
+/* composite component */
 .fancy-btn.btn {
 }
 
@@ -2174,7 +2174,7 @@ Example: `.toggle-btn`
 ```
 
 ```html
-<!-- apply extension and super component defining rule -->
+<!-- apply composite and super component defining rules -->
 <button class="fancy-btn btn"><span></span></button>
 ```
 
@@ -2324,7 +2324,7 @@ This section is for defining style rules that are designed to add or override st
 
 Do not place default styling in this section.
 
-> Why not? Default styling often requires changes or extending. Since styling in this section is not intended to be extended, default styling in this section should be avoided.
+> Why not? Default styling often requires changes. Since styling in this section is not intended to be overridden by another project, default styling in this section should be avoided.
 
 #### App overrides can be useful to change variable values defined earlier in the variables section.
 
@@ -2489,7 +2489,7 @@ Also, if they override styles from another rule, define them below the rule they
 
 #### When overriding a style rule in a media query, write the overridden rule exactly as it appeared earlier.
 
-> Why? This ensures that the specificity of the media query rule will be greater than the rule it is extending.
+> Why? This ensures that the specificity of the media query rule will be greater than the rule it is overriding.
 
 ```css
 .btn div > div > div:first-of-type {
