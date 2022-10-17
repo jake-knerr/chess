@@ -1814,11 +1814,11 @@ In other words, multiple fragments cannot be applied to the same content. This p
 
 This section describes modifier rules.
 
-**.-component-modifier**<br>
-Example: `.-btn-theme`
+**.--component-modifier**<br>
+Example: `.--btn-theme`
 
 - **Modifiers are style rules that modify a component's defining rule and fragments.**
-- **Prefer to define modifiers by starting with a single class selector formed by combining (1) a single hyphen, (2) the component name, (3) another hyphen, and (4) a modifier identifier.**
+- **Prefer to define modifiers by starting with a single class selector formed by combining (1) two hyphens, (2) the component name, (3) another hyphen, and (4) a modifier identifier.**
 
 Note that modifiers change default styling. If the targeted structure is optional, then a fragment is required. However, if you want to change the default styling for a fragment, then use a modifier.
 
@@ -1829,13 +1829,13 @@ The modifier class selector replaces the component's defining rule (class select
 }
 
 /* modifier for the defining rule above */
-.-btn-form {
+.--btn-form {
   color: red;
 }
 ```
 
 ```html
-<button class="btn -btn-form"></button>
+<button class="btn --btn-form"></button>
 ```
 
 #### Modifiers are applied to content alongside the defining rule.
@@ -1852,7 +1852,7 @@ In other words, modifiers are only applied to a component's top-level node, just
 }
 
 /* modifier - modifying a fragment */
-.-btn-no-icon > svg {
+.--btn-no-icon > svg {
   display: none;
 }
 ```
@@ -1862,7 +1862,7 @@ In other words, modifiers are only applied to a component's top-level node, just
   modifier applied alongside the defining rule to the top-level node even 
   though the modifier is modifying a fragment
 -->
-<button class="btn -btn-no-icon">
+<button class="btn --btn-no-icon">
   <svg></svg>
 </button>
 ```
@@ -1879,7 +1879,7 @@ Therefore, modifiers for the defining rule go below the defining rule and modifi
 }
 
 /* modifier below fragment it modifies */
-.-btn-no-icon svg {
+.--btn-no-icon svg {
 }
 ```
 
@@ -1893,7 +1893,7 @@ Therefore, modifiers for the defining rule go below the defining rule and modifi
 }
 
 /* modifier - use same selectors as fragment being modified */
-.-btn-highlight > table thead tr:first-child td {
+.--btn-highlight > table thead tr:first-child td {
 }
 ```
 
@@ -1905,16 +1905,16 @@ Therefore, modifiers for the defining rule go below the defining rule and modifi
 .btn {
 }
 
-.-btn-theme > svg {
+.--btn-theme > svg {
 }
 
-.-btn-head > svg {
+.--btn-head > svg {
 }
 ```
 
 ```html
 <!-- allowed - multiple modifiers can be applied to the same content -->
-<button class="btn -btn-head -btn-theme">
+<button class="btn --btn-head --btn-theme">
   Click Me
   <svg></svg>
 </button>
@@ -1927,10 +1927,10 @@ Therefore, modifiers for the defining rule go below the defining rule and modifi
 .btn {
 }
 
-.-btn-theme > svg {
+.--btn-theme > svg {
 }
 
-.-btn-head > svg {
+.--btn-head > svg {
 }
 ```
 
@@ -1938,10 +1938,10 @@ Therefore, modifiers for the defining rule go below the defining rule and modifi
 <!-- 
   avoid - modifiers listed before defining rule and not sorted alphanumerically
 -->
-<div class="-btn-theme -btn-head btn"></div>
+<div class="--btn-theme --btn-head btn"></div>
 
 <!-- good -->
-<div class="btn -btn-head -btn-theme"></div>
+<div class="btn --btn-head --btn-theme"></div>
 ```
 
 **[⬆ Table of Contents](#toc)**
@@ -1969,7 +1969,7 @@ States can be applied to any content in a component, whether the content is alre
 .btn {
 }
 
-.-btn-error {
+.--btn-error {
 }
 
 /* state */
@@ -2197,7 +2197,7 @@ An outer component overrides inner components by creating style rules that use t
 }
 
 /* outer overriding inner modifier */
-.outer .-inner-error {
+.outer .--inner-error {
 }
 
 .inner {
@@ -2206,7 +2206,7 @@ An outer component overrides inner components by creating style rules that use t
 .inner svg {
 }
 
-.-inner-error {
+.--inner-error {
 }
 ```
 
@@ -2257,7 +2257,7 @@ Place possible style classes on the nodes that they appear. Only write the openi
 
 ```css
 /* 
-  <div hero -hero-lg -hero-sm>
+  <div hero --hero-lg --hero-sm>
     <div>
       <a hero--selected>
         <img>
