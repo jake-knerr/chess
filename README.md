@@ -1814,11 +1814,11 @@ In other words, multiple fragments cannot be applied to the same content. This p
 
 This section describes modifier rules.
 
-**.--component-modifier**<br>
-Example: `.--btn-theme`
+**.(component)--(modifier)**<br>
+Example: `.btn--fancy`
 
 - **Modifiers are style rules that modify a component's defining rule and fragments.**
-- **Prefer to define modifiers by starting with a single class selector formed by combining (1) two hyphens, (2) the component name, (3) another hyphen, and (4) a modifier identifier.**
+- **Prefer to define modifiers by starting with a single class selector formed by combining (1) the component name, (2) two hyphens, and (3) a modifier identifier.**
 
 Note that modifiers change default styling. If the targeted structure is optional, then a fragment is required. However, if you want to change the default styling for a fragment, then use a modifier.
 
@@ -1829,13 +1829,13 @@ The modifier class selector replaces the component's defining rule (class select
 }
 
 /* modifier for the defining rule above */
-.--btn-form {
+.btn--form {
   color: red;
 }
 ```
 
 ```html
-<button class="btn --btn-form"></button>
+<button class="btn btn--form"></button>
 ```
 
 #### Modifiers are applied to content alongside the defining rule.
@@ -1852,7 +1852,7 @@ In other words, modifiers are only applied to a component's top-level node, just
 }
 
 /* modifier - modifying a fragment */
-.--btn-no-icon > svg {
+.btn--no-icon > svg {
   display: none;
 }
 ```
@@ -1862,7 +1862,7 @@ In other words, modifiers are only applied to a component's top-level node, just
   modifier applied alongside the defining rule to the top-level node even 
   though the modifier is modifying a fragment
 -->
-<button class="btn --btn-no-icon">
+<button class="btn btn--no-icon">
   <svg></svg>
 </button>
 ```
@@ -1879,7 +1879,7 @@ Therefore, modifiers for the defining rule go below the defining rule and modifi
 }
 
 /* modifier below fragment it modifies */
-.--btn-no-icon svg {
+.btn--no-icon svg {
 }
 ```
 
@@ -1893,7 +1893,7 @@ Therefore, modifiers for the defining rule go below the defining rule and modifi
 }
 
 /* modifier - use same selectors as fragment being modified */
-.--btn-highlight > table thead tr:first-child td {
+.btn--highlight > table thead tr:first-child td {
 }
 ```
 
@@ -1905,16 +1905,16 @@ Therefore, modifiers for the defining rule go below the defining rule and modifi
 .btn {
 }
 
-.--btn-theme > svg {
+.btn--theme > svg {
 }
 
-.--btn-head > svg {
+.btn--head > svg {
 }
 ```
 
 ```html
 <!-- allowed - multiple modifiers can be applied to the same content -->
-<button class="btn --btn-head --btn-theme">
+<button class="btn btn--head btn--theme">
   Click Me
   <svg></svg>
 </button>
@@ -1927,10 +1927,10 @@ Therefore, modifiers for the defining rule go below the defining rule and modifi
 .btn {
 }
 
-.--btn-theme > svg {
+.btn--theme > svg {
 }
 
-.--btn-head > svg {
+.btn--head > svg {
 }
 ```
 
@@ -1938,10 +1938,10 @@ Therefore, modifiers for the defining rule go below the defining rule and modifi
 <!-- 
   avoid - modifiers listed before defining rule and not sorted alphanumerically
 -->
-<div class="--btn-theme --btn-head btn"></div>
+<div class="btn--theme btn--head btn"></div>
 
 <!-- good -->
-<div class="btn --btn-head --btn-theme"></div>
+<div class="btn btn--head btn--theme"></div>
 ```
 
 **[⬆ Table of Contents](#toc)**
@@ -1952,13 +1952,13 @@ Therefore, modifiers for the defining rule go below the defining rule and modifi
 
 This section describes the portion of a component's style rules that are states.
 
-**.(component)--(state)**<br>
-Example: `.btn--error`
+**.--(component)-(state)**<br>
+Example: `.--btn-error`
 
 #### States:
 
 - **States are style rules that change the appearance, behavior or any other aspect of a component or a component's child content.**
-- **Prefer to define state rules using a single class selector named by adding two parts to the component name: (1) two hyphens and (2) a state identifier. The state identifier should be a verbal or adjectival word.**
+- **Prefer to define states by using a single class selector formed by combining (1) the component name, (2) two hyphens, and (3) a state identifier. The state identifier should be a verbal or adjectival word.**
 - **Rules that use pseudo-classes (like `:hover`) are considered state rules.**
 
 States can be applied to any content in a component, whether the content is already styled by another rule or not. This includes content already targeted by a defining rule, fragment, modifier rule, or any content not already targeted by another rule.
@@ -1969,11 +1969,11 @@ States can be applied to any content in a component, whether the content is alre
 .btn {
 }
 
-.--btn-error {
+.btn--fancy {
 }
 
 /* state */
-.btn--selected {
+.--btn-selected {
 }
 
 /* state */
@@ -1981,7 +1981,7 @@ States can be applied to any content in a component, whether the content is alre
 }
 
 /* state */
-.btn--selected.-btn-error {
+.--btn-selected.btn--fancy {
 }
 ```
 
@@ -1994,12 +1994,12 @@ States are intended to accommodate change.
 }
 
 /* state - added or removed based on whether the button is selected*/
-.btn--selected {
+.--btn-selected {
 }
 ```
 
 ```html
-<div class="btn btn--selected">Click to select</div>
+<div class="btn --btn-selected">Click to select</div>
 ```
 
 #### States rules have the `!important` keyword appended to all property values.
@@ -2013,7 +2013,7 @@ States are intended to accommodate change.
 }
 
 /* state */
-.btn--selected {
+.--btn-selected {
   color: red !important;
 }
 ```
@@ -2028,7 +2028,7 @@ States are intended to accommodate change.
 }
 
 /* avoid */
-.btn--focus:focus
+.--btn-focus:focus
 
 /* good - states using pseudo-classes do not require a unique class name */
 .btn:focus {
@@ -2042,12 +2042,12 @@ Use whatever is more convenient. Sometimes applying the state directly to inner 
 Example - Applying the state alongside the defining rule and targeting inner content with selectors.
 
 ```css
-.btn--selected svg {
+.--btn-selected svg {
 }
 ```
 
 ```html
-<button class="btn btn--selected">
+<button class="btn --btn-selected">
   <svg></svg>
 </button>
 ```
@@ -2055,13 +2055,13 @@ Example - Applying the state alongside the defining rule and targeting inner con
 Example - Applying the state directly to the child content.
 
 ```css
-.btn--selected {
+.--btn-selected {
 }
 ```
 
 ```html
 <button class="btn">
-  <svg class="btn--selected"></svg>
+  <svg class="--btn-selected"></svg>
 </button>
 ```
 
@@ -2089,7 +2089,7 @@ If a state can be applied to multiple places in the component, then define it in
   state applied to the same content at the fragment above; define state below
   the fragment 
 */
-.btn--error svg {
+.--btn-error svg {
 }
 ```
 
@@ -2101,11 +2101,11 @@ If a state can be applied to multiple places in the component, then define it in
 }
 
 /* state */
-.btn--selected {
+.--btn-selected {
 }
 
 /* state */
-.btn--error {
+.--btn-error {
 }
 ```
 
@@ -2114,10 +2114,10 @@ If a state can be applied to multiple places in the component, then define it in
   avoid - states listed before defining rule and button--selected listed before
   button--error
 -->
-<div class="btn--selected btn--error btn"></div>
+<div class="--btn-selected --btn-error btn"></div>
 
 <!-- good -->
-<div class="btn btn--error btn--selected"></div>
+<div class="btn --btn-error --btn-selected"></div>
 ```
 
 **[⬆ Table of Contents](#toc)**
@@ -2136,7 +2136,7 @@ Example: `.toggle-btn`
 - **When overriding super component styling, combine the composite's defining rule with the rule being overridden.**
 - **Apply the defining rules for the composite and the super component together to document content.**
 
-> Why use composite? When creating a composite prevents defining significant amounts of redundant styling. Don't abuse the concept though for the same reasons we avoid god objects in programming.
+> Why use composites? When creating a composite prevents defining significant amounts of redundant styling. Don't abuse the concept though for the same reasons we avoid god objects in programming.
 
 ```css
 /* super component */
@@ -2149,7 +2149,7 @@ Example: `.toggle-btn`
 .btn_icon {
 }
 
-.btn--hover {
+.--btn-hover {
 }
 
 /* composite component */
@@ -2169,7 +2169,7 @@ Example: `.toggle-btn`
 }
 
 /* overriding state */
-.fancy-btn.btn--hover {
+.fancy-btn.--btn-hover {
 }
 ```
 
@@ -2197,7 +2197,7 @@ An outer component overrides inner components by creating style rules that use t
 }
 
 /* outer overriding inner modifier */
-.outer .--inner-error {
+.outer .inner--error {
 }
 
 .inner {
@@ -2206,7 +2206,7 @@ An outer component overrides inner components by creating style rules that use t
 .inner svg {
 }
 
-.--inner-error {
+.inner--error {
 }
 ```
 
@@ -2257,9 +2257,9 @@ Place possible style classes on the nodes that they appear. Only write the openi
 
 ```css
 /* 
-  <div hero --hero-lg --hero-sm>
+  <div hero hero--lg hero--sm>
     <div>
-      <a hero--selected>
+      <a --hero-selected>
         <img>
 */
 ```
@@ -2386,12 +2386,12 @@ Most rules that use animations will be component states.
 @keyframes spinning {
 }
 
-.btn--spinning {
+.--btn-spinning {
   animation-name: spinning;
 }
 
 /* preferred */
-.btn--spinning {
+.--btn-spinning {
   animation-name: btn--spinning;
 }
 
@@ -2399,7 +2399,7 @@ Most rules that use animations will be component states.
   animation has the same name as the rule using it and is defined after the 
   rule using it 
 */
-@keyframes btn--spinning {
+@keyframes --btn-spinning {
 }
 ```
 
