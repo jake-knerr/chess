@@ -1129,8 +1129,6 @@ Shadow DOM is a great concept, but implementation considerations argue against i
 
 > I am building a SPA. Why not use the Shadow DOM? Every element using a shadow DOM requires a style tag or a link to a preloaded stylesheet. Parsing a stylesheet for every component has negative performance implications. A solution named 'adopted stylesheets' aims to fix this problem, but Safari has not implemented it.
 
-> Any other reasons? Shadow DOM prevents parent elements from overriding child fragments.
-
 #### Avoid becoming obsessive over DRY and reusability with CSS.
 
 These principles taken too far will cause madness.
@@ -1243,6 +1241,30 @@ Side effects are styles that when changed force changes in other styles. An exam
   border-color: var(--accent-color);
   font-family: var(--code-font);
 }
+```
+
+#### If multiple themes must be available at runtime, append a descriptive class to the _:root_ selector for each additional theme.
+
+Add the theme to the document by adding the theme class to the `html` element.
+
+> Why? Users may be able to change themes at runtime.
+
+```css
+/* default theme */
+:root {
+  --accent-color: red;
+}
+
+.dark:root {
+  --accent-color: blue;
+}
+```
+
+```html
+<html class="dark">
+  <head></head>
+  <body></body>
+</html>
 ```
 
 #### (Optional) Consider adding a namespace prefix to a CSS variable property name to help avoid naming collisions.
