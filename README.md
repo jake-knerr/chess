@@ -46,14 +46,15 @@ Jake Knerr © Ardisia Labs LLC
   - [Resets](#resets)
   - [Globals](#globals)
   - [Vendor](#vendor)
-  - [Utilities](#utilities)
   - [Components](#components)
   - [Components - Fragments](#components---fragments)
   - [Components - Modifiers](#components---modifiers)
   - [Components - States](#components---states)
+  - [Components - Extensions](#components---extensions)
   - [Components - Inheritance: Composites](#components---inheritance-composites)
-  - [Components - Overrides: Outer Components Overriding Inner Components](#components---overrides-outer-components-overriding-inner-components)
+  - [Component - Guidelines](#component---guidelines)
   - [Components - Documenting Components](#components---documenting-components)
+  - [Utilities](#utilities)
   - [App Overrides](#app-overrides)
   - [Animations](#animations)
   - [Media Queries](#media-queries)
@@ -1391,74 +1392,6 @@ input[type="email"] {
 
 ---
 
-### Utilities
-
-**.\_utility**<br>
-Example: `._error`
-
-This section describes style rules that are not tied to specific content.
-
-- **Utilities are rules that use a single class selector and can be applied to any content in the document.**
-- **Prefer to define utilities by adding a \_ prefix to an identifier for a single class selector.**
-
-> Why use utilities? They are a useful technique to avoid repeating the same styles over and over. Also, they can be useful to make small changes to a component without having to create a modifier.
-
-```css
-._no-sel {
-  user-select: none;
-}
-
-._err {
-  font-weight: bold;
-  color: red;
-}
-```
-
-Example - Using a utility to nudge a button. Without the utility moving the button would require a modifier class or an outer component.
-
-```css
-._pad-top-1 {
-  padding-top: 1rem;
-}
-```
-
-```html
-  <div class="grid">
-    <button class="btn">
-    <button class="btn">
-    <button class="btn _pad-top-1">
-  </div>
-```
-
-#### Utilities are used to add styles, not override.
-
-Since utilities only use a single class selector, their specificity may not be enough to override conflicts in components. Only use them to add styles that will not conflict with other rules.
-
-```html
-<a class="btn _red">Click Me</a>
-```
-
-```css
-/* avoid - utility is overriding a rule */
-.btn {
-  color: blue;
-}
-
-._red {
-  color: red;
-}
-```
-
-#### Do not make utilities required classes in a component.
-
-Only use utilities to make small changes to components.
-
-> Why not make utilities required? The greatest advantage of components is the mental mapping between the component's classes and the corresponding HTML. Requiring outside styles, like utilities, breaks down this mental mapping, and using components becomes clunky.
-
-**[⬆ Table of Contents](#toc)**
-
----
-
 ### Components
 
 **.(component)**<br>
@@ -1502,7 +1435,7 @@ For the component name, the use of gerunds, infinitives, and participles are dis
 
 #### A component is _applied_ to document content by adding the component's defining rule to the content's class attribute.
 
-The defining rule must be applied to content, even if it doesn't apply any styling.
+The defining rule must be applied to content, even if the defining rule doesn't apply any styling.
 
 ```css
 /* component - defining rule */
@@ -1666,17 +1599,42 @@ Being very precise with type selectors, combinators, and pseudo-classes should n
 }
 ```
 
-#### Alternatively, a fragment may be defined with a single class selector formed by combining (1) the component name, (2) an underscore "\_", and (3) a fragment identifier.
+#### A single fragment rule can target one or many document elements.
+
+There does not need to be a mapping between a fragment rule and a single document element.
+
+```html
+<table class="footer">
+  <tbody>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+```
+
+```css
+.footer {
+}
+
+/* fragment - matches five elements */
+.footer > tbody > tr > td {
+}
+```
+
+#### Alternatively, a fragment may be defined with a single class selector formed by combining (1) the component name, (2) two underscores (\_\_), and (3) a fragment identifier.
 
 Such fragments are called "named fragments."
-
-Note, named fragments rules are the only component rules that are not applied to the top-level component HTML element.
 
 > Why use a named fragment? Sometimes, it may not be possible or convenient to select sub-structure using child selectors.
 
 ```html
 <button class="fancy-button">
-  <span class="fancy-button_icon"><svg></svg></span>
+  <span class="fancy-button__icon"><svg></svg></span>
 </button>
 ```
 
@@ -1685,7 +1643,7 @@ Note, named fragments rules are the only component rules that are not applied to
 }
 
 /* named fragment */
-.fancy-button_icon {
+.fancy-button__icon {
 }
 ```
 
@@ -1695,7 +1653,7 @@ In this way, a fragment is a type of sub-component.
 
 ```html
 <button class="fancy-button">
-  <span class="fancy-button_icon"><svg></svg></span>
+  <span class="fancy-button__icon"><svg></svg></span>
 </button>
 ```
 
@@ -1703,11 +1661,11 @@ In this way, a fragment is a type of sub-component.
 .fancy-button {
 }
 
-.fancy-button_icon {
+.fancy-button__icon {
 }
 
 /* acceptable */
-.fancy-button_icon > svg {
+.fancy-button__icon > svg {
 }
 ```
 
@@ -1730,7 +1688,7 @@ In this way, a fragment is a type of sub-component.
 }
 ```
 
-#### Prefer to define fragments in the order they are applied to the component's HTML structure.
+#### Prefer to define fragments in the order they target the component's HTML structure.
 
 ```css
 .btn {
@@ -1806,6 +1764,8 @@ In other words, multiple fragments cannot be applied to the same content. This p
 
 #### If it is difficult to select child content due to deep nesting or any other issue, consider breaking up the component into smaller components.
 
+> Why? Smaller components are easier to comprehend.
+
 **[⬆ Table of Contents](#toc)**
 
 ---
@@ -1818,11 +1778,11 @@ This section describes modifier rules.
 Example: `.btn--fancy`
 
 - **Modifiers are style rules that modify a component's defining rule and fragments.**
-- **Prefer to define modifiers by starting with a single class selector formed by combining (1) the component name, (2) two hyphens, and (3) a modifier identifier.**
+- **Prefer to define modifiers by starting with a single class selector formed by combining (1) the component name, (2) two hyphens (--), and (3) a modifier identifier.**
 
 Note that modifiers change default styling. If the targeted structure is optional, then a fragment is required. However, if you want to change the default styling for a fragment, then use a modifier.
 
-The modifier class selector replaces the component's defining rule (class selector) in the rule.
+The modifier class selector replaces the component's defining rule (class selector) in any rule.
 
 ```css
 .btn {
@@ -1870,6 +1830,8 @@ In other words, modifiers are only applied to a component's top-level node, just
 #### Define modifiers below the rules they are modifying.
 
 Therefore, modifiers for the defining rule go below the defining rule and modifiers for fragments go below fragments.
+
+If a modifier will override styles from multiple rules, then define the modifier after the last rule modified.
 
 > Why? This makes it easier to see what modifiers are modifying, and it gives the modifier rule greater specificity than the rule it is modifying.
 
@@ -1958,18 +1920,15 @@ Example: `.--btn-error`
 #### States:
 
 - **States are style rules that change the appearance, behavior or any other aspect of a component or a component's child content.**
-- **Prefer to define states by using a single class selector formed by combining (1) the component name, (2) two hyphens, and (3) a state identifier. The state identifier should be a verbal or adjectival word.**
+- **Prefer to define states by using a single class selector formed by combining (1) two hyphens (--), (2) the component name, (3) another hyphen (-), and (4) a state identifier. The state identifier should be a verbal or adjectival word.**
 - **Rules that use pseudo-classes (like `:hover`) are considered state rules.**
 
-States can be applied to any content in a component, whether the content is already styled by another rule or not. This includes content already targeted by a defining rule, fragment, modifier rule, or any content not already targeted by another rule.
+States can be applied to any content in a component. This includes content already targeted by a defining rule, fragment, modifier, or any content not already targeted by another rule.
 
 > Why prefer verbs and adjectives for state identifiers? States are _actions_ or _modifiers_, just like verbs and adjectives. They represent change on the page.
 
 ```css
 .btn {
-}
-
-.btn--fancy {
 }
 
 /* state */
@@ -1978,10 +1937,6 @@ States can be applied to any content in a component, whether the content is alre
 
 /* state */
 .btn:focus {
-}
-
-/* state */
-.--btn-selected.btn--fancy {
 }
 ```
 
@@ -2004,7 +1959,7 @@ States are intended to accommodate change.
 
 #### States rules have the `!important` keyword appended to all property values.
 
-> Why? This ensures that states have the necessary CSS specificity.
+> Why? Since states need to override all other style rules, `!important` is necessary to ensure the correct selector specificity.
 
 > Isn't `!important` evil? Usage of `!important` within the context of CHESS is safe because the risk of overmatching is contained.
 
@@ -2069,36 +2024,36 @@ Example - Applying the state directly to the child content.
 
 > Specificity problems when using multiple states? Consider creating a new state instead.
 
-#### Prefer to define states in the order they are applied to the component's HTML structure. Define states below other style rules that target the same content.
+#### Define states below fragments and modifiers.
 
-If a state can be applied to multiple places in the component, then define it in the first place it may be applied.
+> Why? Since states can modify other rules or target unstyled content, it can be tricky to determine where to locate them. For simplicity, put them below other rules.
 
 ```css
 .btn {
-}
-
-/* applied to the top-level node; define state under the defining rule */
-.btn:focus {
 }
 
 /* fragment */
 .btn svg {
 }
 
-/* 
-  state applied to the same content at the fragment above; define state below
-  the fragment 
-*/
+/* state */
+.btn:focus {
+}
+
+/* state */
 .--btn-error svg {
 }
 ```
 
-#### In HTML, prefer to write states after other classes. If multiple states are applied, sort them by the name of the states alphanumerically, left-to-right.
+#### In HTML, prefer to write state classes after other classes. If multiple states are applied, sort them by the name of the states alphanumerically, left-to-right.
 
 ```css
 /* component */
 .btn {
 }
+
+/* modifier */
+.btn--fancy
 
 /* state */
 .--btn-selected {
@@ -2117,96 +2072,36 @@ If a state can be applied to multiple places in the component, then define it in
 <div class="--btn-selected --btn-error btn"></div>
 
 <!-- good -->
-<div class="btn --btn-error --btn-selected"></div>
+<div class="btn btn--fancy --btn-error --btn-selected"></div>
 ```
 
 **[⬆ Table of Contents](#toc)**
 
 ---
 
-### Components - Inheritance: Composites
+### Components - Extensions
 
-**.(composite-component)-(super-component)**<br>
-Example: `.toggle-btn`
+This section concerns rules where outer components style inner components.
 
-#### An "composite component" — or simply "composite" — inherits the styling of the component being extended, the super component.
+#### Extensions add or override styles for nested components' defining rules.
 
-- **Define a composite's defining rule by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the component being extended.**
-- **Create new style rules — rules that don't override styling in the super component — like a typical component.**
-- **When overriding super component styling, combine the composite's defining rule with the rule being overridden.**
-- **Apply the defining rules for the composite and the super component together to document content.**
+Create an extension by using the outer component's defining rule to target the inner component's defining rule as a child element. Only the defining rule for inner component's may be targeted
 
-> Why use composites? When creating a composite prevents defining significant amounts of redundant styling. Don't abuse the concept though for the same reasons we avoid god objects in programming.
+Such rules will typically — but not always — have two class selectors.
+
+> Why use extensions? A common use case is the parent component supplying layout styles to inner components, or making small stylish adjustments.
 
 ```css
-/* super component */
-.btn {
-}
-
-.btn > span:first-child {
-}
-
-.btn_icon {
-}
-
-.--btn-hover {
-}
-
-/* composite component */
-.fancy-btn.btn {
-}
-
-/* new rule - not overriding */
-.fancy-btn::before {
-}
-
-/* overriding fragment */
-.fancy-btn.btn > span:first-child {
-}
-
-/* overriding named fragment */
-.fancy-btn .btn_icon {
-}
-
-/* overriding state */
-.fancy-btn.--btn-hover {
-}
-```
-
-```html
-<!-- apply composite and super component defining rules -->
-<button class="fancy-btn btn"><span></span></button>
-```
-
-**[⬆ Table of Contents](#toc)**
-
----
-
-### Components - Overrides: Outer Components Overriding Inner Components
-
-#### Outer components can override inner components style rules.
-
-An outer component overrides inner components by creating style rules that use the class selector for the outer component's defining rule and the selectors for the inner component's rule that is being overridden. Such rules will typically — but not always — have two class selectors.
-
-```css
-.outer {
-}
-
-/* outer overriding inner fragment */
-.outer .inner svg {
-}
-
-/* outer overriding inner modifier */
-.outer .inner--error {
-}
-
+/* component */
 .inner {
 }
 
-.inner svg {
+/* component */
+.outer {
 }
 
-.inner--error {
+/* extension */
+.outer .inner {
 }
 ```
 
@@ -2216,13 +2111,7 @@ An outer component overrides inner components by creating style rules that use t
 </div>
 ```
 
-#### For reusable components, prefer to not have layout styles present. Instead, outer components can override reusable inner components and provide the layout styles.
-
-> Why? Because this makes it easier to reuse components.
-
-#### Parent components will often be layout containers for inner content.
-
-This is expected and a common use-case for overrides.
+#### Outer components are very useful when providing or overriding layout styles for inner components.
 
 ```html
 <div class="parent">
@@ -2242,6 +2131,148 @@ This is expected and a common use-case for overrides.
 .child {
 }
 ```
+
+#### Prefer to define extensions in the order they target the component's HTML structure.
+
+```html
+<div class="parent">
+  <span></span>
+  <div class="child"></div>
+</div>
+```
+
+```css
+/* avoid - extensions should be below fragment */
+.parent {
+}
+
+.parent .child {
+}
+
+.parent > span {
+}
+
+/* good */
+.parent {
+}
+
+.parent > span {
+}
+
+.parent .child {
+}
+```
+
+#### Be careful to not overmatch content in inner, nested components.
+
+It is important that extensions only target the defining rule for nested components.
+
+> Why? Breaking a component's encapsulation leads to nondeterministic specificity and styling.
+
+```html
+<div class="parent">
+  <span></span>
+  <div class="child">
+    <span></span>
+  </div>
+</div>
+```
+
+```css
+/* avoid - fragment overmatches span in the child component */
+.parent span 
+
+/* good */
+.parent > span;
+```
+
+**[⬆ Table of Contents](#toc)**
+
+---
+
+### Components - Inheritance: Composites
+
+**.(composite-component)-(super-component)**<br>
+Example: `.toggle-btn`
+
+#### An "composite component" — or simply "composite" — inherits the styling of the component being extended, the super component.
+
+- **Define a composite's defining rule by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the component being extended.**
+- **Create new style rules — rules that don't override styling in the super component — like a typical component.**
+- **When overriding super component styling, combine the composite's defining rule with the rule being overridden.**
+- **Apply the defining rules for the composite and the super component together to document content. Apply the composite class before the super component class.**
+
+> Why use composites? When creating a composite prevents defining significant amounts of redundant styling. Do not abuse the concept for the same reasons we avoid treacherous class hierarchies when programming.
+
+```css
+/* super component */
+.btn {
+}
+
+.btn > span:first-child {
+}
+
+.btn__icon {
+}
+
+.--btn-hover {
+}
+
+/* composite component */
+.fancy-btn.btn {
+}
+
+/* new rule - not overriding - super component rule not required*/
+.fancy-btn::before {
+}
+
+/* overriding fragment */
+.fancy-btn.btn > span:first-child {
+}
+
+/* overriding named fragment */
+.fancy-btn .btn__icon {
+}
+
+/* overriding state */
+.fancy-btn.--btn-hover {
+}
+```
+
+```html
+<!-- apply composite and super component defining rules -->
+<button class="fancy-btn btn"><span></span></button>
+```
+
+#### When combining the composite's defining rule with other rules, write the composite class first.
+
+> Why? This makes it more obvious that the rule is a composite rule.
+
+```css
+/* avoid */
+.btn.fancy-btn {
+}
+
+/* good */
+.fancy-btn.btn {
+}
+```
+
+**[⬆ Table of Contents](#toc)**
+
+---
+
+### Component - Guidelines
+
+#### Do not overmatch. Fragments, modifiers, and states should be careful to not match ocntent in nested components.
+
+#### Steps for definig a component
+
+- write df
+- write fragments in order
+- write mods below last rule they modify by adding or overriding styling
+- write states at bottom
+- write
 
 **[⬆ Table of Contents](#toc)**
 
@@ -2311,6 +2342,74 @@ This is often the case with rules that have pseudo-classes.
 .btn:before {
 }
 ```
+
+**[⬆ Table of Contents](#toc)**
+
+---
+
+### Utilities
+
+**.\_\_utility**<br>
+Example: `.__error`
+
+This section describes style rules that are not tied to specific content.
+
+- **Utilities are rules that use a single class selector and can be applied to any content in the document.**
+- **Prefer to define utilities by adding two underscores (`__`) as a prefix to a nounal identifier for a single class selector.**
+
+> Why use utilities? They are a useful technique to avoid repeating the same styles over and over. Also, they can be useful to make small changes to a component without having to create a modifier.
+
+```css
+.__no-sel {
+  user-select: none;
+}
+
+.__err {
+  font-weight: bold;
+  color: red;
+}
+```
+
+Example - Using a utility to nudge a button. Without the utility moving the button would require a modifier class or an outer component.
+
+```css
+.__pad-top-1 {
+  padding-top: 16px;
+}
+```
+
+```html
+  <div class="grid">
+    <button class="btn">
+    <button class="btn">
+    <button class="btn _pad-top-1">
+  </div>
+```
+
+#### Utilities are used to add styles, not override.
+
+Since utilities only use a single class selector, their specificity will not be enough to override conflicts in components. Only use them to add styles that will not conflict with other rules.
+
+```html
+<a class="btn __red">Click Me</a>
+```
+
+```css
+/* avoid - utility is overriding a rule */
+.btn {
+  color: blue;
+}
+
+.__red {
+  color: red;
+}
+```
+
+#### Do not make utilities required classes in a component.
+
+Only use utilities to make small changes to components.
+
+> Why not make utilities required? The greatest advantage of components is the mental mapping between the component's classes and the corresponding HTML. Requiring outside styles, like utilities, breaks down this mental mapping, and using components becomes clunky.
 
 **[⬆ Table of Contents](#toc)**
 
