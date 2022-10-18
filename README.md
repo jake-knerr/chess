@@ -51,12 +51,12 @@ Jake Knerr © Ardisia Labs LLC
   - [Components - States](#components---states)
   - [Components - Extensions](#components---extensions)
   - [Components - Composites](#components---composites)
+  - [Media Queries](#media-queries)
   - [Components - Documenting Components](#components---documenting-components)
   - [Components - Discussion](#components---discussion)
   - [Utilities](#utilities)
   - [App Overrides](#app-overrides)
   - [Animations](#animations)
-  - [Media Queries](#media-queries)
 - [Miscellaneous](#miscellaneous)
   - [F.A.Q.](#faq)
   - [Comparison To BEM](#comparison-to-bem)
@@ -1570,7 +1570,7 @@ Prefer to use the simplest selectors possible that will not overmatch. Each rule
 }
 
 /* fragment - type selector and combinator to target the svg */
-.btn svg {
+.btn svg:first-of-type {
 }
 ```
 
@@ -1649,6 +1649,8 @@ Such fragments are called "named fragments."
 #### Named fragments can use additional selectors to select the child content.
 
 In this way, a fragment is a type of sub-component.
+
+> Why? It can be very convenient.
 
 ```html
 <button class="fancy-button">
@@ -1745,6 +1747,12 @@ In other words, multiple fragments cannot be applied to the same content. This p
 
 > Why? The composition of fragments leads to confusion.
 
+```html
+<div class="btn">
+  <svg></svg>
+</div>
+```
+
 ```css
 /* avoid - multiple fragments will target the same content */
 .btn svg {
@@ -1752,13 +1760,6 @@ In other words, multiple fragments cannot be applied to the same content. This p
 
 .btn > * {
 }
-```
-
-```html
-<div class="btn">
-  <!-- avoid - multiple fragments applied to svg -->
-  <svg></svg>
-</div>
 ```
 
 #### If it is difficult to select child content due to deep nesting or any other issue, consider breaking up the component into smaller components.
@@ -1780,9 +1781,11 @@ Example: `.--btn-error`
 
 - **States are style rules that change the appearance, behavior or any other aspect of a component or a component's child content.**
 - **Prefer to define states by using a single class selector formed by combining (1) two hyphens (--), (2) the component name, (3) another hyphen (-), and (4) a state identifier. The state identifier should be a verbal or adjectival word.**
-- **Rules that use pseudo-classes (like `:hover`) are considered state rules.**
+- **Rules that use dynamic pseudo-classes (like `:hover`) are considered state rules.**
 
 States can be applied to any content in a component. This includes content already targeted by the defining rule, a fragment, or any content not already targeted by another rule.
+
+Prefer to use the simplest selectors possible that will not overmatch.
 
 > Why prefer verbs and adjectives for state identifiers? States are _actions_ or _modifiers_, just like verbs and adjectives. They represent change on the page.
 
@@ -1801,13 +1804,13 @@ States can be applied to any content in a component. This includes content alrea
 
 #### States are applied to content for styling that may change during runtime.
 
-They should not be used to change default styling.
+They should not be used to change default or static styling.
 
 ```css
 .btn {
 }
 
-/* state - added or removed based on whether the button is selected*/
+/* state - added or removed based on whether the button is selected */
 .--btn-selected {
 }
 ```
@@ -1818,7 +1821,7 @@ They should not be used to change default styling.
 
 #### States rules have the `!important` keyword appended to all property values.
 
-> Why? Since states need to override styles in composites (more later), `!important` is necessary to ensure the correct selector specificity.
+> Why? Since states need higher specificity than composites (more later).
 
 > Isn't `!important` evil? Usage of `!important` within the context of CHESS is safe because the risk of overmatching is contained.
 
@@ -1885,7 +1888,7 @@ Example - Applying the state directly to the child content.
 
 #### Define states below fragments.
 
-> Why? Since states can modify other rules or target unstyled content, it can be tricky to determine where to locate them. For simplicity, put them below other rules.
+> Why? Since states can modify fragments or target unstyled content, it can be tricky to determine where to locate them. For simplicity, put them below fragments.
 
 ```css
 .btn {
@@ -1941,9 +1944,9 @@ This section concerns rules where outer components style inner components.
 
 #### Extensions add or override styles for nested components' defining rules.
 
-Create an extension by using the outer component's defining rule to target the inner component's defining rule as a child element. Only target an inner component's defining rule.
+Create an extension by using the outer component's defining rule to target an inner component's defining rule. Extensions can only target an inner component's defining rule.
 
-Such rules will typically — but not always — have two class selectors.
+Such rules will typically have two class selectors.
 
 > Why use extensions? A common use case is the parent component supplying layout styles to inner components, or making small styling adjustments.
 
@@ -2032,8 +2035,10 @@ Example: `.toggle-btn`
 
 #### An "composite component" — or simply "composite" — inherits the styling of the component being extended, the super component.
 
+Composites can add new rules or override existing super component rules.
+
 - **Define a composite's defining rule by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the component being extended.**
-- **Create new style rules — rules that don't override styling in the super component — like a typical component.**
+- **New style rules — rules that don't match the same content as rules already defined by the super component — like a typical component.**
 - **When overriding super component styling, combine the composite's defining rule with the rule being overridden.**
 - **Apply the defining rules for the composite and the super component together to document content. Write the composite class before the super component class.**
 
@@ -2090,6 +2095,105 @@ Example: `.toggle-btn`
 
 /* good */
 .fancy-btn.btn {
+}
+```
+
+**[⬆ Table of Contents](#toc)**
+
+---
+
+### Media Queries
+
+#### Media break-points are defined at the bottom of a component's styles. Use a mobile-first strategy by writing break-points in ascending `min-width:` order.
+
+Logical break-points are `640px` `768px` `1024px` `1280px` and `1440px`.
+
+> Why mobile-first? Writing break-points in ascending order is more intuitive than descending order.
+
+```css
+.btn {
+}
+
+.btn:focus {
+}
+
+/* after all component rules define break-points */
+
+/* lowest resolution break-point */
+@media (min-width: 640px) {
+  .btn {
+  }
+
+  .btn:focus {
+  }
+}
+
+@media (min-width: 768px) {
+  .btn {
+  }
+
+  .btn:focus {
+  }
+}
+
+@media (min-width: 1024px) {
+  .btn {
+  }
+
+  .btn:focus {
+  }
+}
+
+/* ascending order */
+@media (min-width: 1280px) {
+  .btn {
+  }
+
+  .btn:focus {
+  }
+}
+```
+
+#### Prefer to define non-break-point media query rules in the order they are applied to the component's HTML structure.
+
+Also, if they override styles from another rule, define them below the rule they are overriding.
+
+```css
+.btn {
+}
+
+/* define below the rule */
+@media (hover: hover) {
+  .btn:hover {
+    background: yellow;
+  }
+}
+
+.btn > div a {
+}
+
+/* define below the rule being overridden */
+@media only screen and (orientation: landscape) {
+  .btn > div a {
+  }
+}
+
+.btn svg {
+}
+```
+
+#### When overriding a style rule in a media query, write the overridden rule exactly as it appeared earlier.
+
+> Why? This ensures that the specificity of the media query rule will be greater than the rule it is overriding.
+
+```css
+.btn div > div > div:first-of-type {
+}
+
+@media (min-width: 1024px) {
+  /* write the rule being overridden exactly as above */
+  .btn div > div > div:first-of-type {
+  }
 }
 ```
 
@@ -2170,14 +2274,13 @@ This is often the case with rules that have pseudo-classes.
 
 #### Do not overmatch. Fragments and states must not match content in nested components.
 
-Components are encapsulated. Only a component's defining rule is exposed to external classes.
+Components are encapsulated. Only a component's defining rule is exposed to external classes for modification.
 
-#### Creating a component:
+#### Steps when creating a component:
 
 1. Write the defining class rule.
-2. Write the fragment classes if the order they appear in the HTML structure.
-3. Write the extension classes if the order they appear in the HTML structure.
-4. Write the state classes below the fragments.
+1. Write the fragment and extension classes if the order they appear in the HTML structure.
+1. Write the state classes below the fragments/extensions.
 
 **[⬆ Table of Contents](#toc)**
 
@@ -2209,7 +2312,7 @@ This section describes style rules that are not tied to specific content.
 Example - Using a utility to nudge a button. Without the utility moving the button would require a composite or outer component.
 
 ```css
-.__pad-top-1 {
+.__pad-top-16 {
   padding-top: 16px;
 }
 ```
@@ -2218,7 +2321,7 @@ Example - Using a utility to nudge a button. Without the utility moving the butt
   <div class="grid">
     <button class="btn">
     <button class="btn">
-    <button class="btn _pad-top-1">
+    <button class="btn __pad-top-16">
   </div>
 ```
 
@@ -2326,7 +2429,7 @@ Most rules that use animations will be component states.
 }
 
 /* 
-  preferred - animation has the same name and defined before class that uses 
+  preferred - animation has the same name and defined after the class that uses 
   it
 */
 .-btn-spinning {
@@ -2334,105 +2437,6 @@ Most rules that use animations will be component states.
 }
 
 @keyframes btn-spinning {
-}
-```
-
-**[⬆ Table of Contents](#toc)**
-
----
-
-### Media Queries
-
-#### Media break-points are defined at the bottom of a component's styles. Use a mobile-first strategy by writing break-points in ascending `min-width:` order.
-
-Logical break-points are `640px` `768px` `1024px` `1280px` and `1440px`.
-
-> Why mobile-first? Writing break-points in ascending order is more intuitive than descending order.
-
-```css
-.btn {
-}
-
-.btn:focus {
-}
-
-/* after all component rules define break-points */
-
-/* lowest resolution break-point */
-@media (min-width: 640px) {
-  .btn {
-  }
-
-  .btn:focus {
-  }
-}
-
-@media (min-width: 768px) {
-  .btn {
-  }
-
-  .btn:focus {
-  }
-}
-
-@media (min-width: 1024px) {
-  .btn {
-  }
-
-  .btn:focus {
-  }
-}
-
-/* ascending order */
-@media (min-width: 1280px) {
-  .btn {
-  }
-
-  .btn:focus {
-  }
-}
-```
-
-#### Prefer to define non-break-point media query rules in the order they are applied to the component's HTML structure.
-
-Also, if they override styles from another rule, define them below the rule they are overriding.
-
-```css
-.btn {
-}
-
-/* define below the rule */
-@media (hover: hover) {
-  .btn:hover {
-    background: yellow;
-  }
-}
-
-.btn > div a {
-}
-
-/* define below the rule being overridden */
-@media only screen and (orientation: landscape) {
-  .btn > div a {
-  }
-}
-
-.btn svg {
-}
-```
-
-#### When overriding a style rule in a media query, write the overridden rule exactly as it appeared earlier.
-
-> Why? This ensures that the specificity of the media query rule will be greater than the rule it is overriding.
-
-```css
-.btn div > div > div:first-of-type {
-}
-
-@media (min-width: 1024px) {
-  /* write the rule being overridden exactly as above */
-  .btn div > div > div:first-of-type {
-  }
 }
 ```
 
