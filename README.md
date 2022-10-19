@@ -1575,7 +1575,7 @@ Namespacing via a prefix is particularly useful for component libraries since th
 
 Fragments are rules that style a component's child content.
 
-#### Fragments style a component's child/inner content. By default, start a fragment with the component's defining rule class selector and then use additional selectors to select the child content.
+#### Fragments style a component's child/inner content. By default, start a fragment with the component's name and then use additional selectors to select the child content.
 
 Prefer to use the simplest selectors possible that will not overmatch. Each rule should only use one class selector, which is typically the defining rule class selector.
 
@@ -1598,7 +1598,7 @@ Prefer to use the simplest selectors possible that will not overmatch. Each rule
 
 #### If overmatching is a problem, use specific type selectors, child/sibling combinators, and/or pseudo-classes.
 
-Being very precise with type selectors, combinators, and pseudo-classes should negate overmatching.
+Being very precise with type selectors, combinators, and pseudo-classes can negate overmatching.
 
 ```html
 <table class="footer">
@@ -1765,7 +1765,7 @@ In other words, the existence of a fragment does not mean it must be applied to 
 
 #### A content element can only have a single fragment applied to it.
 
-In other words, multiple fragments cannot be applied to the same content. This prohibition applies to fragments from the same component or multiple components.
+In other words, multiple fragments cannot be applied to the same content.
 
 > Why? The composition of fragments leads to confusion.
 
@@ -1805,7 +1805,7 @@ Example: `.--btn-error`
 - **Prefer to define states by using a single class selector formed by combining (1) two hyphens (--), (2) the component name, (3) another hyphen (-), and (4) a state identifier. The state identifier should be a verbal or adjectival word.**
 - **Rules that use dynamic pseudo-classes (like `:hover`) are considered state rules.**
 
-States can be applied to any content in a component. This includes content already targeted by the defining rule, a fragment, or any content not already targeted by another rule.
+States can be applied to any content in a component. This includes content already targeted by another rule, or any content not already targeted by another rule.
 
 Prefer to use the simplest selectors possible that will not overmatch.
 
@@ -1966,7 +1966,7 @@ This section concerns rules where outer components style inner components.
 
 #### Extensions add or override styles for nested components' defining rules.
 
-Create an extension by using the outer component's defining rule to target an inner component's defining rule. Extensions can only target an inner component's defining rule.
+Create an extension by using the a component's defining rule to target an inner component's defining rule. Extensions can only target an inner component's defining rule.
 
 Such rules will typically have two class selectors.
 
@@ -1993,6 +1993,10 @@ Such rules will typically have two class selectors.
 ```
 
 #### Prefer to define extensions in the order they target the component's HTML structure.
+
+Fragments and extensions are both defined in the order they target the component's HTML structure.
+
+States are defined below fragments and extensions.
 
 ```html
 <div class="parent">
@@ -2055,14 +2059,14 @@ Extensions may only target the defining rule for nested components.
 **.(composite-component)-(super-component)**<br>
 Example: `.toggle-btn`
 
-#### An "composite component" — or simply "composite" — inherits the styling of the component being extended, the super component.
+#### A "composite component" — or simply "composite" — inherits the styling of the component being extended, the super component.
 
 Composites can add new rules or override existing super component rules.
 
-- **Define a composite's defining rule by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the component being extended.**
-- **New style rules — rules that don't match the same content as rules already defined by the super component — like a typical component.**
-- **When overriding super component styling, combine the composite's defining rule with the rule being overridden.**
-- **Apply the defining rules for the composite and the super component together to document content. Write the composite class before the super component class.**
+- **Define a composite's defining rule by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the super component.**
+- **New style rules — rules that don't match the same content as rules already defined by the super component — are defined like a typical component.**
+- **When changing super component styling, combine the composite's defining rule with the rule being overridden.**
+- **Apply the defining rules for the composite and the super component together to HTML content. Write the composite class before the super component class.**
 
 > Why use composites? When creating a composite prevents defining significant amounts of redundant styling. Do not abuse the concept for the same reasons we avoid treacherous class hierarchies when programming.
 
@@ -2429,17 +2433,15 @@ App overrides in this section can change the styling for any section that came b
 }
 ```
 
-#### App overrides can also be used to style content that was not previously styled. In other words, app overrides can create new fragments, states, extensions, etc.
-
 **[⬆ Table of Contents](#toc)**
 
 ---
 
 ### Animations
 
-#### Prefer to give animation definitions the same name as the rule that uses them. Define the animation immediately following the rule that uses it. If more than one rule uses the animation then define the animation after the first rule that uses it.
+#### Prefer to give an animation the same name as the class that uses it. Define the animation immediately following the rule that uses it. If more than one rule uses the animation then define the animation after the first rule that uses it.
 
-Most rules that use animations will be component states.
+Many rules that use animations will be component states.
 
 ```css
 /* discouraged */
