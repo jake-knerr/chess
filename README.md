@@ -2066,7 +2066,7 @@ Composites can add new rules or override existing super component rules.
 - **Define a composite's defining rule by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the super component.**
 - **New style rules — rules that don't match the same content as rules already defined by the super component — are defined like a typical component.**
 - **When changing super component styling, combine the composite's defining rule with the rule being overridden.**
-- **Apply the defining rules for the composite and the super component together to HTML content. Write the composite class before the super component class.**
+- **Apply the defining rules for the composite and the super component together to HTML content. Write the composite class before the super component class in HTML.**
 
 > Why use composites? When creating a composite prevents defining significant amounts of redundant styling. Do not abuse the concept for the same reasons we avoid treacherous class hierarchies when programming.
 
