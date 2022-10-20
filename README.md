@@ -1843,7 +1843,7 @@ They should not be used to change default or static styling.
 
 #### States rules have the `!important` keyword appended to all property values.
 
-> Why? Since states need higher specificity than composites (more later).
+> Why? Since states need higher specificity than composites and extensions (more on these later).
 
 > Isn't `!important` evil? Usage of `!important` within the context of CHESS is safe because the risk of overmatching is contained.
 
