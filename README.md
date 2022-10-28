@@ -49,8 +49,8 @@ Jake Knerr © Ardisia Labs LLC
   - [Components](#components)
   - [Components - Fragments](#components---fragments)
   - [Components - States](#components---states)
-  - [Components - Extensions](#components---extensions)
   - [Components - Composites](#components---composites)
+  - [Components - Extensions](#components---extensions)
   - [Media Queries](#media-queries)
   - [Components - Documenting Components](#components---documenting-components)
   - [Components - Discussion](#components---discussion)
@@ -1960,13 +1960,87 @@ Example - Applying the state directly to the child content.
 
 ---
 
+### Components - Composites
+
+**.(composite-component)-(composed-component)**<br>
+Example: `.toggle-btn`
+
+#### A "composite component" — or simply "composite" — inherits the styling of the component being composed, the super component or the composed component.
+
+Composites can add new rules or override existing composed component rules.
+
+- **Define a composite's class selector by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the super/composed component.**
+- **New style rules — rules that don't match the same content as rules already defined by the composed component — are defined like a typical component.**
+- **When creating rules that match the same content as rules already defined by the composed component, combine the composite's defining rule with the selectors for the rule that already matches the targeted content.**
+- **Apply the class selectors for the composite and the composed component together to HTML content. Write the composite class before the composed component class in HTML.**
+
+> Why use composites? When creating a composite prevents defining significant amounts of redundant styling. Do not abuse the concept for the same reasons we avoid treacherous class hierarchies when programming.
+
+```css
+/* composed component */
+.btn {
+}
+
+.btn > span:first-child {
+}
+
+.btn__icon {
+}
+
+.--btn-hover {
+}
+
+/* composite component */
+.fancy-btn.btn {
+}
+
+/* new rule - not overriding - composed component rule not required*/
+.fancy-btn::before {
+}
+
+/* overriding fragment */
+.fancy-btn.btn > span:first-child {
+}
+
+/* overriding named fragment */
+.fancy-btn .btn__icon {
+}
+
+/* overriding state */
+.fancy-btn.--btn-hover {
+}
+```
+
+```html
+<!-- apply composite and composed component defining rules -->
+<button class="fancy-btn btn"><span></span></button>
+```
+
+#### When combining the composite's defining rule with other rules, write the composite class first.
+
+> Why? This makes it more obvious that the rule is a composite rule.
+
+```css
+/* avoid */
+.btn.fancy-btn {
+}
+
+/* good */
+.fancy-btn.btn {
+}
+```
+
+**[⬆ Table of Contents](#toc)**
+
+---
+
 ### Components - Extensions
 
 This section concerns rules where outer components style inner components.
 
 #### Extensions add or override styles for nested components' defining rules.
 
-Create an extension by using the a component's defining rule to target an inner component's defining rule. Extensions can only target an inner component's defining rule.
+Create an extension by using the parent component's defining rule to target a child component's defining rule. Extensions can only target an child/inner component's defining rule.
 
 Such rules will typically have two class selectors.
 
@@ -2050,77 +2124,17 @@ Extensions may only target the defining rule for nested components.
 .parent > span;
 ```
 
-**[⬆ Table of Contents](#toc)**
+#### Extensions that target inner composites include the class selectors for the composite's defining rule and the composed component.
 
----
-
-### Components - Composites
-
-**.(composite-component)-(super-component)**<br>
-Example: `.toggle-btn`
-
-#### A "composite component" — or simply "composite" — inherits the styling of the component being extended, the super component.
-
-Composites can add new rules or override existing super component rules.
-
-- **Define a composite's defining rule by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the super component.**
-- **New style rules — rules that don't match the same content as rules already defined by the super component — are defined like a typical component.**
-- **When creating rules that match the same content as rules already defined by the super component, combine the composite's defining rule with the selectors for the rule that already matches the targeted content.**
-- **Apply the defining rules for the composite and the super component together to HTML content. Write the composite class before the super component class in HTML.**
-
-> Why use composites? When creating a composite prevents defining significant amounts of redundant styling. Do not abuse the concept for the same reasons we avoid treacherous class hierarchies when programming.
-
-```css
-/* super component */
-.btn {
-}
-
-.btn > span:first-child {
-}
-
-.btn__icon {
-}
-
-.--btn-hover {
-}
-
-/* composite component */
-.fancy-btn.btn {
-}
-
-/* new rule - not overriding - super component rule not required*/
-.fancy-btn::before {
-}
-
-/* overriding fragment */
-.fancy-btn.btn > span:first-child {
-}
-
-/* overriding named fragment */
-.fancy-btn .btn__icon {
-}
-
-/* overriding state */
-.fancy-btn.--btn-hover {
-}
-```
-
-```html
-<!-- apply composite and super component defining rules -->
-<button class="fancy-btn btn"><span></span></button>
-```
-
-#### When combining the composite's defining rule with other rules, write the composite class first.
-
-> Why? This makes it more obvious that the rule is a composite rule.
+> Why? This ensures the necessary specificity.
 
 ```css
 /* avoid */
-.btn.fancy-btn {
+.parent > .toggle-button {
 }
 
 /* good */
-.fancy-btn.btn {
+.parent > .toggle-button.button {
 }
 ```
 
@@ -2307,6 +2321,20 @@ Components are encapsulated. Only a component's defining rule is exposed to exte
 1. Write the defining class rule.
 1. Write the fragment and extension classes if the order they appear in the HTML structure.
 1. Write the state classes below the fragments/extensions.
+
+#### When to create extensions or state rules, or a composite:
+
+When the proposed styles are strongly related to a particular parent component and make only minor changes, create an extension for the parent component.
+
+For example, since a rule that positions component A inside a particular container component B is strongly related to the container component and only makes minor styling changes, an extension rule for parent B is appropriate.
+
+Otherwise, create a state rule for the styled component or a new composite component.
+
+#### When to create state rules or create a composite:
+
+If a rule is dynamic and applied indeterminately — it could be due to user interaction like a click — then a state is appropriate.
+
+If there are multiple rules, or if the rules effectively create a fundamentally different component, create a composite.
 
 **[⬆ Table of Contents](#toc)**
 
