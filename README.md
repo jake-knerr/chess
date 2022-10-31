@@ -1969,10 +1969,12 @@ Example: `.toggle-btn`
 
 Composites can add new rules or override existing composed component rules.
 
-- **Define a composite's class selector by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the super/composed component.**
+- **Define a composite class selector by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the super/composed component.**
 - **New style rules — rules that don't match the same content as rules already defined by the composed component — are defined like a typical component.**
-- **When creating rules that match the same content as rules already defined by the composed component, combine the composite's defining rule with the selectors for the rule that already matches the targeted content.**
+- **When creating rules that match the same content as rules already defined by the composed component, combine the composite's class selector with the selectors for the rule that already matches the targeted content.**
 - **Apply the class selectors for the composite and the composed component together to HTML content. Write the composite class before the composed component class in HTML.**
+
+See the examples below.
 
 > Why use composites? When creating a composite prevents defining significant amounts of redundant styling. Do not abuse the concept for the same reasons we avoid treacherous class hierarchies when programming.
 
@@ -2012,7 +2014,7 @@ Composites can add new rules or override existing composed component rules.
 ```
 
 ```html
-<!-- apply composite and composed component defining rules -->
+<!-- apply composite and composed component selectors -->
 <button class="fancy-btn btn"><span></span></button>
 ```
 
@@ -2124,7 +2126,7 @@ Extensions may only target the defining rule for nested components.
 .parent > span;
 ```
 
-#### Extensions that target inner composites include the class selectors for the composite's defining rule and the composed component.
+#### Extensions that target inner composites include the class selectors from the composite and the composed component.
 
 > Why? This ensures the necessary specificity.
 
