@@ -46,6 +46,7 @@ Jake Knerr © Ardisia Labs LLC
   - [Resets](#resets)
   - [Globals](#globals)
   - [Vendor](#vendor)
+  - [Utilities](#utilities)
   - [Components](#components)
   - [Components - Fragments](#components---fragments)
   - [Components - States](#components---states)
@@ -54,7 +55,6 @@ Jake Knerr © Ardisia Labs LLC
   - [Media Queries](#media-queries)
   - [Components - Documenting Components](#components---documenting-components)
   - [Components - Discussion](#components---discussion)
-  - [Utilities](#utilities)
   - [App Overrides](#app-overrides)
   - [Animations](#animations)
 - [Miscellaneous](#miscellaneous)
@@ -1413,6 +1413,74 @@ input[type="email"] {
 
 ---
 
+### Utilities
+
+**.\_\_utility**<br>
+Example: `.__error`
+
+This section describes style rules that are not tied to specific content.
+
+- **Utilities are rules that use a single class selector and can be applied to any content in the document.**
+- **Prefer to define utilities by adding two underscores (`__`) as a prefix to a nounal identifier for a single class selector.**
+
+> Why use utilities? They are a useful technique to avoid repeating the same styles over and over. Also, they can be useful to make small changes to a component without having to create a composite.
+
+```css
+.__no-sel {
+  user-select: none;
+}
+
+.__err {
+  font-weight: bold;
+  color: red;
+}
+```
+
+Example - Using a utility to nudge a button. Without the utility moving the button would require a composite or outer component.
+
+```css
+.__pad-top-16 {
+  padding-top: 16px;
+}
+```
+
+```html
+  <div class="grid">
+    <button class="btn">
+    <button class="btn">
+    <button class="btn __pad-top-16">
+  </div>
+```
+
+#### Utilities are used to add styles, not override.
+
+Since utilities only use a single class selector, their specificity will not be enough to override conflicts in components. Only use them to add styles that will not conflict with other rules.
+
+```html
+<a class="btn __red">Click Me</a>
+```
+
+```css
+/* avoid - utility is overriding a rule */
+.btn {
+  color: blue;
+}
+
+.__red {
+  color: red;
+}
+```
+
+#### Do not make utilities required classes in a component.
+
+Only use utilities to make small changes to components.
+
+> Why not make utilities required? The greatest advantage of components is the mental mapping between the component's classes and the corresponding HTML. Requiring outside styles, like utilities, breaks down this mental mapping, and using components becomes clunky.
+
+**[⬆ Table of Contents](#toc)**
+
+---
+
 ### Components
 
 **.(component)**<br>
@@ -2337,74 +2405,6 @@ Otherwise, create a state rule for the styled component or a new composite compo
 If a rule is dynamic and applied indeterminately — it could be due to user interaction like a click — then a state is appropriate.
 
 If there are multiple rules, or if the rules effectively create a fundamentally different component, create a composite.
-
-**[⬆ Table of Contents](#toc)**
-
----
-
-### Utilities
-
-**.\_\_utility**<br>
-Example: `.__error`
-
-This section describes style rules that are not tied to specific content.
-
-- **Utilities are rules that use a single class selector and can be applied to any content in the document.**
-- **Prefer to define utilities by adding two underscores (`__`) as a prefix to a nounal identifier for a single class selector.**
-
-> Why use utilities? They are a useful technique to avoid repeating the same styles over and over. Also, they can be useful to make small changes to a component without having to create a composite.
-
-```css
-.__no-sel {
-  user-select: none;
-}
-
-.__err {
-  font-weight: bold;
-  color: red;
-}
-```
-
-Example - Using a utility to nudge a button. Without the utility moving the button would require a composite or outer component.
-
-```css
-.__pad-top-16 {
-  padding-top: 16px;
-}
-```
-
-```html
-  <div class="grid">
-    <button class="btn">
-    <button class="btn">
-    <button class="btn __pad-top-16">
-  </div>
-```
-
-#### Utilities are used to add styles, not override.
-
-Since utilities only use a single class selector, their specificity will not be enough to override conflicts in components. Only use them to add styles that will not conflict with other rules.
-
-```html
-<a class="btn __red">Click Me</a>
-```
-
-```css
-/* avoid - utility is overriding a rule */
-.btn {
-  color: blue;
-}
-
-.__red {
-  color: red;
-}
-```
-
-#### Do not make utilities required classes in a component.
-
-Only use utilities to make small changes to components.
-
-> Why not make utilities required? The greatest advantage of components is the mental mapping between the component's classes and the corresponding HTML. Requiring outside styles, like utilities, breaks down this mental mapping, and using components becomes clunky.
 
 **[⬆ Table of Contents](#toc)**
 
