@@ -2326,7 +2326,7 @@ Components are encapsulated. Only a component's defining rule is exposed to exte
 
 #### When to create extensions or state rules, or a composite:
 
-When the proposed styles are strongly related to a particular parent component and make only minor changes, create an extension for the parent component.
+When the proposed styles are strongly related to a particular parent component and make only minor changes to the child component, create an extension rule for the parent component.
 
 For example, since a rule that positions component A inside a particular container component B is strongly related to the container component and only makes minor styling changes, an extension rule for parent B is appropriate.
 
