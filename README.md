@@ -1894,7 +1894,7 @@ Prefer to use the simplest selectors possible that will not overmatch.
 
 #### States are applied to content for styling that may change during runtime.
 
-They should not be used to change default or static styling.
+They should not be used to style default or static styling.
 
 ```css
 .btn {
