@@ -1351,9 +1351,7 @@ Globals are useful to prevent declaring the same styles repeatedly.
 > Why allow type and attribute selectors when other CSS naming schemas do not? To avoid adding a large number of style classes and rules to the document merely to follow an abstraction. Avoid blindly adhering to abstractions.
 
 ```css
-/* 
-  avoid - specificty too high 
-*/
+/* avoid - specificity too high */
 a.btn {
 }
 
@@ -1371,7 +1369,7 @@ div {
 }
 ```
 
-#### Global rules can use additional selectors, but they must be contained within a `:where` pseudo-class function. The specificty of a global rule must not be greater than a single type selector.
+#### Global rules can use additional selectors, but they must be contained within a `:where` pseudo-class function. The specificity of a global rule must not be greater than a single type selector.
 
 > Why? Global rules can be useful to prevent redefining the same styles over and over, but their specificity must remain low so components can override them.
 
@@ -1839,7 +1837,7 @@ In other words, the existence of a fragment does not mean it must be applied to 
 
 In other words, applying multiple fragments to the same content is discouraged.
 
-> Why? The composition of fragments leads to confusion and specificty issues.
+> Why? The composition of fragments leads to confusion and specificity issues.
 
 ```html
 <div class="btn">
