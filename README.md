@@ -1440,7 +1440,7 @@ This section describes style rules that are not tied to specific content.
 }
 ```
 
-Example - Using a utility to nudge a button. Without the utility moving the button would require a composite or outer component.
+Example - Using a utility to nudge a button. Without the utility moving the button would require a composite or extension.
 
 ```css
 .__pad-top-16 {
@@ -1458,7 +1458,7 @@ Example - Using a utility to nudge a button. Without the utility moving the butt
 
 #### Utilities are used to add styles, not override.
 
-Since utilities only use a single class selector, their specificity will not be enough to override conflicts in components. Only use them to add styles that will not conflict with other rules.
+Since utilities only use a single class selector and are defined before components, their specificity will not be enough to override conflicts in components. Only use them to add styles that will not conflict with component rules.
 
 ```html
 <a class="btn __red">Click Me</a>
