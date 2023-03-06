@@ -1335,11 +1335,10 @@ body {
 
 This section contains style rules that are applied to elements across the entire document.
 
-#### A global style rule, or _global_ has a single simple selector that contains:
+#### A global style rule, or _global_ has the specificity of a single simple selector:
 
-- **A single [universal](https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors) selector.**
-- **A single [type](https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors) selector; or**
-- **A single [attribute](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors) (not class) selector.**
+- **A single [universal](https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors) selector; or**
+- **A single [type](https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors) selector.**
 
 **Global styles are applied to elements across the entire document.**
 
@@ -1347,32 +1346,15 @@ A global is not intended to be applied to specific content. When creating stylin
 
 Globals are useful to prevent declaring the same styles repeatedly.
 
-> Why only permit type, attribute, or universal selectors in globals? Since globals apply default styling document-wide, more specific styling should easily override them. Type, attribute, and universal selectors have low CSS specificity; class based rules defined later in the document can easily override them.
+> Why only permit type, or universal selectors in globals? Since globals apply default styling document-wide, more specific styling should easily override them. Type, attribute, and universal selectors have low CSS specificity; class based rules defined later in the document can easily override them.
 
 > Why allow type and attribute selectors when other CSS naming schemas do not? To avoid adding a large number of style classes and rules to the document merely to follow an abstraction. Avoid blindly adhering to abstractions.
 
 ```css
 /* 
-  avoid - a global simple selector only has a single type, attribute, or 
-  universal selector 
+  avoid - specificty too high 
 */
 a.btn {
-}
-
-div.error {
-}
-
-input[type="email"].focused {
-}
-
-/* avoid - these rules are intended for specific content */
-header {
-}
-
-div[id="logo"] {
-}
-
-input[id="email-field"] {
 }
 
 /* good */
@@ -1387,9 +1369,31 @@ a {
 div {
   box-sizing: border-box;
 }
+```
+
+#### Global rules can use additional selectors, but they must be contained within a `:where` pseudo-class function. The specificty of a global rule must not be greater than a single type selector.
+
+> Why? Global rules can be useful to prevent redefining the same styles over and over, but their specificity must remain low so components can override them.
+
+```css
+/* avoid */
+div.error {
+}
 
 input[type="email"] {
-  opacity: 0.5;
+}
+
+div#logo {
+}
+
+/* good */
+div:where(.error) {
+}
+
+input:where([type="email"]) {
+}
+
+div:where(#logo) {
 }
 ```
 
@@ -1831,11 +1835,11 @@ In other words, the existence of a fragment does not mean it must be applied to 
 </div>
 ```
 
-#### A content element can only have a single fragment applied to it.
+#### Prefer to apply a single fragment rule to a content element.
 
-In other words, multiple fragments cannot be applied to the same content.
+In other words, applying multiple fragments to the same content is discouraged.
 
-> Why? The composition of fragments leads to confusion.
+> Why? The composition of fragments leads to confusion and specificty issues.
 
 ```html
 <div class="btn">
@@ -1844,7 +1848,7 @@ In other words, multiple fragments cannot be applied to the same content.
 ```
 
 ```css
-/* avoid - multiple fragments will target the same content */
+/* discouraged - multiple fragments will target the same content */
 .btn svg {
 }
 
@@ -2033,13 +2037,12 @@ Example - Applying the state directly to the child content.
 **.(composite-component)-(composed-component)**<br>
 Example: `.toggle-btn`
 
-#### A "composite component" — or simply "composite" — inherits the styling of the component being composed, the super component or the composed component.
+#### A "composite component" — or simply "composite" — inherits the styling of the component being composed (known as the super component or the composed component).
 
 Composites can add new rules or override existing composed component rules.
 
 - **Define a composite class selector by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the super/composed component.**
-- **New style rules — rules that don't match the same content as rules already defined by the composed component — are defined like a typical component.**
-- **When creating rules that match the same content as rules already defined by the composed component, combine the composite's class selector with the selectors for the rule that already matches the targeted content.**
+- **Start each rule with the composite class selector and the composed component's defining rule.**
 - **Apply the class selectors for the composite and the composed component together to HTML content. Write the composite class before the composed component class in HTML.**
 
 See the examples below.
@@ -2086,16 +2089,12 @@ See the examples below.
 <button class="fancy-btn btn"><span></span></button>
 ```
 
-#### When combining the composite's defining rule with other rules, write the composite class first.
-
-> Why? This makes it more obvious that the rule is a composite rule.
-
 ```css
 /* avoid */
 .btn.fancy-btn {
 }
 
-/* good */
+/* good - composite class selector before composed component's defining rule */
 .fancy-btn.btn {
 }
 ```
@@ -2317,6 +2316,8 @@ Also, if they override styles from another rule, define them below the rule they
 
 Place possible style classes on the nodes that they appear. Only write the opening tag and leave out any attributes. Nested elements can go on the same line or next line.
 
+This step is purely optional.
+
 > Why document? It can quickly provide instruction to the reader on how to use the component.
 
 ```css
@@ -2334,7 +2335,7 @@ Place possible style classes on the nodes that they appear. Only write the openi
 /* 
   <div homepage>
     <div>
-      <div hero> --> notice no inner structure documented for the nested hero component
+      <div hero> --> notice no inner structure or states documented for the nested hero component
     <div>
     <footer>
 */
