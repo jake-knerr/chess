@@ -1350,7 +1350,7 @@ Globals are useful to prevent declaring the same styles repeatedly.
 
 > Why only permit type, or universal selectors in globals? Since globals apply default styling document-wide, more specific styling should easily override them. Type, attribute, and universal selectors have low CSS specificity; class based rules defined later in the document can easily override them.
 
-> Why allow type and attribute selectors when other CSS naming schemas do not? To avoid adding a large number of style classes and rules to the document merely to follow an abstraction. Avoid blindly adhering to abstractions.
+> Why allow type and attribute selectors when other CSS naming schemas do not? To avoid adding a large number of style classes and rules to the document merely to follow the component abstraction. Avoid blindly adhering to abstractions.
 
 ```css
 /* avoid - specificity too high */
