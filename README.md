@@ -944,7 +944,7 @@ This is a soft preference.
 }
 ```
 
-#### Use kebab-case for class selector names and custom property names.
+#### Use train-case for class selector names and custom property names.
 
 ```css
 /* avoid */
