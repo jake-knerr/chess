@@ -2067,7 +2067,7 @@ See the examples below.
 .fancy-btn.btn {
 }
 
-/* new rule - not overriding - composed component rule not required*/
+/* new composite rule - not overriding */
 .fancy-btn::before {
 }
 
@@ -2085,7 +2085,7 @@ See the examples below.
 ```
 
 ```html
-<!-- apply composite and composed component selectors -->
+<!-- apply composite and composed classes -->
 <button class="fancy-btn btn"><span></span></button>
 ```
 
@@ -2135,9 +2135,9 @@ Such rules will typically have two class selectors.
 </div>
 ```
 
-#### Prefer to define extensions in the order they target the component's HTML structure.
+#### Prefer to define extensions in the order they target HTML structure.
 
-Fragments and extensions are both defined in the order they target the component's HTML structure.
+Fragments and extensions are both defined in the order they target HTML structure.
 
 States are defined below fragments and extensions.
 
