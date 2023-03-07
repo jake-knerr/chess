@@ -191,11 +191,13 @@ In other words, use lowercase when defining style rules, selectors, declarations
 
 - **Use only lowercase letters, numbers, and hyphens.**
 - **The first character of a filename is a letter.**
-- **Use kebab-case to separate words.**
+- **Use train-case to separate words.**
 
-> Why? Alphanumeric file names ensure the widest compatibility.
+Use descriptive names.
 
-> Why kebab-case and no underscores? Underlined filenames and links can obscure the underscore, making it easy to miss.
+> Why? Alphanumeric file names ensure the widest compatibility and is simple.
+
+> Why train-case and no underscores? Underlined filenames and links can obscure the underscore, making it easy to miss.
 
 ```
 # avoid
