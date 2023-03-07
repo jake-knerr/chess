@@ -1386,7 +1386,7 @@ input[type="email"] {
 div#logo {
 }
 
-/* good */
+/* acceptable */
 div:where(.error) {
 }
 
