@@ -41,8 +41,8 @@ Jake Knerr © Ardisia Labs LLC
   - [CSS General Design](#css-general-design)
   - [Style Rule Sections and Section Order](#style-rule-sections-and-section-order)
   - [Imports](#imports)
-  - [Theme](#theme)
   - [Fonts](#fonts)
+  - [Theme](#theme)
   - [Resets](#resets)
   - [Globals](#globals)
   - [Vendor](#vendor)
@@ -1144,8 +1144,8 @@ These principles taken too far will cause madness.
 #### Prefer to split up a document's style rules into the following sections and order:
 
 1. Imports.
-1. Theme.
 1. Fonts
+1. Theme.
 1. Resets.
 1. Globals.
 1. Vendor.
@@ -1169,8 +1169,8 @@ These principles taken too far will cause madness.
 
 <!-- preferred -->
 <link rel="stylesheet" type="text/css" href="imports.css" />
-<link rel="stylesheet" type="text/css" href="theme.css" />
 <link rel="stylesheet" type="text/css" href="fonts.css" />
+<link rel="stylesheet" type="text/css" href="theme.css" />
 <link rel="stylesheet" type="text/css" href="resets.css" />
 <link rel="stylesheet" type="text/css" href="globals.css" />
 <link rel="stylesheet" type="text/css" href="vendor.css" />
@@ -1196,6 +1196,21 @@ These principles taken too far will cause madness.
 **[⬆ Table of Contents](#toc)**
 
 ---
+
+### Fonts
+
+#### Place `@font-face` rules in this section.
+
+> Why? Including font definitions towards the top will start the asynchronous download of the font files sooner rather than later.
+
+```css
+@font-face {
+  font-family: Inter var;
+  src: url("/fonts/Inter.var.woff2") format("woff2");
+}
+```
+
+**[⬆ Table of Contents](#toc)**
 
 ### Theme
 
@@ -1287,21 +1302,6 @@ Add the theme to the document by adding the theme class to the `html` element.
 :root {
   --b-primary-color: red;
   --b-secondary-color: #0000ff;
-}
-```
-
-**[⬆ Table of Contents](#toc)**
-
-### Fonts
-
-#### Place `@font-face` rules in this section.
-
-> Why? Including font definitions towards the top will start the asynchronous download of the font files sooner rather than later.
-
-```css
-@font-face {
-  font-family: Inter var;
-  src: url("/fonts/Inter.var.woff2") format("woff2");
 }
 ```
 
