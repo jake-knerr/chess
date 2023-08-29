@@ -1101,6 +1101,8 @@ In other words, prefer using names that describe the purpose of the class instea
 
 #### Prefer to use `REM` for font sizes (or anything that should scale with fonts) and use `px` for everything else.
 
+Sometimes, it may be useful to use `REM` for styles that are related to displayed text. For example, the padding around text may be specified in `REM` units.
+
 Do not change the browser's default `font-size`.
 
 > Why? This way, users can change the font size of your document without affecting the layout.
@@ -1639,6 +1641,26 @@ Namespacing via a prefix is particularly useful for component libraries since th
 
 > Why? Putting each component in a separate file is an excellent way to emphasize how components are isolated and decoupled.
 
+#### When creating related components that are not [composites](#components---composites), write the unique adjective after the primary descriptor.
+
+> Why? This avoids confusion with composite components (more later).
+
+```css
+/* avoid */
+.fancy-btn {
+}
+
+.btn {
+}
+
+/* good */
+.btn-fancy {
+}
+
+.btn {
+}
+```
+
 **[⬆ Table of Contents](#toc)**
 
 ---
@@ -2043,12 +2065,15 @@ Composites can add new rules or override existing composed component rules.
 
 - **Define a composite class selector by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the super/composed component.**
 - **Start each rule with the composite class selector and the composed component's defining rule.**
-- **Apply the class selectors for the composite and the composed component together to HTML content. Write the composite class before the composed component class in HTML.**
+- **Apply the class selectors for the composite and the composed component together to HTML content. Write the composite class after the composed component class in HTML.**
 
 See the examples below.
 
 > Why use composites? When creating a composite prevents defining significant amounts of redundant styling. Do not abuse the concept for the same reasons we avoid treacherous class hierarchies when programming.
 
+> How are composites different from states? States are used to change styling at runtime due to user interaction or application state changes. Composites are used to create new components that inherit styling from other components.
+
+````css
 ```css
 /* composed component */
 .btn {
@@ -2082,7 +2107,7 @@ See the examples below.
 /* overriding state */
 .fancy-btn.--btn-hover {
 }
-```
+````
 
 ```html
 <!-- apply composite and composed classes -->
