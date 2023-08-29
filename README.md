@@ -52,7 +52,7 @@ Jake Knerr © Ardisia Labs LLC
   - [Components - States](#components---states)
   - [Components - Composites](#components---composites)
   - [Components - Extensions](#components---extensions)
-  - [Media Queries](#media-queries)
+  - [Media \& Container Queries](#media--container-queries)
   - [Components - Documenting Components](#components---documenting-components)
   - [Components - Discussion](#components---discussion)
   - [App Overrides](#app-overrides)
@@ -2236,7 +2236,7 @@ Extensions may only target the defining rule for nested components.
 
 ---
 
-### Media Queries
+### Media & Container Queries
 
 #### Media break-points are defined at the bottom of a component's styles. Use a mobile-first strategy by writing break-points in ascending `min-width:` order.
 
@@ -2288,7 +2288,7 @@ Logical break-points are `640px` `768px` `1024px` `1280px` and `1440px`.
 }
 ```
 
-#### Prefer to define non-break-point media query rules in the order they are applied to the component's HTML structure.
+#### Prefer to define non-break-point media & container query rules in the order they are applied to the component's HTML structure.
 
 Also, if they override styles from another rule, define them below the rule they are overriding.
 
@@ -2316,7 +2316,7 @@ Also, if they override styles from another rule, define them below the rule they
 }
 ```
 
-#### When overriding a style rule in a media query, write the overridden rule exactly as it appeared earlier.
+#### When overriding a style rule in a media & container query, write the overridden rule exactly as it appeared earlier.
 
 > Why? This ensures that the specificity of the media query rule will be greater than the rule it is overriding.
 
