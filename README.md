@@ -43,7 +43,6 @@ Jake Knerr © Ardisia Labs LLC
   - [Imports](#imports)
   - [Fonts](#fonts)
   - [Theme](#theme)
-  - [Resets](#resets)
   - [Globals](#globals)
   - [Vendor](#vendor)
   - [Utilities](#utilities)
@@ -1148,7 +1147,6 @@ These principles taken too far will cause madness.
 1. Imports.
 1. Fonts
 1. Theme.
-1. Resets.
 1. Globals.
 1. Vendor.
 1. Utilities.
@@ -1164,7 +1162,6 @@ These principles taken too far will cause madness.
 <link rel="stylesheet" type="text/css" href="globals.css" />
 <link rel="stylesheet" type="text/css" href="theme.css" />
 <link rel="stylesheet" type="text/css" href="fonts.css" />
-<link rel="stylesheet" type="text/css" href="resets.css" />
 <link rel="stylesheet" type="text/css" href="utilities.css" />
 <link rel="stylesheet" type="text/css" href="imports.css" />
 <link rel="stylesheet" type="text/css" href="components.css" />
@@ -1173,7 +1170,6 @@ These principles taken too far will cause madness.
 <link rel="stylesheet" type="text/css" href="imports.css" />
 <link rel="stylesheet" type="text/css" href="fonts.css" />
 <link rel="stylesheet" type="text/css" href="theme.css" />
-<link rel="stylesheet" type="text/css" href="resets.css" />
 <link rel="stylesheet" type="text/css" href="globals.css" />
 <link rel="stylesheet" type="text/css" href="vendor.css" />
 <link rel="stylesheet" type="text/css" href="utilities.css" />
@@ -1311,33 +1307,9 @@ Add the theme to the document by adding the theme class to the `html` element.
 
 ---
 
-### Resets
-
-This section is for style rules that equalize, or _reset_, the default styles among clients.
-
-#### A reset style rule, or _reset_, normalizes the display across different browsers/clients. In other words, a reset fixes an inconsistent default style among browsers/clients.
-
-A popular set of reset style rules is [normalize.css](https://github.com/necolas/normalize.css).
-
-```css
-/* not a reset - body.backgroundColor is not inconsistent among browsers */
-body {
-  background-color: red;
-}
-
-/* is a reset - body.margin is inconsistent among browsers */
-body {
-  margin: 0;
-}
-```
-
-**[⬆ Table of Contents](#toc)**
-
----
-
 ### Globals
 
-This section contains style rules that are applied to elements across the entire document.
+This section contains style rules that are applied to elements across the entire document. This includes _reset_ rules.
 
 #### A global style rule, or _global_ has the specificity of a single simple selector:
 
@@ -1396,6 +1368,20 @@ input:where([type="email"]) {
 }
 
 div:where(#logo) {
+}
+```
+
+#### Global rules include reset style rules, which normalize the display across different browsers/clients. In other words, a reset fixes an inconsistent default style among browsers/clients.
+
+```css
+/* not a reset - body.backgroundColor is not inconsistent among browsers */
+body {
+  background-color: red;
+}
+
+/* is a reset - body.margin is inconsistent among browsers */
+body {
+  margin: 0;
 }
 ```
 
@@ -2470,7 +2456,7 @@ Do not place default styling in this section.
 
 #### App overrides can override existing styles or add additional styles. In other words, style rules in this section use the same selectors as the rule they are overriding and apply new styles by either overriding existing styles or adding new ones.
 
-App overrides in this section can change the styling for any section that came before: resets, globals, components, utilities, and everything else are available for overriding in this section. App overrides can also be used to theme an application.
+App overrides in this section can change the styling for any section that came before: globals, components, utilities, and everything else are available for overriding in this section. App overrides can also be used to theme an application.
 
 > When are app overrides appropriate? When one cannot change the HTML or CSS for a document or library, or creating new components is not an option. In such a case, app overrides are the only way to change the styling of the document. Library code with hard-coded HTML and CSS is a good use case for when app overrides are appropriate.
 
