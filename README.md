@@ -1371,7 +1371,9 @@ div:where(#logo) {
 }
 ```
 
-#### Global rules include reset style rules, which normalize the display across different browsers/clients. In other words, a reset fixes an inconsistent default style among browsers/clients.
+#### Global rules include reset style rules, which normalize the display across different browsers/clients.
+
+In other words, a reset fixes an inconsistent default style among browsers/clients.
 
 ```css
 /* not a reset - body.backgroundColor is not inconsistent among browsers */
