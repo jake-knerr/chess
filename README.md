@@ -39,13 +39,10 @@ Jake Knerr © Ardisia Labs LLC
   - [CSS Suggested Review](#css-suggested-review)
   - [CSS Formatting](#css-formatting)
   - [CSS General Design](#css-general-design)
-  - [Style Rule Sections and Section Order](#style-rule-sections-and-section-order)
-  - [Imports](#imports)
+  - [Rule Order](#rule-order)
   - [Fonts](#fonts)
-  - [Theme](#theme)
+  - [Themes](#themes)
   - [Globals](#globals)
-  - [Vendor](#vendor)
-  - [Utilities](#utilities)
   - [Components](#components)
   - [Components - Fragments](#components---fragments)
   - [Components - States](#components---states)
@@ -54,7 +51,7 @@ Jake Knerr © Ardisia Labs LLC
   - [Media \& Container Queries](#media--container-queries)
   - [Components - Documenting Components](#components---documenting-components)
   - [Components - Discussion](#components---discussion)
-  - [App Overrides](#app-overrides)
+  - [Overrides](#overrides)
   - [Animations](#animations)
 - [Miscellaneous](#miscellaneous)
   - [F.A.Q.](#faq)
@@ -1140,66 +1137,25 @@ These principles taken too far will cause madness.
 
 ---
 
-### Style Rule Sections and Section Order
+### Rule Order
 
-#### Prefer to split up a document's style rules into the following sections and order:
+#### Rules can be added to the document in any order.
 
-1. Imports.
-1. Fonts
-1. Theme.
-1. Globals.
-1. Vendor.
-1. Utilities.
-1. Components.
-1. App Overrides
+In other words, different rules for fonts, themes, globals, components, etc. can be added to the document in any order. CHESS makes it so their order does not matter. The only exception is for `overrides`, which are rules that must be declared after the rules they are overriding. `Overrides` are discussed later in this document.
 
-#### The style rules can all exist in the same style sheet or multiple style sheets. Prefer to preserve the desired section order.
+> Why? When building an application is can be difficult to get the order of rules correct. This is especially true when multiple developers are working on the same project. CHESS makes it so the order of rules does not matter.
 
-```html
-<!-- discouraged -->
-<link rel="stylesheet" type="text/css" href="vendor.css" />
-<link rel="stylesheet" type="text/css" href="app-overrides.css" />
-<link rel="stylesheet" type="text/css" href="globals.css" />
-<link rel="stylesheet" type="text/css" href="theme.css" />
-<link rel="stylesheet" type="text/css" href="fonts.css" />
-<link rel="stylesheet" type="text/css" href="utilities.css" />
-<link rel="stylesheet" type="text/css" href="imports.css" />
-<link rel="stylesheet" type="text/css" href="components.css" />
+#### Typically, it is best to declare fonts, globals, and theme rules early in your stylesheets.
 
-<!-- preferred -->
-<link rel="stylesheet" type="text/css" href="imports.css" />
-<link rel="stylesheet" type="text/css" href="fonts.css" />
-<link rel="stylesheet" type="text/css" href="theme.css" />
-<link rel="stylesheet" type="text/css" href="globals.css" />
-<link rel="stylesheet" type="text/css" href="vendor.css" />
-<link rel="stylesheet" type="text/css" href="utilities.css" />
-<link rel="stylesheet" type="text/css" href="components.css" />
-<link rel="stylesheet" type="text/css" href="app-overrides.css" />
-```
-
-**[⬆ Table of Contents](#toc)**
-
----
-
-### Imports
-
-#### Place `@import` rules in this section.
-
-> Why? `@import` rules must precede other rule types.
-
-```css
-@import "my.css";
-```
-
-**[⬆ Table of Contents](#toc)**
+The more global a rule is, the earlier it should be declared in the document. For example, fonts are typically used by many components, so they should be declared early in the document. However, this is not required.
 
 ---
 
 ### Fonts
 
-#### Place `@font-face` rules in this section.
+#### Prefer to place `@font-face` rules early in your stylesheets.
 
-> Why? Including font definitions towards the top will start the asynchronous download of the font files sooner rather than later.
+> Why? Including font definitions towards the top will start the asynchronous download of the font files sooner rather than later. However, with browser performance becoming better and better, this is not as important as it once was.
 
 ```css
 @font-face {
@@ -1210,9 +1166,7 @@ These principles taken too far will cause madness.
 
 **[⬆ Table of Contents](#toc)**
 
-### Theme
-
-This section is for defining default values for CSS variables (sometimes known as custom properties) that are used throughout the document.
+### Themes
 
 #### Use CSS variables to create a default visual theme.
 
@@ -1386,90 +1340,6 @@ body {
   margin: 0;
 }
 ```
-
-**[⬆ Table of Contents](#toc)**
-
----
-
-### Vendor
-
-#### Include styles required by third-party libraries in this location.
-
-> Why in this location? Component CSS (explained in a later section below) should override conflicts with vendor CSS.
-
-```css
-/* vendor rules */
-.highlight-js {
-}
-```
-
-**[⬆ Table of Contents](#toc)**
-
----
-
-### Utilities
-
-**.\_\_utility**<br>
-Example: `.__error`
-
-This section describes style rules that are not tied to specific content.
-
-- **Utilities are rules that use a single class selector and can be applied to any content in the document.**
-- **Prefer to define utilities by adding two underscores (`__`) as a prefix to a nounal identifier for a single class selector.**
-
-> Why use utilities? They are a useful technique to avoid repeating the same styles over and over. Also, they can be useful to make small changes to a component without having to create a composite.
-
-```css
-.__no-sel {
-  user-select: none;
-}
-
-.__err {
-  font-weight: bold;
-  color: red;
-}
-```
-
-Example - Using a utility to nudge a button. Without the utility moving the button would require a composite or extension.
-
-```css
-.__pad-top-16 {
-  padding-top: 16px;
-}
-```
-
-```html
-  <div class="grid">
-    <button class="btn">
-    <button class="btn">
-    <button class="btn __pad-top-16">
-  </div>
-```
-
-#### Utilities are used to add styles, not override.
-
-Since utilities only use a single class selector and are defined before components, their specificity will not be enough to override conflicts in components. Only use them to add styles that will not conflict with component rules.
-
-```html
-<a class="btn __red">Click Me</a>
-```
-
-```css
-/* avoid - utility is overriding a rule */
-.btn {
-  color: blue;
-}
-
-.__red {
-  color: red;
-}
-```
-
-#### Do not make utilities required classes in a component.
-
-Only use utilities to make small changes to components.
-
-> Why not make utilities required? The greatest advantage of components is the mental mapping between the component's classes and the corresponding HTML. Requiring outside styles, like utilities, breaks down this mental mapping, and using components becomes clunky.
 
 **[⬆ Table of Contents](#toc)**
 
@@ -2052,7 +1922,7 @@ Example: `.toggle-btn`
 Composites can add new rules or override existing composed component rules.
 
 - **Define a composite class selector by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the super/composed component.**
-- **Start each rule with the composite class selector and the composed component's defining rule.**
+- **Start each rule with the composite class selector. If overriding styles from the composed component then also add its defining rule.**
 - **Apply the class selectors for the composite and the composed component together to HTML content. Write the composite class after the composed component class in HTML.**
 
 See the examples below.
@@ -2061,7 +1931,6 @@ See the examples below.
 
 > How are composites different from states? States are used to change styling at runtime due to user interaction or application state changes. Composites are used to create new components that inherit styling from other components.
 
-````css
 ```css
 /* composed component */
 .btn {
@@ -2095,7 +1964,7 @@ See the examples below.
 /* overriding state */
 .fancy-btn.--btn-hover {
 }
-````
+```
 
 ```html
 <!-- apply composite and composed classes -->
@@ -2109,6 +1978,35 @@ See the examples below.
 
 /* good - composite class selector before composed component's defining rule */
 .fancy-btn.btn {
+}
+```
+
+#### When adding rules to a composite that do not override styles from the composed component, then one does not need to write the composed component's defining rule.
+
+```css
+/* composed component */
+.btn {
+}
+
+.btn > span {
+}
+
+/* composite component */
+.fancy-btn.btn {
+}
+
+/* 
+  both defining rules are required because the composed styling is being 
+  overridden 
+*/
+.fancy-btn.btn > span {
+}
+
+/* 
+  only the composite defining rule is required because the composed styling is 
+  not being overridden 
+*/
+.fancy-btn > a {
 }
 ```
 
@@ -2342,15 +2240,26 @@ This step is purely optional.
 */
 ```
 
-#### When documenting a component with inner components, only write the inner component's top-level node and defining rule.
+#### When documenting a component with inner components, only write the inner component's defining rule.
+
+In other words, do not write out the inner component's HTML structure.
+
+> Why? To save space, avoid repetition, and make documentation easier.
 
 ```css
 /* 
+  avoid
+
   <div homepage>
-    <div>
-      <div hero> --> notice no inner structure or states documented for the nested hero component
-    <div>
-    <footer>
+    <div hero> 
+      <a>
+*/
+
+/*
+  good
+
+  <div homepage>
+    <hero> 
 */
 ```
 
@@ -2424,19 +2333,34 @@ If there are multiple rules, or if the rules effectively create a fundamentally 
 
 ---
 
-### App Overrides
+### Overrides
 
-This section is for defining style rules that are designed to add or override style properties that were defined earlier. They `override` the earlier-defined styles at an application level.
+These rules are designed to add or change style properties that were defined earlier. They `override` earlier-defined styles.
 
-#### App overrides are intended to be used by the people assembling an application, not for libraries or default styles. In other words, app overrides are application-specific.
+#### Overrides use the same selectors as the rule they are overriding and apply new styles by either overriding existing styles or adding new ones.
 
-Do not place default styling in this section.
+Overrides can change the styling for any rules that came before: globals, components, utilities, and everything else are available for overriding. Overrides can also be used to theme an application.
 
-> Why not? Default styling often requires changes. Since styling in this section is not intended to be overridden by another project, default styling in this section should be avoided.
+> When are overrides appropriate? When one cannot change the HTML or CSS for a document or library, creating new components is not an option, or you are building an SPA that requires it. In such a case, overrides are the only way to change the styling of the document. Library code with hard-coded HTML and CSS is a good use case for when overrides are appropriate.
 
-#### App overrides can be useful to change variable values defined earlier in the variables section.
+> Why not just use CSS custom properties? While custom properties work to create themes, it can become oppressive, verbose, and inflexible to add a custom property for every style that may need to change. Also, CSS custom properties can not be used to add styles that are not already defined, unlike overrides that can add styles that were not anticipated earlier.
 
-> Why? This can be useful to create application-specific themes without changing default variable values. Perhaps, the developer cannot change the default values.
+```css
+/* component: button */
+.btn {
+  color: red;
+}
+
+/* override */
+.btn {
+  color: blue; /* overriding color */
+  text-align: center; /* overrides can also add new styles like text-align */
+}
+```
+
+#### Overrides are defined after the rules they are overwriting.
+
+These are the only rules where order matters.
 
 ```css
 /* default variables */
@@ -2448,32 +2372,11 @@ Do not place default styling in this section.
   color: var(--button-color);
 }
 
-/* app overrides */
+/* overrides */
 
 /* new blue sub-theme */
 :root {
   --button-color: blue;
-}
-```
-
-#### App overrides can override existing styles or add additional styles. In other words, style rules in this section use the same selectors as the rule they are overriding and apply new styles by either overriding existing styles or adding new ones.
-
-App overrides in this section can change the styling for any section that came before: globals, components, utilities, and everything else are available for overriding in this section. App overrides can also be used to theme an application.
-
-> When are app overrides appropriate? When one cannot change the HTML or CSS for a document or library, or creating new components is not an option. In such a case, app overrides are the only way to change the styling of the document. Library code with hard-coded HTML and CSS is a good use case for when app overrides are appropriate.
-
-> Why not just use CSS custom properties? While custom properties work to create themes, it can become oppressive, verbose, and inflexible to add a custom property for every style that may need to change. Also, CSS custom properties can not be used to add styles that are not already defined, unlike app overrides that can add styles that were not anticipated earlier.
-
-```css
-/* component: button */
-.btn {
-  color: red;
-}
-
-/* app overrides section */
-.btn {
-  color: blue; /* overriding color */
-  text-align: center; /* app overrides can also add new styles like text-align */
 }
 ```
 
@@ -2544,6 +2447,10 @@ If in a pinch, an easy way to raise CSS specificity is by repeating class select
 > What about selector performance?
 
 Do not concern yourself with selector performance. The runtime difference between optimized and unoptimized CSS is nearly always inconsequential.
+
+> Where are the utility rules?
+
+Utility rules would make it that rules would need to be ordered, which CHESS proscribes. Instead of utilities, use theming rules.
 
 ### Comparison To BEM
 
