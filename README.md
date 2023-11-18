@@ -1603,7 +1603,7 @@ There does not need to be a mapping between a fragment rule and a single documen
 
 Such fragments are called "named fragments."
 
-> Why use a named fragment? Sometimes, it may not be possible or convenient to select sub-structure using child selectors.
+> Why use a named fragment? Sometimes, it may not be possible or convenient to select sub-structure using child selectors. A class could ease `querySelector` woes.
 
 ```html
 <button class="fancy-button">
