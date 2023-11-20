@@ -1826,9 +1826,11 @@ They should not be used to style default or static styling.
 }
 ```
 
-#### When applying a state to a component's inner content, states can be applied alongside the defining rule and then use selectors to match the inner content, or they can be applied directly to the child content.
+#### When applying a state's styles to a component's inner content, prefer to apply the state to the top-level node alongside the defining rule and then use selectors to match the inner content.
 
-Use whatever is more convenient. Sometimes applying the state directly to inner content will be necessary.
+Only apply the state directly to inner child content if necessary.
+
+> Why prefer to apply to the top-level node? It is simpler for a developer to use the state.
 
 Example - Applying the state alongside the defining rule and targeting inner content with selectors.
 
@@ -1843,7 +1845,7 @@ Example - Applying the state alongside the defining rule and targeting inner con
 </button>
 ```
 
-Example - Applying the state directly to the child content.
+Example - Applying the state directly to the child content. Necessary here because there are an indeterminate number of list elements.
 
 ```css
 .--btn-selected {
@@ -1851,9 +1853,11 @@ Example - Applying the state directly to the child content.
 ```
 
 ```html
-<button class="btn">
-  <svg class="--btn-selected"></svg>
-</button>
+<ul class="list">
+  <li></li>
+  <li class="--list-selected"></li>
+  <li></li>
+</ul>
 ```
 
 #### Multiple states can be applied to the same content.
@@ -2223,72 +2227,11 @@ Also, if they override styles from another rule, define them below the rule they
 
 ### Components - Documenting Components
 
-#### (Optional) Consider documenting a component above its defining rule by writing out its HTML structure and style classes.
+#### Be wary of documentation. Documentation of a component can easily become stale and out of date.
 
-Place possible style classes on the nodes that they appear. Only write the opening tag and leave out any attributes. Nested elements can go on the same line or next line.
+Detailed documentation of a component's structure and usage is typically not worth it. Document when something is unclear.
 
-This step is purely optional.
-
-> Why document? It can quickly provide instruction to the reader on how to use the component.
-
-```css
-/* 
-  <div hero --hero-selected>
-    <div>
-      <a --hero-selected>
-        <img>
-*/
-```
-
-#### When documenting a component with inner components, only write the inner component's defining rule.
-
-In other words, do not write out the inner component's HTML structure.
-
-> Why? To save space, avoid repetition, and make documentation easier.
-
-```css
-/* 
-  avoid
-
-  <div homepage>
-    <div hero> 
-      <a>
-*/
-
-/*
-  good
-
-  <div homepage>
-    <hero> 
-*/
-```
-
-#### Prefer to use regular expressions syntax `*?+{}()|` to denote repeating structure or possible structure.
-
-```css
-/*
-  <div grid>
-    <table>
-      <tbody>
-        ?<thead> --> 0 or 1 thead
-          *<tr> --> tr can be repeated 0 or more times
-            <td>
-              *<*> --> 0 or more nodes of any tag type
-            <td>
-              *<img|svg> --> 0 or more img or svg here
-        <tbody>
-          *<tr><td><td> --> ok to write nested structure on the same line
-    {2}<div> --> 2 divs
-*/
-```
-
-#### Do not stress over the documentation describing all possible HTML states for the component.
-
-It can be very difficult to fully describe all possibilities.
-
-#### Add additional code comments when the purpose of a rule is not clear.
-
-This is often the case with rules that have pseudo-classes.
+Example - Documentation is useful here because the pseudo-element effect is not obvious.
 
 ```css
 .btn {
@@ -2296,6 +2239,18 @@ This is often the case with rules that have pseudo-classes.
 
 /* ripple effect */
 .btn:before {
+}
+```
+
+#### When listing multiple components in a single file, consider adding a comment to separate them.
+
+```css
+/* fancy-btn */
+.fancy-btn {
+}
+
+/* simple-btn */
+.simple-btn {
 }
 ```
 
