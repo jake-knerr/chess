@@ -50,7 +50,6 @@ Jake Knerr © Ardisia Labs LLC
   - [Components - Extensions](#components---extensions)
   - [Media \& Container Queries](#media--container-queries)
   - [Components - Documenting Components](#components---documenting-components)
-  - [Components - Discussion](#components---discussion)
   - [Overrides](#overrides)
   - [Animations](#animations)
 - [Miscellaneous](#miscellaneous)
@@ -148,11 +147,11 @@ In other words, use lowercase when defining style rules, selectors, declarations
 }
 
 /* 
-  acceptable - "SuffiX" is not language-dependent (it has no special meaning to 
+  acceptable - "Jake" is not language-dependent (it has no special meaning to 
   the CSS language) 
 */
 .btn::after {
-  content: "SuffiX";
+  content: "Jake";
 }
 ```
 
@@ -294,7 +293,7 @@ This rule only applies if it makes sense with regard to one's natural language. 
 <div>By Jake</div>
 
 <!-- preferred -->
-<!-- author goes here -->
+<!-- author -->
 <div>By Jake</div>
 ```
 
@@ -485,39 +484,6 @@ Also, prefer to not place comments on lines that also contain code. In other wor
 <div class="btn"></div>
 ```
 
-#### For comments that are used to delineate sections (section dividers):\*\*
-
-- **The comment is on a single line and does not overflow the line width.**
-- **Starting from the left after the opening characters `<!--` (HTML) or `/*` (CSS), place a single space.**
-- **Place two consecutive equal signs `==` (HTML) or two hyphens `--` (CSS).**
-- **Add another space.**
-- **Next, place the comment's text content. The text content uses title case.**
-- **Add another space.**
-- **Place two consecutive equal signs `==` (HTML), or 10 hyphens `----------` (CSS), and add another space before closing the comment with the closing characters `-->` (HTML) or `*/` (CSS).**
-- **Place blank lines above and below the divider, if possible.**
-
-Section divider comments are not encouraged or discouraged. Usage of them is left up to a developer's discretion. This is simply a guide as to how they should be formatted if used.
-
-> Why equal signs in HTML dividers? Although hyphens would be preferable for consistency, double hyphens create potential XHTML issues.
-
-```css
-.btn {
-}
-
-/* -- Document and Button States ---------- */
-
-.state-one {
-}
-```
-
-```html
-<div>Content</div>
-
-<!-- == Header == -->
-
-<header>Content</header>
-```
-
 #### Use a _TODO_ comment to signify follow-up work.
 
 > Why? _TODO_ is the most common convention for action comments.
@@ -533,7 +499,7 @@ Section divider comments are not encouraged or discouraged. Usage of them is lef
 <div></div>
 ```
 
-#### (Optional) A file can, at a developer's discretion, have a top-level comment with a description of the file, its purpose, authors, licenses, copyrights, and any other pertinent top-level information. In addition, the top-level comment has the following requirements:
+#### (Optional) A file can, at a developer's discretion, have a top-level comment with a description of the file, its purpose, authors, licenses, copyrights, and any other pertinent top-level information. The top-level comment has the following requirements:
 
 - **Be placed on the first line of the file.**
 - **Have a blank line following it.**
@@ -710,7 +676,7 @@ In other words, avoid unquoted attribute values.
 #### When Prettier gives one the option:
 
 - **Prefer placing block elements on a new line.**
-- **Prefer placing inline elements (inline as defined by HTML, not CSS) on the same line as their parent element if everything fits within the column width.**
+- **Prefer placing inline elements (inline as defined by HTML) on the same line as their parent element if everything fits within the column width.**
 
 However, the most important issue is clarity; the chosen format should be clear.
 
@@ -1143,7 +1109,7 @@ These principles taken too far will cause madness.
 
 In other words, different rules for fonts, themes, globals, components, etc. can be added to the document in any order. CHESS makes it so their order does not matter. The only exception is for `overrides`, which are rules that must be declared after the rules they are overriding. `Overrides` are discussed later in this document.
 
-> Why? When building an application is can be difficult to get the order of rules correct. This is especially true when multiple developers are working on the same project. CHESS makes it so the order of rules does not matter.
+> Why? When building an application is can be difficult to completely control the order of style rules. This is especially true when multiple developers are working on the same project. CHESS makes it so the order of rules does not matter.
 
 #### Typically, it is best to declare fonts, globals, and theme rules early in your stylesheets.
 
@@ -1178,7 +1144,7 @@ The more global a rule is, the earlier it should be declared in the document. Fo
 
 #### CSS variables are particularly useful for styles that do not cause side effects.
 
-Side effects are styles that when changed force changes in other styles. An example of styles that do not typically cause side effects are "colors", and styles that typically cause side effects are sizing styles like "width".
+Side effects are styles that when changed force changes in other styles. An example of styles that do not typically cause side effects are "colors", and styles that typically cause side effects are layout styles like "width".
 
 > Why are CSS variables so useful for styles without side effects? Without side effects, variables can be adjusted in isolation without requiring other changes, which is a perfect use case for CSS variables and theming.
 
@@ -1301,7 +1267,7 @@ div {
 
 #### Global rules can use additional selectors, but they must be contained within a `:where` pseudo-class function. The specificity of a global rule must not be greater than a single type selector.
 
-> Why? Global rules can be useful to prevent redefining the same styles over and over, but their specificity must remain low so components can override them.
+> Why? Global rules can be useful to prevent redefining the same styles over and over, but their specificity must remain low so components can predictably override them.
 
 ```css
 /* avoid */
@@ -1376,6 +1342,8 @@ These types will be described later in this document.
 
 For the component name, the use of gerunds, infinitives, and participles are discouraged because even though they can function as nouns/adjectives in a sentence, they are typically perceived as verbs.
 
+Sometimes the term "defining rule" simply refers to the class selector used by the defining rule.
+
 > Why is the _component name_ unique? The component name serves as a namespace to group all of the component's style rules, and its uniqueness helps reduce name collisions with other style rules.
 
 > Why prefer nounal names? Components are _things_, just like nouns. They represent content on the page.
@@ -1405,7 +1373,7 @@ The defining rule must be applied to content, even if the defining rule doesn't 
 
 In other words, multiple components cannot be applied to the same content.
 
-> Why? The composition of components leads to confusion.
+> Why? The combining of components' styling leads to confusion.
 
 ```css
 .btn {
@@ -1499,26 +1467,6 @@ Namespacing via a prefix is particularly useful for component libraries since th
 
 > Why? Putting each component in a separate file is an excellent way to emphasize how components are isolated and decoupled.
 
-#### When creating related components that are not [composites](#components---composites), write the unique adjective after the primary descriptor.
-
-> Why? This avoids confusion with composite components (more later).
-
-```css
-/* avoid */
-.fancy-btn {
-}
-
-.btn {
-}
-
-/* good */
-.btn-fancy {
-}
-
-.btn {
-}
-```
-
 **[⬆ Table of Contents](#toc)**
 
 ---
@@ -1527,7 +1475,7 @@ Namespacing via a prefix is particularly useful for component libraries since th
 
 Fragments are rules that style a component's child content.
 
-#### Fragments style a component's child/inner content. By default, start a fragment with the component's name and then use additional selectors to select the child content.
+#### Fragments style a component's child/inner content. By default, create a fragment by writing a rule that start begins with the component's name class selector and then use additional selectors to select the child content.
 
 Prefer to use the simplest selectors possible that will not overmatch. Each rule should only use one class selector, which is typically the defining rule class selector.
 
@@ -1603,7 +1551,7 @@ There does not need to be a mapping between a fragment rule and a single documen
 
 Such fragments are called "named fragments."
 
-> Why use a named fragment? Sometimes, it may not be possible or convenient to select sub-structure using child selectors. A class could ease `querySelector` woes.
+> Why use a named fragment? Sometimes, it may not be possible or convenient to select sub-structure using child selectors. A named fragment could ease `querySelector` woes.
 
 ```html
 <button class="fancy-button">
@@ -1763,6 +1711,8 @@ Prefer to use the simplest selectors possible that will not overmatch.
 
 > Why prefer verbs and adjectives for state identifiers? States are _actions_ or _modifiers_, just like verbs and adjectives. They represent change on the page.
 
+> If a rule is dynamic and applied indeterminately — it could be due to user interaction like a click — then a state is appropriate. If there are multiple rules, or if the rules effectively create a fundamentally different component, create a composite (more later).
+
 ```css
 .btn {
 }
@@ -1826,11 +1776,11 @@ They should not be used to style default or static styling.
 }
 ```
 
-#### When applying a state's styles to a component's inner content, prefer to apply the state to the top-level node alongside the defining rule and then use selectors to match the inner content.
+#### When applying a state's styles to a component's inner content, prefer to apply the state to the top-level node and then use selectors to match the inner content.
 
 Only apply the state directly to inner child content if necessary.
 
-> Why prefer to apply to the top-level node? It is simpler for a developer to use the state.
+> Why prefer to apply to the top-level node? It is simpler. All a developer needs to know is that to use the state, apply it to the top-level node.
 
 Example - Applying the state alongside the defining rule and targeting inner content with selectors.
 
@@ -1903,7 +1853,7 @@ Example - State rule is using two class selectors, which is fine since it is the
 }
 ```
 
-#### In HTML, prefer to write state classes after other classes. If multiple states are applied, sort them by the name of the states alphanumerically, left-to-right.
+#### In HTML, prefer to write state classes after other classes. If multiple states are applied, prefer to sort them by the name of the states alphanumerically, left-to-right.
 
 ```css
 /* component */
@@ -1921,12 +1871,12 @@ Example - State rule is using two class selectors, which is fine since it is the
 
 ```html
 <!-- 
-  avoid - states listed before defining rule and --btn-selected listed before
+  discouraged - states listed before defining rule and --btn-selected listed before
   --btn-error
 -->
 <div class="--btn-selected --btn-error btn"></div>
 
-<!-- good -->
+<!-- preferred -->
 <div class="btn --btn-error --btn-selected"></div>
 ```
 
@@ -1944,7 +1894,7 @@ Example: `.toggle-btn`
 Composites can add new rules or override existing composed component rules.
 
 - **Define a composite class selector by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the super/composed component.**
-- **Start each rule with the composite class selector. If overriding styles from the composed component then also add its defining rule.**
+- **Start each rule with the composite class selector. If overriding styles from the composed component then also add its defining rule class selector.**
 - **Apply the class selectors for the composite and the composed component together to HTML content. Write the composite class after the composed component class in HTML.**
 
 See the examples below.
@@ -1971,7 +1921,7 @@ See the examples below.
 .fancy-btn.btn {
 }
 
-/* new composite rule - not overriding */
+/* new composite fragment rule - not overriding */
 .fancy-btn::before {
 }
 
@@ -2003,7 +1953,7 @@ See the examples below.
 }
 ```
 
-#### When adding rules to a composite that do not override styles from the composed component, then one does not need to write the composed component's defining rule.
+#### When adding rules to a composite that do not override styles from the composed component, one does not need to write the composed component's defining rule.
 
 ```css
 /* composed component */
@@ -2126,11 +2076,14 @@ Extensions may only target the defining rule for nested components.
 .parent > span;
 ```
 
-#### Extensions that target inner composites include the class selectors from the composite and the composed component.
+#### Extensions that target inner composites include the defining rules from the composite and the composed component.
 
 > Why? This ensures the necessary specificity.
 
 ```css
+.toggle-button.btn {
+}
+
 /* avoid */
 .parent > .toggle-button {
 }
@@ -2204,7 +2157,7 @@ Also, if they override styles from another rule, define them below the rule they
 .btn {
 }
 
-/* define below the rule */
+/* define below the overridden rule */
 @media (hover: hover) {
   .btn:hover {
     background: yellow;
@@ -2224,7 +2177,7 @@ Also, if they override styles from another rule, define them below the rule they
 }
 ```
 
-#### When overriding a style rule in a media query or container query, write the overridden rule exactly as it appeared earlier.
+#### When overriding a style rule inside a media query or container query, write the overridden rule exactly as it appeared earlier.
 
 > Why? This ensures that the specificity of the media query rule will be greater than the rule it is overriding.
 
@@ -2276,43 +2229,13 @@ Example - Documentation is useful here because the pseudo-element effect is not 
 
 ---
 
-### Components - Discussion
-
-#### Do not overmatch. Fragments and states must not match content in nested components.
-
-Components are encapsulated. Only a component's defining rule is exposed to external classes for modification.
-
-#### Steps when creating a component:
-
-1. Write the defining class rule.
-1. Write the fragment and extension classes if the order they appear in the HTML structure.
-1. Write the state classes below the fragments/extensions.
-
-#### When to create extensions or state rules, or a composite:
-
-When the proposed styles are strongly related to a particular parent component and make only minor changes to the child component, create an extension rule for the parent component.
-
-For example, since a rule that positions component A inside a particular container component B is strongly related to the container component and only makes minor styling changes, an extension rule for parent B is appropriate.
-
-Otherwise, create a state rule for the styled component or a new composite component.
-
-#### When to create state rules or create a composite:
-
-If a rule is dynamic and applied indeterminately — it could be due to user interaction like a click — then a state is appropriate.
-
-If there are multiple rules, or if the rules effectively create a fundamentally different component, create a composite.
-
-**[⬆ Table of Contents](#toc)**
-
----
-
 ### Overrides
 
 These rules are designed to add or change style properties that were defined earlier. They `override` earlier-defined styles.
 
 #### Overrides use the same selectors as the rule they are overriding and apply new styles by either overriding existing styles or adding new ones.
 
-Overrides can change the styling for any rules that came before: globals, components, utilities, and everything else are available for overriding. Overrides can also be used to theme an application.
+Overrides can change the styling for any rules that came before: globals, components, and everything else are available for overriding. Overrides can also be used to theme an application.
 
 > When are overrides appropriate? When one cannot change the HTML or CSS for a document or library, creating new components is not an option, or you are building an SPA that requires it. In such a case, overrides are the only way to change the styling of the document. Library code with hard-coded HTML and CSS is a good use case for when overrides are appropriate.
 
@@ -2423,7 +2346,7 @@ Do not concern yourself with selector performance. The runtime difference betwee
 
 > Where are the utility rules?
 
-Utility rules would make it that rules would need to be ordered, which CHESS proscribes. Instead of utilities, use theming rules.
+Inclusion of utility rules would impose rule ordering, which CHESS proscribes. Instead of utilities, use theming rules.
 
 ### Comparison To BEM
 
@@ -2439,7 +2362,7 @@ Initially, CHESS used the BEM terms _block_ and _element_. Ultimately, CHESS dro
 
 Tailwind is a utility-first paradigm that eschews component-based design.
 
-I like Tailwind, and I understand the motivation. However, I prefer thinking of documents as being composed of composable blocks rather than building up structure with loads of small classes. Especially for SPA projects.
+I like Tailwind, and I understand the motivation. However, I prefer thinking of documents as being composed of composable blocks rather than building up structure with loads of small classes — especially for SPA projects.
 
 **[⬆ Table of Contents](#toc)**
 
