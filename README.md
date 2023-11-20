@@ -1860,6 +1860,24 @@ Example - Applying the state directly to the child content. Necessary here becau
 </ul>
 ```
 
+Example - State rule is using two class selectors, which is fine since it is the simplest way to target the fragment with the state applied to the top-level HTML element.
+
+```css
+/* fragment */
+.--btn__icon {
+}
+
+/* state */
+.--btn-selected > .--btn__icon {
+}
+```
+
+```html
+<button class="btn --btn-selected">
+  <span class="btn__icon"></span>
+</button>
+```
+
 #### Multiple states can be applied to the same content.
 
 > Specificity problems when using multiple states? Consider creating a new state instead.
@@ -2178,7 +2196,7 @@ Logical break-points are `640px` `768px` `1024px` `1280px` and `1440px`.
 }
 ```
 
-#### Prefer to define non-break-point media & container query rules in the order they are applied to the component's HTML structure.
+#### Prefer to define non-break-point media query rules and container query rules in the order they are applied to the component's HTML structure.
 
 Also, if they override styles from another rule, define them below the rule they are overriding.
 
@@ -2206,7 +2224,7 @@ Also, if they override styles from another rule, define them below the rule they
 }
 ```
 
-#### When overriding a style rule in a media & container query, write the overridden rule exactly as it appeared earlier.
+#### When overriding a style rule in a media query or container query, write the overridden rule exactly as it appeared earlier.
 
 > Why? This ensures that the specificity of the media query rule will be greater than the rule it is overriding.
 
