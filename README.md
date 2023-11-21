@@ -1111,7 +1111,7 @@ In other words, different rules for fonts, themes, globals, components, etc. can
 
 > Why? When building an application is can be difficult to completely control the order of style rules. This is especially true when multiple developers are working on the same project. CHESS makes it so the order of rules does not matter.
 
-#### Typically, it is best to declare fonts, globals, and theme rules early in your stylesheets.
+#### Prefer to declare fonts, globals, and theme rules early in your stylesheets.
 
 The more global a rule is, the earlier it should be declared in the document. For example, fonts are typically used by many components, so they should be declared early in the document. However, this is not required.
 
