@@ -2231,7 +2231,7 @@ Example - Documentation is useful here because the pseudo-element effect is not 
 
 ### Overrides
 
-These rules are designed to add or change style properties that were defined earlier. They `override` earlier-defined styles.
+These rules are designed to add styles or change style properties that were defined earlier. They `override` earlier-defined rules.
 
 #### Overrides use the same selectors as the rule they are overriding and apply new styles by either overriding existing styles or adding new ones.
 
