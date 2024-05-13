@@ -1546,7 +1546,7 @@ There does not need to be a mapping between a fragment rule and a single documen
 }
 ```
 
-#### Alternatively, a fragment may be defined with a single class selector formed by combining (1) the component name, (2) two underscores (\_\_), and (3) a fragment identifier.
+#### Alternatively, a fragment may be defined with a single class selector formed by combining (1) a fragment identifier, (2) two underscores (\_\_), and (3) the component name.
 
 Such fragments are called "named fragments."
 
@@ -1554,16 +1554,15 @@ Such fragments are called "named fragments."
 
 ```html
 <button class="fancy-button">
-  <span class="fancy-button__icon"><svg></svg></span>
+  <span class="icon__fancy-button"><svg></svg></span>
 </button>
 ```
 
 ```css
 .fancy-button {
-}
-
-/* named fragment */
-.fancy-button__icon {
+  /* named fragment */
+  .icon__fancy-button {
+  }
 }
 ```
 
@@ -1575,19 +1574,17 @@ In this way, a fragment is a type of sub-component.
 
 ```html
 <button class="fancy-button">
-  <span class="fancy-button__icon"><svg></svg></span>
+  <span class="icon__fancy-button"><svg></svg></span>
 </button>
 ```
 
 ```css
 .fancy-button {
-}
-
-.fancy-button__icon {
-}
-
-/* acceptable */
-.fancy-button__icon > svg {
+  .fancy-button__icon {
+    /* acceptable */
+    > svg {
+    }
+  }
 }
 ```
 
@@ -1695,13 +1692,13 @@ In other words, applying multiple fragments to the same content is discouraged.
 
 This section describes the portion of a component's style rules that are states.
 
-**.--(component)-(state)**<br>
-Example: `.--btn-error`
+**.(state)--(component)**<br>
+Example: `.error--btn`
 
 #### States:
 
 - **States are style rules that change the appearance, behavior or any other aspect of a component or a component's child content.**
-- **Prefer to define states by using a single class selector formed by combining (1) two hyphens (--), (2) the component name, (3) another hyphen (-), and (4) a state identifier. The state identifier should be a verbal or adjectival word.**
+- **Prefer to define states by using a single class selector formed by combining (1) a state identifier, (2) two hyphens (--), and (3) the component name. The state identifier should be a verbal or adjectival word.**
 - **Rules that use dynamic pseudo-classes (like `:hover`) are considered state rules.**
 
 States can be applied to any content in a component. This includes content already targeted by another rule, or any content not already targeted by another rule.
@@ -1717,7 +1714,7 @@ Prefer to use the simplest selectors possible that will not overmatch.
 }
 
 /* state */
-.--btn-selected {
+.selected--btn {
 }
 
 /* state */
@@ -1734,12 +1731,12 @@ They should not be used to style default or static styling.
 }
 
 /* state - added or removed based on whether the button is selected */
-.--btn-selected {
+.selected--btn {
 }
 ```
 
 ```html
-<div class="btn --btn-selected">Click to select</div>
+<div class="btn selected--btn">Click to select</div>
 ```
 
 #### States rules have the `!important` keyword appended to all property values.
@@ -1753,7 +1750,7 @@ They should not be used to style default or static styling.
 }
 
 /* state */
-.--btn-selected {
+.selected--btn {
   color: red !important;
 }
 ```
@@ -1768,7 +1765,7 @@ They should not be used to style default or static styling.
 }
 
 /* avoid */
-.--btn-focus:focus
+.focus--btn:focus
 
 /* good - states using pseudo-classes do not require a unique class name */
 .btn:focus {
@@ -1784,12 +1781,12 @@ Only apply the state directly to inner child content if necessary.
 Example - Applying the state alongside the defining rule and targeting inner content with selectors.
 
 ```css
-.--btn-selected svg {
+.selected--btn svg {
 }
 ```
 
 ```html
-<button class="btn --btn-selected">
+<button class="btn selected--btn">
   <svg></svg>
 </button>
 ```
@@ -1797,14 +1794,14 @@ Example - Applying the state alongside the defining rule and targeting inner con
 Example - Applying the state directly to the child content. Necessary here because there are an indeterminate number of list elements.
 
 ```css
-.--btn-selected {
+.selected--btn {
 }
 ```
 
 ```html
 <ul class="list">
   <li></li>
-  <li class="--list-selected"></li>
+  <li class="selected--list"></li>
   <li></li>
 </ul>
 ```
@@ -1813,17 +1810,17 @@ Example - State rule is using two class selectors, which is fine since it is the
 
 ```css
 /* fragment */
-.--btn__icon {
+.icon__btn {
 }
 
 /* state */
-.--btn-selected > .--btn__icon {
+.selected--btn > .icon__btn {
 }
 ```
 
 ```html
-<button class="btn --btn-selected">
-  <span class="btn__icon"></span>
+<button class="btn selected--btn">
+  <span class="icon__btn"></span>
 </button>
 ```
 
@@ -1848,7 +1845,7 @@ Example - State rule is using two class selectors, which is fine since it is the
 }
 
 /* state */
-.--btn-error svg {
+.error--btn svg {
 }
 ```
 
@@ -1860,23 +1857,23 @@ Example - State rule is using two class selectors, which is fine since it is the
 }
 
 /* state */
-.--btn-selected {
+.selected--btn {
 }
 
 /* state */
-.--btn-error {
+.error--btn {
 }
 ```
 
 ```html
 <!-- 
-  discouraged - states listed before defining rule and --btn-selected listed before
-  --btn-error
+  discouraged - states listed before defining rule and selected--btn listed before
+  error--btn
 -->
-<div class="--btn-selected --btn-error btn"></div>
+<div class="selected--btn error--btn btn"></div>
 
 <!-- preferred -->
-<div class="btn --btn-error --btn-selected"></div>
+<div class="btn error--btn selected--btn"></div>
 ```
 
 **[⬆ Table of Contents](#toc)**
@@ -1910,10 +1907,10 @@ See the examples below.
 .btn > span:first-child {
 }
 
-.btn__icon {
+.icon__btn {
 }
 
-.--btn-hover {
+.hover--btn {
 }
 
 /* composite component */
@@ -1929,11 +1926,11 @@ See the examples below.
 }
 
 /* overriding named fragment */
-.fancy-btn .btn__icon {
+.fancy-btn .icon__btn {
 }
 
 /* overriding state */
-.fancy-btn.--btn-hover {
+.fancy-btn.hover--btn {
 }
 ```
 
@@ -2261,6 +2258,41 @@ Example - Documentation is useful here because the pseudo-element effect is not 
 }
 ```
 
+#### If documenting a component's structure, use the following format:
+
+- **Write the type of HTML element next to a open bracket.**
+- **Next, write the component's defining rule class selector.**
+- **Add any structure, and indent to indicate child structure.**
+- **Do not write closing tags.**
+- **For named fragments, add the fragment name after the element type. Drop the component name.**
+- **Add states to the elements that may have them. Drop the component name.**
+- **Use () | \* ? {1} or other simple regex to indicate possible types and repetition.**
+- **Use # for comments.**
+
+Display structure comments above the component's defining rule.
+
+```css
+/*
+  <ul list state--list> # list component
+    <button? fragment__> # optional named fragment
+    <div*> # 0 or more divs
+    <button state-two--list>
+*/
+```
+
+```css
+/*
+  <* red> # component that can be any type
+    <**> # any type repeated 0 or more times
+*/
+```
+
+```css
+/*
+  <div|li list-item> # component that can be a div or li
+*/
+```
+
 #### When listing multiple components in a single file, consider adding a comment to separate them.
 
 ```css
@@ -2339,7 +2371,7 @@ Many rules that use animations will be component states.
 @keyframes spinning {
 }
 
-.--btn-spinning {
+.spinning--btn {
   animation-name: spinning;
 }
 
@@ -2347,8 +2379,8 @@ Many rules that use animations will be component states.
   preferred - animation has the same name and defined after the class that uses 
   it
 */
-.-btn-spinning {
-  animation-name: btn-spinning;
+.spinning--btn {
+  animation-name: spinning--btn;
 }
 
 @keyframes btn-spinning {
