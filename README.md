@@ -1100,6 +1100,25 @@ Shadow DOM is a great concept, but implementation considerations argue against i
 
 These principles taken too far will cause madness.
 
+#### Use CSS Nesting.
+
+Support is extremely good and it makes code more readable and concise.
+
+```css
+/* avoid */
+.btn {
+}
+
+.btn > div {
+}
+
+/* good */
+.btn {
+  > div {
+  }
+}
+```
+
 **[⬆ Table of Contents](#toc)**
 
 ---
@@ -1115,6 +1134,8 @@ In other words, different rules for fonts, themes, globals, components, etc. can
 #### Prefer to declare fonts, globals, and theme rules early in your stylesheets.
 
 The more global a rule is, the earlier it should be declared in the document. For example, fonts are typically used by many components, so they should be declared early in the document. However, this is not required.
+
+**[⬆ Table of Contents](#toc)**
 
 ---
 
@@ -1132,6 +1153,8 @@ The more global a rule is, the earlier it should be declared in the document. Fo
 ```
 
 **[⬆ Table of Contents](#toc)**
+
+---
 
 ### Themes
 
@@ -1436,8 +1459,10 @@ However, it still must be applied to HTML content.
 ```css
 /* component "btn" - no defining rule */
 
-/* fragment */
-.btn a {
+.btn {
+  /* fragment */
+  a {
+  }
 }
 ```
 
@@ -1490,8 +1515,9 @@ Prefer to use the simplest selectors possible that will not overmatch. Each rule
 .btn {
 }
 
-/* fragment - type selector and combinator to target the svg */
-.btn svg:first-of-type {
+.btn {
+  /* fragment - type selector and combinator to target the svg */
+  svg: first-of-type;
 }
 ```
 
@@ -1514,8 +1540,9 @@ Being very precise with type selectors, combinators, and pseudo-classes can nega
 .footer {
 }
 
-/* fragment - very specific to match exactly - uses a single class selector */
-.footer > tbody > tr > td:first-of-type {
+.footer {
+  /* fragment - very specific to match exactly - uses a single class selector */
+  > tbody > tr > td:first-of-type
 }
 ```
 
@@ -1541,8 +1568,9 @@ There does not need to be a mapping between a fragment rule and a single documen
 .footer {
 }
 
-/* fragment - matches five elements */
-.footer > tbody > tr > td {
+.footer {
+  /* fragment - matches five elements */
+  > tbody > tr > td
 }
 ```
 
@@ -1592,18 +1620,17 @@ In this way, a fragment is a type of sub-component.
 
 ```css
 .btn {
-}
+  /* fragment - using a pseudo-element selector */
+  &::before {
+  }
 
-/* fragment - using a pseudo-element selector */
-.btn::before {
-}
+  /* fragment - using a pseudo-element selector */
+  > div::after {
+  }
 
-/* fragment - using a pseudo-element selector */
-.btn > div::after {
-}
-
-/* fragment - using a pseudo-element selector */
-.btn table a::first-letter {
+  /* fragment - using a pseudo-element selector */
+  table a::first-letter {
+  }
 }
 ```
 
@@ -1611,20 +1638,21 @@ In this way, a fragment is a type of sub-component.
 
 ```css
 .btn {
-}
+  /* avoid - fragments defined out of order */
+  span:last-child {
+  }
 
-/* avoid - fragments defined out of order */
-.btn span:last-child {
-}
-
-.btn span:first-child {
+  span:first-child {
+  }
 }
 
 /* good - fragments defined in the same order they appear in the html */
-.btn span:first-child {
-}
+.btn {
+  span:first-child {
+  }
 
-.btn span:last-child {
+  span:last-child {
+  }
 }
 ```
 
@@ -1645,7 +1673,9 @@ In other words, the existence of a fragment does not mean it must be applied to 
 }
 
 /* fragment - optional; only applied if the button has an icon */
-.btn svg {
+.btn {
+  svg {
+  }
 }
 ```
 
@@ -1674,9 +1704,11 @@ In other words, applying multiple fragments to the same content is discouraged.
 ```css
 /* discouraged - multiple fragments will target the same content */
 .btn svg {
-}
+  svg {
+  }
 
-.btn > * {
+  & > * {
+  }
 }
 ```
 
@@ -1699,7 +1731,7 @@ Example: `.error--btn`
 
 - **States are style rules that change the appearance, behavior or any other aspect of a component or a component's child content.**
 - **Prefer to define states by using a single class selector formed by combining (1) a state identifier, (2) two hyphens (--), and (3) the component name. The state identifier should be a verbal or adjectival word.**
-- **Rules that use dynamic pseudo-classes (like `:hover`) are considered state rules.**
+- **Rules that use dynamic pseudo-classes (like `:hover` or `:has`) are considered state rules.**
 
 States can be applied to any content in a component. This includes content already targeted by another rule, or any content not already targeted by another rule.
 
@@ -1711,48 +1743,50 @@ Prefer to use the simplest selectors possible that will not overmatch.
 
 ```css
 .btn {
-}
+  && {
+    /* state */
+    &.selected--btn {
+    }
 
-/* state */
-.selected--btn {
-}
-
-/* state */
-.btn:focus {
+    /* state */
+    &&:focus {
+    }
+  }
 }
 ```
 
-#### States are applied to content for styling that may change during runtime.
+#### States are applied to content for styling that may change during runtime for initial configuration.
 
-They should not be used to style default or static styling.
+In other more simple terms, a state is for anything that may vary either when created or change in realtime due to user interaction.
+
+They should not be used for default styling.
 
 ```css
 .btn {
+  && {
+    /* 
+      state - added or removed based on whether the button is selected 
+      (changing content) 
+    */
+    &.selected--btn {
+    }
+  }
 }
 
-/* state - added or removed based on whether the button is selected */
-.selected--btn {
+.user {
+  && {
+    /* 
+      state - added or removed based on whether the user is banned 
+      (configuration) 
+    */
+    &.banned--user {
+    }
+  }
 }
 ```
 
 ```html
 <div class="btn selected--btn">Click to select</div>
-```
-
-#### States rules have the `!important` keyword appended to all property values.
-
-> Why? Since states need higher specificity than composites and extensions (more on these later).
-
-> Isn't `!important` evil? Usage of `!important` within the context of CHESS is safe because the risk of overmatching is contained.
-
-```css
-.btn {
-}
-
-/* state */
-.selected--btn {
-  color: red !important;
-}
 ```
 
 #### States that use pseudo-classes do not require a unique class name.
@@ -1765,10 +1799,19 @@ They should not be used to style default or static styling.
 }
 
 /* avoid */
-.focus--btn:focus
+.btn {
+  && {
+    &.focus--btn:focus {
+    }
+  }
+}
 
 /* good - states using pseudo-classes do not require a unique class name */
-.btn:focus {
+.btn {
+  && {
+    &:focus {
+    }
+  }
 }
 ```
 
@@ -1809,12 +1852,16 @@ Example - Applying the state directly to the child content. Necessary here becau
 Example - State rule is using two class selectors, which is fine since it is the simplest way to target the fragment with the state applied to the top-level HTML element.
 
 ```css
-/* fragment */
-.icon__btn {
-}
+.btn {
+  /* fragment */
+  .icon__btn {
+  }
 
-/* state */
-.selected--btn > .icon__btn {
+  /* state */
+  && {
+    &.selected--btn > .icon__btn {
+    }
+  }
 }
 ```
 
@@ -1834,18 +1881,18 @@ Example - State rule is using two class selectors, which is fine since it is the
 
 ```css
 .btn {
-}
+  /* fragment */
+  svg {
+  }
 
-/* fragment */
-.btn svg {
-}
+  /* states */
+  && {
+    &:focus {
+    }
 
-/* state */
-.btn:focus {
-}
-
-/* state */
-.error--btn svg {
+    &.error--btn svg {
+    }
+  }
 }
 ```
 
@@ -1854,14 +1901,13 @@ Example - State rule is using two class selectors, which is fine since it is the
 ```css
 /* component */
 .btn {
-}
+  && {
+    .selected--btn {
+    }
 
-/* state */
-.selected--btn {
-}
-
-/* state */
-.error--btn {
+    .error--btn {
+    }
+  }
 }
 ```
 
@@ -1897,40 +1943,40 @@ See the examples below.
 
 > Why use composites? When creating a composite prevents defining significant amounts of redundant styling. Do not abuse the concept for the same reasons we avoid treacherous class hierarchies when programming.
 
-> How are composites different from states? States are used to change styling at runtime due to user interaction or application state changes. Composites are used to create new components that inherit styling from other components.
+> Wht not just use states instead? Why use a composite? Composites are defined externally from the super component in a new file. Being in a new file can be useful when creating a new Javascript-based component or when creating new components based on a library. Otherwise, if building a component from scratch, prefer states.
 
 ```css
 /* composed component */
 .btn {
-}
+  & > span:first-child {
+  }
 
-.btn > span:first-child {
-}
+  .icon__btn {
+  }
 
-.icon__btn {
-}
-
-.hover--btn {
+  .hover--btn {
+  }
 }
 
 /* composite component */
 .fancy-btn.btn {
-}
+  /* new composite fragment rule - not overriding */
+  &::before {
+  }
 
-/* new composite fragment rule - not overriding */
-.fancy-btn::before {
-}
+  /* overriding fragment */
+  & > span:first-child {
+  }
 
-/* overriding fragment */
-.fancy-btn.btn > span:first-child {
-}
+  /* overriding named fragment */
+  & .icon__btn {
+  }
 
-/* overriding named fragment */
-.fancy-btn .icon__btn {
-}
-
-/* overriding state */
-.fancy-btn.hover--btn {
+  /* overriding state */
+  && {
+    &.hover--btn {
+    }
+  }
 }
 ```
 
@@ -1946,35 +1992,6 @@ See the examples below.
 
 /* good - composite class selector before composed component's defining rule */
 .fancy-btn.btn {
-}
-```
-
-#### When adding rules to a composite that do not override styles from the composed component, one does not need to write the composed component's defining rule.
-
-```css
-/* composed component */
-.btn {
-}
-
-.btn > span {
-}
-
-/* composite component */
-.fancy-btn.btn {
-}
-
-/* 
-  both defining rules are required because the composed styling is being 
-  overridden 
-*/
-.fancy-btn.btn > span {
-}
-
-/* 
-  only the composite defining rule is required because the composed styling is 
-  not being overridden 
-*/
-.fancy-btn > a {
 }
 ```
 
@@ -2004,7 +2021,9 @@ Such rules will typically have two class selectors.
 }
 
 /* extension */
-.outer .inner {
+.outer {
+  .inner {
+  }
 }
 ```
 
@@ -2018,7 +2037,7 @@ Such rules will typically have two class selectors.
 
 Fragments and extensions are both defined in the order they target HTML structure.
 
-States are defined below fragments and extensions.
+Extensions are defined below fragments and above states.
 
 ```html
 <div class="parent">
@@ -2030,22 +2049,20 @@ States are defined below fragments and extensions.
 ```css
 /* avoid - extension should be below the fragment */
 .parent {
-}
+  .child {
+  }
 
-.parent .child {
-}
-
-.parent > span {
+  > span {
+  }
 }
 
 /* good */
 .parent {
-}
+  > span {
+  }
 
-.parent > span {
-}
-
-.parent .child {
+  .child {
+  }
 }
 ```
 
@@ -2066,10 +2083,16 @@ Extensions may only target the defining rule for nested components.
 
 ```css
 /* avoid - fragment overmatches span in the child component */
-.parent span 
+.parent {
+  span {
+  }
+}
 
 /* good */
-.parent > span;
+.parent {
+  > span {
+  }
+}
 ```
 
 #### Extensions that target inner composites include the defining rules from the composite and the composed component.
@@ -2081,11 +2104,15 @@ Extensions may only target the defining rule for nested components.
 }
 
 /* avoid */
-.parent > .toggle-button {
+.parent {
+  > .toggle-button {
+  }
 }
 
 /* good */
-.parent > .toggle-button.button {
+.parent {
+  > .toggle-button.button {
+  }
 }
 ```
 
@@ -2121,7 +2148,7 @@ Signals do not break encapsulation of components because signals are opt-in. A c
 }
 ```
 
-#### Define signal rules below states and above media queries.
+#### Define signal rules below extensions and above media queries.
 
 > Why? Defining signals below other rules indicates they are meant to add or modify styles from other rules.
 
@@ -2144,7 +2171,11 @@ Signals do not break encapsulation of components because signals are opt-in. A c
 
 ### Media & Container Queries
 
-#### Media break-points are defined at the bottom of a component's styles. Use a mobile-first strategy by writing break-points in ascending `min-width:` order.
+#### Media queries are defined at the bottom of a component's styles.
+
+> Why? Media queries are used to change styles based on the device's screen size. By defining them at the bottom of a component's styles, it is easier to see how the component's styles change based on the screen size.
+
+#### Use a mobile-first strategy for media break-points by writing break-points in ascending `min-width:` order.
 
 Logical break-points are `640px` `768px` `1024px` `1280px` and `1440px`.
 
@@ -2194,45 +2225,29 @@ Logical break-points are `640px` `768px` `1024px` `1280px` and `1440px`.
 }
 ```
 
-#### Prefer to define non-break-point media query rules and container query rules in the order they are applied to the component's HTML structure.
-
-Also, if they override styles from another rule, define them below the rule they are overriding.
-
-```css
-.btn {
-}
-
-/* define below the overridden rule */
-@media (hover: hover) {
-  .btn:hover {
-    background: yellow;
-  }
-}
-
-.btn > div a {
-}
-
-/* define below the rule being overridden */
-@media only screen and (orientation: landscape) {
-  .btn > div a {
-  }
-}
-
-.btn svg {
-}
-```
-
 #### When overriding a style rule inside a media query or container query, write the overridden rule exactly as it appeared earlier.
 
 > Why? This ensures that the specificity of the media query rule will be greater than the rule it is overriding.
 
 ```css
-.btn div > div > div:first-of-type {
+.btn {
+  div {
+    > div {
+      > div:first-of-type {
+      }
+    }
+  }
 }
 
 @media (min-width: 1024px) {
   /* write the rule being overridden exactly as above */
-  .btn div > div > div:first-of-type {
+  .btn {
+    div {
+      > div {
+        > div:first-of-type {
+        }
+      }
+    }
   }
 }
 ```
@@ -2371,19 +2386,27 @@ Many rules that use animations will be component states.
 @keyframes spinning {
 }
 
-.spinning--btn {
-  animation-name: spinning;
+.btn {
+  && {
+    &.spinning--btn {
+      animation-name: spinning;
+    }
+  }
 }
 
 /* 
   preferred - animation has the same name and defined after the class that uses 
   it
 */
-.spinning--btn {
-  animation-name: spinning--btn;
+.btn {
+  && {
+    &.spinning--btn {
+      animation-name: spinning--btn;
+    }
+  }
 }
 
-@keyframes btn-spinning {
+@keyframes spinning--btn {
 }
 ```
 
