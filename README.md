@@ -1594,7 +1594,7 @@ Such fragments are called "named fragments."
 }
 ```
 
-#### Named fragments can use additional selectors to select the child content.
+#### Fragments can use additional selectors to select the child content.
 
 In this way, a fragment is a type of sub-component.
 
@@ -1877,20 +1877,29 @@ Example - State rule is using two class selectors, which is fine since it is the
 
 #### Define states below fragments.
 
+Even if a fragment has a state applied directly to it, the state should be defined in the state section of the component.
+
 > Why? Since states can modify fragments or target unstyled content, it can be tricky to determine where to locate them. For simplicity, put them below fragments.
 
 ```css
+/* avoid */
 .btn {
-  /* fragment */
+  /* state nested within fragment */
+  svg {
+    && {
+      :focus {
+      }
+    }
+  }
+}
+
+/* good */
+.btn {
   svg {
   }
 
-  /* states */
   && {
-    &:focus {
-    }
-
-    &.error--btn svg {
+    svg:focus {
     }
   }
 }
@@ -2377,7 +2386,9 @@ These are the only rules where order matters.
 
 ### Animations
 
-#### Prefer to give an animation the same name as the class that uses it. Define the animation immediately following the rule that uses it. If more than one rule uses the animation then define the animation after the first rule that uses it.
+#### Prefer to give an animation the same name as the class that uses it. Define the animation immediately following the component.
+
+Note that `@keyframes` rules cannot be defined nested within a component. They are defined after the component that uses them.
 
 Many rules that use animations will be component states.
 
