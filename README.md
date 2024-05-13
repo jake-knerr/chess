@@ -48,9 +48,10 @@ Jake Knerr © Ardisia Labs LLC
   - [Components - States](#components---states)
   - [Components - Composites](#components---composites)
   - [Components - Extensions](#components---extensions)
-  - [Signals](#signals)
-  - [Media \& Container Queries](#media--container-queries)
+  - [Components - Signals](#components---signals)
+  - [Components - Media \& Container Queries](#components---media--container-queries)
   - [Components - Documenting Components](#components---documenting-components)
+  - [Components - Additional Notes and Guidelines](#components---additional-notes-and-guidelines)
   - [Overrides](#overrides)
   - [Animations](#animations)
 - [Miscellaneous](#miscellaneous)
@@ -1947,6 +1948,7 @@ Composites can add new rules or override existing composed component rules.
 - **Define a composite class selector by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the super/composed component.**
 - **Start each rule with the composite class selector. If overriding styles from the composed component then also add its defining rule class selector.**
 - **Apply the class selectors for the composite and the composed component together to HTML content. Write the composite class after the composed component class in HTML.**
+- **Write overridden rules before new rules.**
 
 See the examples below.
 
@@ -1969,10 +1971,6 @@ See the examples below.
 
 /* composite component */
 .fancy-btn.btn {
-  /* new composite fragment rule - not overriding */
-  &::before {
-  }
-
   /* overriding fragment */
   & > span:first-child {
   }
@@ -1985,6 +1983,10 @@ See the examples below.
   && {
     &.hover--btn {
     }
+  }
+
+  /* new composite fragment rule - not overriding */
+  &::before {
   }
 }
 ```
@@ -2129,7 +2131,7 @@ Extensions may only target the defining rule for nested components.
 
 ---
 
-### Signals
+### Components - Signals
 
 **.\_\_(signals-name)**<br>
 Example: `.__dark-theme`
@@ -2178,7 +2180,7 @@ Signals do not break encapsulation of components because signals are opt-in. A c
 
 ---
 
-### Media & Container Queries
+### Components - Media & Container Queries
 
 #### Media queries are defined at the bottom of a component's styles.
 
@@ -2328,6 +2330,59 @@ Display structure comments above the component's defining rule.
 .simple-btn {
 }
 ```
+
+**[⬆ Table of Contents](#toc)**
+
+---
+
+### Components - Additional Notes and Guidelines
+
+#### Structure Overview:
+
+```css
+.defining-rule {
+  /* fragments */
+  div {
+  }
+
+  .fragment__defining-rule {
+    > span {
+    }
+  }
+
+  /* states */
+  && {
+    &.state__defining-rule {
+    }
+
+    .state-2__defining-rule div {
+    }
+  }
+
+  /* extensions */
+  .inner-component {
+  }
+
+  /* signals opt-ins */
+  .signal {
+    & {
+      color: red;
+    }
+  }
+
+  /* media & container queries */
+  @media (min-width: 640px) {
+  }
+}
+
+/* animations */
+@keyframes state {
+}
+```
+
+#### All rule declarations should only have a maximum of one class selector.
+
+Their specificity can be higher, but only a single class selector should be written in the rule. If not, nest the rule and use the `&` selector to target the parent class.
 
 **[⬆ Table of Contents](#toc)**
 
