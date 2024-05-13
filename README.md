@@ -48,6 +48,7 @@ Jake Knerr © Ardisia Labs LLC
   - [Components - States](#components---states)
   - [Components - Composites](#components---composites)
   - [Components - Extensions](#components---extensions)
+  - [Signals](#signals)
   - [Media \& Container Queries](#media--container-queries)
   - [Components - Documenting Components](#components---documenting-components)
   - [Overrides](#overrides)
@@ -1178,11 +1179,9 @@ Side effects are styles that when changed force changes in other styles. An exam
 }
 ```
 
-#### If multiple themes must be available at runtime, append a descriptive class to the _:root_ selector for each additional theme.
+#### For multiple themes, use a _signal_ to trigger a particular theme.
 
-Add the theme to the document by adding the theme class to the `html` element.
-
-> Why? Users may be able to change themes at runtime.
+More on [signals](#signals) later in this document.
 
 ```css
 /* default theme */
@@ -1190,13 +1189,13 @@ Add the theme to the document by adding the theme class to the `html` element.
   --accent-color: red;
 }
 
-.dark:root {
+.__dark:root {
   --accent-color: blue;
 }
 ```
 
 ```html
-<html class="dark">
+<html class="__dark">
   <head></head>
   <body></body>
 </html>
@@ -2090,6 +2089,55 @@ Extensions may only target the defining rule for nested components.
 
 /* good */
 .parent > .toggle-button.button {
+}
+```
+
+**[⬆ Table of Contents](#toc)**
+
+---
+
+### Signals
+
+**.\_\_(signals-name)**<br>
+Example: `.__dark-theme`
+
+#### Signals:
+
+- **Signals are classes added to the document element that can be used to add or override styles in any other style rule.**
+- **Signals are named by prefixing a double underscore (\_\_) to a descriptive name. Signals use train-case to separate words.**
+
+Signals do not break encapsulation of components because signals are opt-in. A component must be designed to use signals.
+
+> Why use signals? Because a signal can be added once in the document and trigger style changes anywhere in the document. Sometimes, adding states for all style changes either does not work or is unwieldy. A good example is themes. If every component needed states to accommodate every theme, the document would be unmanageable.
+
+```css
+.__dark-theme {
+  /* overriding theme variables */
+  --background-color: black;
+}
+
+.btn {
+  &.__dark-theme {
+    /* overriding component styles */
+    color: white;
+  }
+}
+```
+
+#### Define signal rules below states and above media queries.
+
+> Why? Defining signals below other rules indicates they are meant to add or modify styles from other rules.
+
+```css
+.btn {
+  && {
+    &:hover {
+    }
+  }
+
+  /* signals */
+  .__dark-theme {
+  }
 }
 ```
 
