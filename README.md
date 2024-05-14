@@ -1271,7 +1271,7 @@ Signals do not break encapsulation of style rules because signals are opt-in. St
 ```css
 /* theme example */
 :root {
-  .__dark-theme & {
+  &.__dark-theme {
     /* overriding theme variables */
     --background-color: black;
   }
