@@ -51,7 +51,6 @@ Jake Knerr © Ardisia Labs LLC
   - [Components - Signals](#components---signals)
   - [Components - Media \& Container Queries](#components---media--container-queries)
   - [Components - Documenting Components](#components---documenting-components)
-  - [Components - Additional Notes and Guidelines](#components---additional-notes-and-guidelines)
   - [Signals](#signals)
   - [Overrides](#overrides)
   - [Animations](#animations)
@@ -1344,6 +1343,51 @@ Example: `.btn-huge`
 
 This section is typically the most substantial portion of an application's styles.
 
+#### Component Structure Overview:
+
+```css
+.defining-rule {
+  /* fragments */
+  div {
+  }
+
+  .fragment__defining-rule {
+    > span {
+    }
+  }
+
+  /* states */
+  && {
+    &.state__defining-rule {
+    }
+
+    > .state-2__defining-rule div {
+    }
+  }
+
+  /* extensions */
+  .inner-component {
+  }
+
+  /* signals opt-ins */
+  .__signal & {
+    div {
+      color: red;
+    }
+  }
+
+  /* media & container queries */
+  @media (min-width: 640px) {
+    & {
+    }
+  }
+}
+
+/* animations */
+@keyframes state {
+}
+```
+
 #### A component is a set of related style rules that are applied as a group to document content.
 
 > Why the name _component_? CHESS's concept of components is well suited for documents built using a view-component-based design since each view-component object can be coupled with a CHESS component to encapsulate styling.
@@ -1476,6 +1520,10 @@ However, it still must be applied to HTML content.
   <a></a>
 </div>
 ```
+
+#### All rule declarations should only have a maximum of one class selector.
+
+Their specificity can be higher, but only a single class selector should be written in each rule. If not, nest the rule and use the `&` selector to target the parent class.
 
 #### (Optional) Consider adding a namespace prefix to a component's class names to help avoid style collisions with other components, libraries, and any other styling present in the document.
 
@@ -1921,6 +1969,27 @@ Even if a fragment has a state applied directly to it, the state should be defin
 }
 ```
 
+#### Prefer to define states inside a double `&&` block.
+
+> Why? This ensures the necessary specificity and provides an indented block that makes state code more readable.
+
+```css
+/* discouraged */
+.btn {
+  &&.selected--btn {
+  }
+}
+
+/* preferred */
+.btn {
+  && {
+    /* state */
+    &.selected--btn {
+    }
+  }
+}
+```
+
 #### In HTML, prefer to write state classes after other classes. If multiple states are applied, prefer to sort them by the name of the states alphanumerically, left-to-right.
 
 ```css
@@ -2148,6 +2217,27 @@ Extensions may only target the defining rule for nested components.
 
 ### Components - Signals
 
+#### Define signals below extensions.
+
+```css
+.btn {
+  > span {
+  }
+
+  && {
+    &.selected--btn {
+    }
+  }
+
+  .__dark-theme & {
+    && {
+      &.selected--btn {
+      }
+    }
+  }
+}
+```
+
 **[⬆ Table of Contents](#toc)**
 
 ---
@@ -2166,44 +2256,45 @@ Logical break-points are `640px` `768px` `1024px` `1280px` and `1440px`.
 
 ```css
 .btn {
-}
-
-.btn:focus {
-}
-
-/* after all component rules define break-points */
-
-/* lowest resolution break-point */
-@media (min-width: 640px) {
-  .btn {
+  && {
+    &:focus {
+    }
   }
 
-  .btn:focus {
-  }
-}
+  /* after all component rules define break-points */
 
-@media (min-width: 768px) {
-  .btn {
-  }
+  /* lowest resolution break-point */
+  @media (min-width: 640px) {
+    .btn {
+    }
 
-  .btn:focus {
-  }
-}
-
-@media (min-width: 1024px) {
-  .btn {
+    .btn:focus {
+    }
   }
 
-  .btn:focus {
-  }
-}
+  @media (min-width: 768px) {
+    .btn {
+    }
 
-/* ascending order */
-@media (min-width: 1280px) {
-  .btn {
+    .btn:focus {
+    }
   }
 
-  .btn:focus {
+  @media (min-width: 1024px) {
+    .btn {
+    }
+
+    .btn:focus {
+    }
+  }
+
+  /* ascending order */
+  @media (min-width: 1280px) {
+    .btn {
+    }
+
+    .btn:focus {
+    }
   }
 }
 ```
@@ -2220,14 +2311,14 @@ Logical break-points are `640px` `768px` `1024px` `1280px` and `1440px`.
       }
     }
   }
-}
 
-@media (min-width: 1024px) {
-  /* write the rule being overridden exactly as above */
-  .btn {
-    div {
-      > div {
-        > div:first-of-type {
+  @media (min-width: 1024px) {
+    /* write the rule being overridden exactly as above */
+    .btn {
+      div {
+        > div {
+          > div:first-of-type {
+          }
         }
       }
     }
@@ -2249,10 +2340,11 @@ Example - Documentation is useful here because the pseudo-element effect is not 
 
 ```css
 .btn {
-}
-
-/* ripple effect */
-.btn:before {
+  /* ripple effect */
+  && {
+    .btn:before {
+    }
+  }
 }
 ```
 
@@ -2268,6 +2360,8 @@ Example - Documentation is useful here because the pseudo-element effect is not 
 - **Use # for comments.**
 
 Display structure comments above the component's defining rule.
+
+Do not worry about being too detailed. The goal is to give a general idea of the component's structure.
 
 ```css
 /*
@@ -2302,59 +2396,6 @@ Display structure comments above the component's defining rule.
 .simple-btn {
 }
 ```
-
-**[⬆ Table of Contents](#toc)**
-
----
-
-### Components - Additional Notes and Guidelines
-
-#### Structure Overview:
-
-```css
-.defining-rule {
-  /* fragments */
-  div {
-  }
-
-  .fragment__defining-rule {
-    > span {
-    }
-  }
-
-  /* states */
-  && {
-    &.state__defining-rule {
-    }
-
-    .state-2__defining-rule div {
-    }
-  }
-
-  /* extensions */
-  .inner-component {
-  }
-
-  /* signals opt-ins */
-  .signal {
-    & {
-      color: red;
-    }
-  }
-
-  /* media & container queries */
-  @media (min-width: 640px) {
-  }
-}
-
-/* animations */
-@keyframes state {
-}
-```
-
-#### All rule declarations should only have a maximum of one class selector.
-
-Their specificity can be higher, but only a single class selector should be written in the rule. If not, nest the rule and use the `&` selector to target the parent class.
 
 **[⬆ Table of Contents](#toc)**
 
