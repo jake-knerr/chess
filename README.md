@@ -2036,6 +2036,28 @@ Example - State rule is using two class selectors, which is fine since it is the
 </button>
 ```
 
+#### When a state's styles cascade down to inner content, prefer to write the optional `&` selector.
+
+> Why? This makes the state's purpose more clear.
+
+```css
+/* discouraged */
+.btn {
+  && {
+    .selected--btn {
+    }
+  }
+}
+
+/* preferable - explicitly put the & */
+.btn {
+  && {
+    & .selected--btn {
+    }
+  }
+}
+```
+
 #### Multiple states can be applied to the same content.
 
 > Specificity problems when using multiple states? Consider creating a new state instead.
