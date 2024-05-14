@@ -2608,7 +2608,7 @@ If in a pinch, an easy way to raise CSS specificity is by repeating class select
 .btn.btn {
 }
 
-.btn.btn--focused {
+.btn.focused--btn {
 }
 ```
 
@@ -2618,7 +2618,7 @@ Do not concern yourself with selector performance. The runtime difference betwee
 
 > Where are the utility rules?
 
-Inclusion of utility rules would impose rule ordering, which CHESS proscribes. Instead of utilities, use theming rules.
+Inclusion of utility rules would impose more strict rule ordering, which CHESS proscribes. Instead of utilities, use theming rules.
 
 ### Comparison To BEM
 
