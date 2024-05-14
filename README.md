@@ -1300,10 +1300,10 @@ Signals do not break encapsulation of style rules because signals are opt-in. St
 
 This section contains style rules that are applied to elements across the entire document. This includes _reset_ rules.
 
-#### A global style rule, or _global_ has the specificity of a single simple selector:
+#### A global style rule, or _global_ has the specificity of a simple selector:
 
-- **A single [universal](https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors) selector; or**
-- **A single [type](https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors) selector.**
+- **A [universal](https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors) selector; or**
+- **A [type](https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors) selector.**
 
 **Global styles are applied to elements across the entire document.**
 
@@ -1334,7 +1334,9 @@ div {
 }
 ```
 
-#### Global rules can use additional selectors, but they must be contained within a `:where` pseudo-class function. The specificity of a global rule must not be greater than a single type selector.
+#### Global rules can use additional selectors like class selectors, but they must be contained within a `:where` pseudo-class function. The specificity of a global rule must not be greater than a type selector.
+
+It is acceptable for a rule to have a specificity of multiple type selectors.
 
 > Why? Global rules can be useful to prevent redefining the same styles over and over, but their specificity must remain low so components can predictably override them.
 
@@ -1350,13 +1352,19 @@ div#logo {
 }
 
 /* acceptable */
-div:where(.error) {
+div {
+  &:where(.error) {
+  }
 }
 
-input:where([type="email"]) {
+input {
+  &:where([type="email"]) {
+  }
 }
 
-div:where(#logo) {
+div {
+  &:where(#logo) {
+  }
 }
 ```
 
