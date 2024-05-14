@@ -1266,13 +1266,15 @@ Signals do not break encapsulation of style rules because signals are opt-in. St
 
 > Why use signals? Because a signal can be added once in the document and trigger style changes anywhere in the document. Sometimes, adding states for all style changes either does not work or is unwieldy. A good example is themes. If every component needed states to accommodate every theme, the document would be unmanageable.
 
-> Why are they called signals? Because they signal to other style rules that they should change their styles. Think of the document CSS system being a large observer pattern and the signals are events.
+> Why are they called signals? Because they signal to other style rules that they should change their styles. Think of the document CSS system being a large observer pattern and signals are events.
 
 ```css
 /* theme example */
-.__dark-theme {
-  /* overriding theme variables */
-  --background-color: black;
+:root {
+  .__dark-theme & {
+    /* overriding theme variables */
+    --background-color: black;
+  }
 }
 
 /* component example */
@@ -1285,7 +1287,9 @@ Signals do not break encapsulation of style rules because signals are opt-in. St
 ```
 
 ```html
-<html class="__dark-theme"></html>
+<html class="__dark-theme">
+  <button class="btn"></button>
+</html>
 ```
 
 **[⬆ Table of Contents](#toc)**
