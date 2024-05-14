@@ -42,6 +42,7 @@ Jake Knerr © Ardisia Labs LLC
   - [Rule Order](#rule-order)
   - [Fonts](#fonts)
   - [Themes](#themes)
+  - [Signals](#signals)
   - [Globals](#globals)
   - [Components](#components)
   - [Components - Fragments](#components---fragments)
@@ -51,7 +52,6 @@ Jake Knerr © Ardisia Labs LLC
   - [Components - Signals](#components---signals)
   - [Components - Media \& Container Queries](#components---media--container-queries)
   - [Components - Documenting Components](#components---documenting-components)
-  - [Signals](#signals)
   - [Overrides](#overrides)
   - [Animations](#animations)
 - [Miscellaneous](#miscellaneous)
@@ -1252,6 +1252,46 @@ More on [signals](#signals) later in this document.
 
 ---
 
+### Signals
+
+**.\_\_(signals-name)**<br>
+Example: `.__dark-theme`
+
+#### Signals:
+
+- **Signals are classes added to the document element that can be used to add or override styles in any other style rule.**
+- **Signals are named by prefixing a double underscore (\_\_) to a descriptive name. Signals use train-case to separate words.**
+
+Signals do not break encapsulation of style rules because signals are opt-in. Style rules must be designed to use signals. In other words, signals do not directly provide styles.
+
+> Why use signals? Because a signal can be added once in the document and trigger style changes anywhere in the document. Sometimes, adding states for all style changes either does not work or is unwieldy. A good example is themes. If every component needed states to accommodate every theme, the document would be unmanageable.
+
+> Why are they called signals? Because they signal to other style rules that they should change their styles. Think of the document CSS system being a large observer pattern and the signals are events.
+
+```css
+/* theme example */
+.__dark-theme {
+  /* overriding theme variables */
+  --background-color: black;
+}
+
+/* component example */
+.btn {
+  .__dark-theme & {
+    /* overriding component styles */
+    color: white;
+  }
+}
+```
+
+```html
+<html class="__dark-theme"></html>
+```
+
+**[⬆ Table of Contents](#toc)**
+
+---
+
 ### Globals
 
 This section contains style rules that are applied to elements across the entire document. This includes _reset_ rules.
@@ -2395,46 +2435,6 @@ Do not worry about being too detailed. The goal is to give a general idea of the
 /* simple-btn */
 .simple-btn {
 }
-```
-
-**[⬆ Table of Contents](#toc)**
-
----
-
-### Signals
-
-**.\_\_(signals-name)**<br>
-Example: `.__dark-theme`
-
-#### Signals:
-
-- **Signals are classes added to the document element that can be used to add or override styles in any other style rule.**
-- **Signals are named by prefixing a double underscore (\_\_) to a descriptive name. Signals use train-case to separate words.**
-
-Signals do not break encapsulation of style rules because signals are opt-in. Style rules must be designed to use signals. In other words, signals do not directly provide styles.
-
-> Why use signals? Because a signal can be added once in the document and trigger style changes anywhere in the document. Sometimes, adding states for all style changes either does not work or is unwieldy. A good example is themes. If every component needed states to accommodate every theme, the document would be unmanageable.
-
-> Why are they called signals? Because they signal to other style rules that they should change their styles. Think of the document CSS system being a large observer pattern and the signals are events.
-
-```css
-/* theme example */
-.__dark-theme {
-  /* overriding theme variables */
-  --background-color: black;
-}
-
-/* component example */
-.btn {
-  .__dark-theme & {
-    /* overriding component styles */
-    color: white;
-  }
-}
-```
-
-```html
-<html class="__dark-theme"></html>
 ```
 
 **[⬆ Table of Contents](#toc)**
