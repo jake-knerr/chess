@@ -1567,12 +1567,14 @@ However, it still must be applied to HTML content.
 </div>
 ```
 
-#### All rule declarations should only have a maximum of one class selector.
+#### Rule aggregate selectors should only have a single class selector.
 
-Their specificity can be higher, but only a single class selector should be written in each rule. If not, nest the rule and use the `&` selector to target the parent class.
+If not, nest the rule and use the `&` selector to target the parent class.
+
+The aggregate selector specificity can be higher though.
 
 ```css
-/* avoid - multiple class selectors */
+/* avoid - multiple class selectors in a single aggregate selector */
 .btn .btn__icon {
 }
 
@@ -1948,7 +1950,11 @@ Only apply the state directly to inner child content if necessary.
 Example - Applying the state alongside the defining rule and targeting inner content with selectors.
 
 ```css
-.selected--btn svg {
+.btn {
+  && {
+    &.selected--btn svg {
+    }
+  }
 }
 ```
 
@@ -1961,14 +1967,18 @@ Example - Applying the state alongside the defining rule and targeting inner con
 Example - Applying the state directly to the child content. Necessary here because there are an indeterminate number of list elements.
 
 ```css
-.selected--btn {
+.btn {
+  && {
+    & > .selected-item--list {
+    }
+  }
 }
 ```
 
 ```html
 <ul class="list">
   <li></li>
-  <li class="selected--list"></li>
+  <li class="selected-item"></li>
   <li></li>
 </ul>
 ```
@@ -1983,7 +1993,9 @@ Example - State rule is using two class selectors, which is fine since it is the
 
   /* state */
   && {
-    &.selected--btn > .icon__btn {
+    &.selected--btn {
+      > .icon__btn {
+      }
     }
   }
 }
@@ -2003,7 +2015,7 @@ Example - State rule is using two class selectors, which is fine since it is the
 
 Even if a fragment has a state applied directly to it, the state should be defined in the state section of the component.
 
-> Why? Since states can modify fragments or target unstyled content, it can be tricky to determine where to locate them. For simplicity, put them below fragments.
+> Why? Since states can modify fragments or target unstyled content, it can be tricky to determine where to locate them. For simplicity, put all states in the states portion of the component styling.
 
 ```css
 /* avoid */
@@ -2029,18 +2041,24 @@ Even if a fragment has a state applied directly to it, the state should be defin
 }
 ```
 
-#### Prefer to define states inside a double `&&` block.
+#### Define states inside a double `&&` block.
 
 > Why? This ensures the necessary specificity and provides an indented block that makes state code more readable.
 
 ```css
-/* discouraged */
+/* avoid */
 .btn {
   &&.selected--btn {
   }
 }
 
-/* preferred */
+/* avoid */
+.btn {
+  .selected--btn {
+  }
+}
+
+/* good */
 .btn {
   && {
     /* state */
@@ -2098,7 +2116,7 @@ See the examples below.
 
 > Why use composites? When creating a composite prevents defining significant amounts of redundant styling. Do not abuse the concept for the same reasons we avoid treacherous class hierarchies when programming.
 
-> Wht not just use states instead? Why use a composite? Composites are defined externally from the super component in a new file. Being in a new file can be useful when creating a new Javascript-based component or when creating new components based on a library. Otherwise, if building a component from scratch, prefer states.
+> Wht not just use states instead? Composites are defined externally from the super component in a new file. Being in a new file can be useful when creating a new Javascript-based component, creating new components based on a library, or when the new component is changed so much that it is a fundamentally different component. Otherwise, if building a component from scratch, prefer states.
 
 ```css
 /* composed component */
