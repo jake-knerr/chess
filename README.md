@@ -42,16 +42,17 @@ Jake Knerr © Ardisia Labs LLC
   - [Rule Order](#rule-order)
   - [Fonts](#fonts)
   - [Themes](#themes)
-  - [Signals](#signals)
   - [Globals](#globals)
   - [Components](#components)
   - [Components - Fragments](#components---fragments)
   - [Components - States](#components---states)
   - [Components - Composites](#components---composites)
   - [Components - Extensions](#components---extensions)
+  - [Components - Signals](#components---signals)
   - [Components - Media \& Container Queries](#components---media--container-queries)
   - [Components - Documenting Components](#components---documenting-components)
   - [Components - Additional Notes and Guidelines](#components---additional-notes-and-guidelines)
+  - [Signals](#signals)
   - [Overrides](#overrides)
   - [Animations](#animations)
 - [Miscellaneous](#miscellaneous)
@@ -1126,9 +1127,11 @@ Support is extremely good and it makes code more readable and concise.
 
 ### Rule Order
 
-#### Rules can be added to the document in any order.
+#### Rules can be defined in any order in the stylesheets.
 
 In other words, different rules for fonts, themes, globals, components, etc. can be added to the document in any order. CHESS makes it so their order does not matter. The only exception is for `overrides`, which are rules that must be declared after the rules they are overriding. `Overrides` are discussed later in this document.
+
+Also, components can be defined anywhere, but a component's styles must be defined together (more later).
 
 > Why? When building an application is can be difficult to completely control the order of style rules. This is especially true when multiple developers are working on the same project. CHESS makes it so the order of rules does not matter.
 
@@ -1243,55 +1246,6 @@ More on [signals](#signals) later in this document.
 :root {
   --b-primary-color: red;
   --b-secondary-color: #0000ff;
-}
-```
-
-**[⬆ Table of Contents](#toc)**
-
----
-
-### Signals
-
-**.\_\_(signals-name)**<br>
-Example: `.__dark-theme`
-
-#### Signals:
-
-- **Signals are classes added to the document element that can be used to add or override styles in any other style rule.**
-- **Signals are named by prefixing a double underscore (\_\_) to a descriptive name. Signals use train-case to separate words.**
-
-Signals do not break encapsulation of style rules because signals are opt-in. Style rules must be designed to use signals.
-
-> Why use signals? Because a signal can be added once in the document and trigger style changes anywhere in the document. Sometimes, adding states for all style changes either does not work or is unwieldy. A good example is themes. If every component needed states to accommodate every theme, the document would be unmanageable.
-
-```css
-.__dark-theme {
-  /* overriding theme variables */
-  --background-color: black;
-}
-
-.btn {
-  &.__dark-theme {
-    /* overriding component styles */
-    color: white;
-  }
-}
-```
-
-#### Signals do not directly provide styles. Other style rules opt-in to the signal and then provide their own styling.
-
-> Why? Signals are not meant to provide styles directly. They are meant to trigger style changes in other rules.
-
-```css
-.btn {
-  && {
-    &:hover {
-    }
-  }
-
-  /* signals */
-  .__dark-theme {
-  }
 }
 ```
 
@@ -1592,7 +1546,14 @@ Being very precise with type selectors, combinators, and pseudo-classes can nega
 
 .footer {
   /* fragment - very specific to match exactly - uses a single class selector */
-  > tbody > tr > td:first-of-type
+  > tbody {
+    > {
+      tr > {
+        td:first-of-type {
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -1620,7 +1581,12 @@ There does not need to be a mapping between a fragment rule and a single documen
 
 .footer {
   /* fragment - matches five elements */
-  > tbody > tr > td
+  > tbody {
+    > tr {
+      > td {
+      }
+    }
+  }
 }
 ```
 
@@ -1789,8 +1755,6 @@ Prefer to use the simplest selectors possible that will not overmatch.
 
 > Why prefer verbs and adjectives for state identifiers? States are _actions_ or _modifiers_, just like verbs and adjectives. They represent change on the page.
 
-> If a rule is dynamic and applied indeterminately — it could be due to user interaction like a click — then a state is appropriate. If there are multiple rules, or if the rules effectively create a fundamentally different component, create a composite (more later).
-
 ```css
 .btn {
   && {
@@ -1805,11 +1769,13 @@ Prefer to use the simplest selectors possible that will not overmatch.
 }
 ```
 
-#### States are applied to content for styling that may change during runtime for initial configuration.
+#### States are applied to content for styling that may change during runtime or for initial configuration.
 
 In other more simple terms, a state is for anything that may vary either when created or change in realtime due to user interaction.
 
 They should not be used for default styling.
+
+> If a rule is dynamic and applied indeterminately — it could be due to user interaction like a click — then a state is appropriate.
 
 ```css
 .btn {
@@ -1841,7 +1807,7 @@ They should not be used for default styling.
 
 #### States that use pseudo-classes do not require a unique class name.
 
-> Why? An additional class does not help target the content.
+> Why? An additional class does not help target the content and creates complexity.
 
 ```css
 /* component */
@@ -2180,6 +2146,12 @@ Extensions may only target the defining rule for nested components.
 
 ---
 
+### Components - Signals
+
+**[⬆ Table of Contents](#toc)**
+
+---
+
 ### Components - Media & Container Queries
 
 #### Media queries are defined at the bottom of a component's styles.
@@ -2383,6 +2355,46 @@ Display structure comments above the component's defining rule.
 #### All rule declarations should only have a maximum of one class selector.
 
 Their specificity can be higher, but only a single class selector should be written in the rule. If not, nest the rule and use the `&` selector to target the parent class.
+
+**[⬆ Table of Contents](#toc)**
+
+---
+
+### Signals
+
+**.\_\_(signals-name)**<br>
+Example: `.__dark-theme`
+
+#### Signals:
+
+- **Signals are classes added to the document element that can be used to add or override styles in any other style rule.**
+- **Signals are named by prefixing a double underscore (\_\_) to a descriptive name. Signals use train-case to separate words.**
+
+Signals do not break encapsulation of style rules because signals are opt-in. Style rules must be designed to use signals. In other words, signals do not directly provide styles.
+
+> Why use signals? Because a signal can be added once in the document and trigger style changes anywhere in the document. Sometimes, adding states for all style changes either does not work or is unwieldy. A good example is themes. If every component needed states to accommodate every theme, the document would be unmanageable.
+
+> Why are they called signals? Because they signal to other style rules that they should change their styles. Think of the document CSS system being a large observer pattern and the signals are events.
+
+```css
+/* theme example */
+.__dark-theme {
+  /* overriding theme variables */
+  --background-color: black;
+}
+
+/* component example */
+.btn {
+  .__dark-theme & {
+    /* overriding component styles */
+    color: white;
+  }
+}
+```
+
+```html
+<html class="__dark-theme"></html>
+```
 
 **[⬆ Table of Contents](#toc)**
 
