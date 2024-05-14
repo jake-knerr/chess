@@ -1384,6 +1384,27 @@ body {
 }
 ```
 
+#### (Optional) Globals can be nested within other global definitions.
+
+As long as the specificity is just simple selectors, this is permissible.
+
+> Why? This way, the global rules are more easily identified.
+
+```css
+/* acceptable */
+html,
+body {
+  margin: 0;
+
+  /* nested globals */
+  a {
+  }
+
+  div {
+  }
+}
+```
+
 **[⬆ Table of Contents](#toc)**
 
 ---
