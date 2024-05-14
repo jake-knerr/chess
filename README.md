@@ -1436,12 +1436,14 @@ This section is typically the most substantial portion of an application's style
 
 > Why the name _component_? CHESS's concept of components is well suited for documents built using a view-component-based design since each view-component object can be coupled with a CHESS component to encapsulate styling.
 
-#### Components consist of four types of style rules:
+#### Components consist of many types of style rules:
 
 - **The defining rule.**
 - **Component fragments, which apply default styling to child content.**
 - **Component states, which apply dynamic styling to content.**
 - **Component extensions, which apply styling to nested components.**
+- **Component signal opt-ins.**
+- **Component media and container queries.**
 
 These types will be described later in this document.
 
@@ -1569,6 +1571,18 @@ However, it still must be applied to HTML content.
 
 Their specificity can be higher, but only a single class selector should be written in each rule. If not, nest the rule and use the `&` selector to target the parent class.
 
+```css
+/* avoid - multiple class selectors */
+.btn .btn__icon {
+}
+
+/* good */
+.btn {
+  .btn__icon {
+  }
+}
+```
+
 #### (Optional) Consider adding a namespace prefix to a component's class names to help avoid style collisions with other components, libraries, and any other styling present in the document.
 
 Namespacing via a prefix is particularly useful for component libraries since the styles in a library may be used across large numbers of documents.
@@ -1686,37 +1700,37 @@ There does not need to be a mapping between a fragment rule and a single documen
 
 Such fragments are called "named fragments."
 
-> Why use a named fragment? Sometimes, it may not be possible or convenient to select sub-structure using child selectors. A named fragment could ease `querySelector` woes.
+> Why use a named fragment? Sometimes, it may not be possible or convenient to select sub-structure using child selectors. A named fragment could ease `querySelector` difficulties.
 
 ```html
-<button class="fancy-button">
-  <span class="icon__fancy-button"><svg></svg></span>
+<button class="button-fancy">
+  <span class="icon__button-fancy"><svg></svg></span>
 </button>
 ```
 
 ```css
-.fancy-button {
+.button-fancy {
   /* named fragment */
-  .icon__fancy-button {
+  .icon__button-fancy {
   }
 }
 ```
 
-#### Fragments can use additional selectors to select the child content.
+#### Named fragments can use additional selectors to select the child content.
 
-In this way, a fragment is a type of sub-component.
+In this way, a named fragment is a type of sub-component.
 
 > Why? It can be very convenient.
 
 ```html
-<button class="fancy-button">
-  <span class="icon__fancy-button"><svg></svg></span>
+<button class="button-fancy">
+  <span class="icon__button-fancy"><svg></svg></span>
 </button>
 ```
 
 ```css
-.fancy-button {
-  .fancy-button__icon {
+.button-fancy {
+  .icon__button-fancy {
     /* acceptable */
     > svg {
     }
@@ -1841,7 +1855,7 @@ Example: `.error--btn`
 - **Prefer to define states by using a single class selector formed by combining (1) a state identifier, (2) two hyphens (--), and (3) the component name. The state identifier should be a verbal or adjectival word.**
 - **Rules that use dynamic pseudo-classes (like `:hover` or `:has`) are considered state rules.**
 
-States can be applied to any content in a component. This includes content already targeted by another rule, or any content not already targeted by another rule.
+States can be applied to any content in a component. This includes content already targeted by another rule.
 
 Prefer to use the simplest selectors possible that will not overmatch.
 
@@ -1863,11 +1877,13 @@ Prefer to use the simplest selectors possible that will not overmatch.
 
 #### States are applied to content for styling that may change during runtime or for initial configuration.
 
-In other more simple terms, a state is for anything that may vary either when created or change in realtime due to user interaction.
+In other more simple terms, a state is for anything that may vary either when created or in realtime due to user interaction.
 
 They should not be used for default styling.
 
 > If a rule is dynamic and applied indeterminately — it could be due to user interaction like a click — then a state is appropriate.
+
+> Also, if a style rule can vary based on the content's initial configuration, then a state is appropriate.
 
 ```css
 .btn {
