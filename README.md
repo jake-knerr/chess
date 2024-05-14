@@ -1567,11 +1567,11 @@ However, it still must be applied to HTML content.
 </div>
 ```
 
-#### Rule aggregate selectors should only have a single class selector.
+#### Rule aggregate selectors should only define a single class selector, with very limited exceptions.
 
-If not, nest the rule and use the `&` selector to target the parent class.
+If you find yourself using more than a single class selector per line, nest the rule and use the `&` selector to target the parent class.
 
-The aggregate selector specificity can be higher though.
+There are exceptions to this rule, but they are rare.
 
 ```css
 /* avoid - multiple class selectors in a single aggregate selector */
@@ -1613,7 +1613,7 @@ Fragments are rules that style a component's child content.
 
 #### Fragments style a component's child/inner content. By default, create a fragment by writing a rule that start begins with the component's name class selector and then use additional selectors to select the child content.
 
-Prefer to use the simplest selectors possible that will not overmatch. Each rule should only use one class selector, which is typically the defining rule class selector.
+Prefer to use the simplest selectors possible that will not overmatch.
 
 > Isn't this madness? The prevailing wisdom is that using child combinators leads to specificity problems and unmanageable CSS. In my experience, as long as components are well designed, selecting inner content via type simple selectors, combinators, and pseudo-classes results in far less work, code, and complexity. The risk of overmatching is real. But, since CSS gives us a huge array of selectors, we can use them to be very specific as to what we select. Instead of ignoring all of the tools CSS gives us, we should embrace and use them.
 
@@ -2101,14 +2101,14 @@ Even if a fragment has a state applied directly to it, the state should be defin
 ### Components - Composites
 
 **.(composite-component)-(composed-component)**<br>
-Example: `.toggle-btn`
+Example: `.toggle-btn.btn`
 
 #### A "composite component" — or simply "composite" — inherits the styling of the component being composed (known as the super component or the composed component).
 
 Composites can add new rules or override existing composed component rules.
 
-- **Define a composite class selector by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the super/composed component.**
-- **Start each rule with the composite class selector. If overriding styles from the composed component then also add its defining rule class selector.**
+- **Define the composite's name (its class selector) by combining (1) a descriptive name for the composite, (2) a single hyphen, and (3) the component name for the super/composed component.**
+- **The composite's defining rule is two class selectors: the composite name (class selector) and the composed component's defining rule.**
 - **Apply the class selectors for the composite and the composed component together to HTML content. Write the composite class after the composed component class in HTML.**
 - **Write overridden rules before new rules.**
 
@@ -2141,14 +2141,14 @@ See the examples below.
   & .icon__btn {
   }
 
+  /* new composite fragment rule - not overriding */
+  &::before {
+  }
+
   /* overriding state */
   && {
     &.hover--btn {
     }
-  }
-
-  /* new composite fragment rule - not overriding */
-  &::before {
   }
 }
 ```
@@ -2186,11 +2186,11 @@ Such rules will typically have two class selectors.
 
 ```css
 /* component */
-.inner {
+.outer {
 }
 
 /* component */
-.outer {
+.inner {
 }
 
 /* extension */
@@ -2206,11 +2206,7 @@ Such rules will typically have two class selectors.
 </div>
 ```
 
-#### Prefer to define extensions in the order they target HTML structure.
-
-Fragments and extensions are both defined in the order they target HTML structure.
-
-Extensions are defined below fragments and above states.
+#### Extensions are defined below states.
 
 ```html
 <div class="parent">
@@ -2220,18 +2216,24 @@ Extensions are defined below fragments and above states.
 ```
 
 ```css
-/* avoid - extension should be below the fragment */
+/* avoid - extension should be below the fragment and states */
 .parent {
   .child {
   }
 
   > span {
   }
+
+  && {
+  }
 }
 
 /* good */
 .parent {
   > span {
+  }
+
+  && {
   }
 
   .child {
@@ -2268,7 +2270,7 @@ Extensions may only target the defining rule for nested components.
 }
 ```
 
-#### Extensions that target inner composites include the defining rules from the composite and the composed component.
+#### Extensions that target inner composites must include the composite's full defining rule.
 
 > Why? This ensures the necessary specificity.
 
@@ -2282,9 +2284,9 @@ Extensions may only target the defining rule for nested components.
   }
 }
 
-/* good */
+/* good - included the full defining rule for the composite */
 .parent {
-  > .toggle-button.button {
+  > .toggle-button.btn {
   }
 }
 ```
@@ -2307,6 +2309,9 @@ Extensions may only target the defining rule for nested components.
     }
   }
 
+  .inner-component {
+  }
+
   .__dark-theme & {
     && {
       &.selected--btn {
@@ -2322,7 +2327,7 @@ Extensions may only target the defining rule for nested components.
 
 ### Components - Media & Container Queries
 
-#### Media queries are defined at the bottom of a component's styles.
+#### Media and container queries are defined at the bottom of a component's styles.
 
 > Why? Media queries are used to change styles based on the device's screen size. By defining them at the bottom of a component's styles, it is easier to see how the component's styles change based on the screen size.
 
@@ -2435,11 +2440,9 @@ Example - Documentation is useful here because the pseudo-element effect is not 
 - **For named fragments, add the fragment name after the element type. Drop the component name.**
 - **Add states to the elements that may have them. Drop the component name.**
 - **Use () | \* ? {1} or other simple regex to indicate possible types and repetition.**
-- **Use # for comments.**
+- **Use # for inline comments.**
 
 Display structure comments above the component's defining rule.
-
-Do not worry about being too detailed. The goal is to give a general idea of the component's structure.
 
 ```css
 /*
@@ -2448,6 +2451,9 @@ Do not worry about being too detailed. The goal is to give a general idea of the
     <div*> # 0 or more divs
     <button state-two--list>
 */
+
+.list {
+}
 ```
 
 ```css
@@ -2455,12 +2461,18 @@ Do not worry about being too detailed. The goal is to give a general idea of the
   <* red> # component that can be any type
     <**> # any type repeated 0 or more times
 */
+
+.red {
+}
 ```
 
 ```css
 /*
   <div|li list-item> # component that can be a div or li
 */
+
+.list-item {
+}
 ```
 
 #### When listing multiple components in a single file, consider adding a comment to separate them.
@@ -2532,7 +2544,7 @@ These are the only rules where order matters.
 
 ### Animations
 
-#### Prefer to give an animation the same name as the class that uses it. Define the animation immediately following the component.
+#### Prefer to give an animation the same name as the class that uses it. Define the animation immediately following the component that uses it.
 
 Note that `@keyframes` rules cannot be defined nested within a component. They are defined after the component that uses them.
 
