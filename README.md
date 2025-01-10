@@ -1981,128 +1981,6 @@ They should not be used for default styling. For changes to default styling, see
 }
 ```
 
-#### When applying a state's styles to a component's inner content, prefer to apply the state to the top-level node and then use selectors to match the inner content.
-
-Only apply the state directly to inner child content if necessary.
-
-> Why prefer to apply to the top-level node? It is simpler. All a developer needs to know is that to use the state, apply it to the top-level node.
-
-Example - Applying the state alongside the defining rule and targeting inner content with selectors.
-
-```css
-.btn {
-  && {
-    &.selected--btn svg {
-    }
-  }
-}
-```
-
-```html
-<button class="btn selected--btn">
-  <svg></svg>
-</button>
-```
-
-Example - Applying the state directly to the child content. Necessary here because there are an indeterminate number of list elements.
-
-```css
-.btn {
-  && {
-    & > .selected-item--list {
-    }
-  }
-}
-```
-
-```html
-<ul class="list">
-  <li></li>
-  <li class="selected-item"></li>
-  <li></li>
-</ul>
-```
-
-Example - State rule is using two class selectors, which is fine since it is the simplest way to target the fragment with the state applied to the top-level HTML element.
-
-```css
-.btn {
-  /* fragment */
-  .icon__btn {
-  }
-
-  /* state */
-  && {
-    &.selected--btn {
-      > .icon__btn {
-      }
-    }
-  }
-}
-```
-
-```html
-<button class="btn selected--btn">
-  <span class="icon__btn"></span>
-</button>
-```
-
-#### When a state's styles cascade down to inner content, prefer to write the optional `&` selector.
-
-> Why? This makes the state's purpose more clear.
-
-```css
-/* discouraged */
-.btn {
-  && {
-    .selected--btn {
-    }
-  }
-}
-
-/* preferable - explicitly put the & */
-.btn {
-  && {
-    & .selected--btn {
-    }
-  }
-}
-```
-
-#### Multiple states can be applied to the same content.
-
-> Specificity problems when using multiple states? Consider creating a new state instead.
-
-#### Define states below fragments.
-
-Even if a fragment has a state applied directly to it, the state should be defined in the state section of the component.
-
-> Why? Since states can modify fragments or target unstyled content, it can be tricky to determine where to locate them. For simplicity, put all states in the states portion of the component styling.
-
-```css
-/* avoid */
-.btn {
-  /* state nested within fragment */
-  svg {
-    && {
-      :focus {
-      }
-    }
-  }
-}
-
-/* good */
-.btn {
-  svg {
-  }
-
-  && {
-    svg:focus {
-    }
-  }
-}
-```
-
 #### Define states inside a double `&&` block.
 
 > Why? This ensures the necessary specificity and provides an indented block that makes state code more readable.
@@ -2125,6 +2003,96 @@ Even if a fragment has a state applied directly to it, the state should be defin
   && {
     /* state */
     &.selected--btn {
+    }
+  }
+}
+```
+
+#### Multiple states can be applied to the same content.
+
+> Specificity problems when using multiple states? Consider creating a new state instead.
+
+#### Define states nested under the content that they are applied to, after any other rules.
+
+This makes it easy to understand the state's purpose and effect.
+
+```css
+/* avoid */
+.btn {
+  svg {
+    path {
+    }
+  }
+
+  && {
+    svg:focus {
+    }
+  }
+}
+
+.btn {
+  svg {
+    && {
+      :focus {
+      }
+    }
+
+    path {
+    }
+  }
+}
+
+/* good */
+.btn {
+  svg {
+    path {
+    }
+
+    && {
+      :focus {
+      }
+    }
+  }
+}
+```
+
+#### If a state changes multiple parts of the inner structure, move the state definition to a shared ancestor element.
+
+For clarity, prefer to define such states on the defining node.
+
+> Why? this makes it easier to see the complete effect of applying a state.
+
+```css
+/* avoid */
+.btn {
+  a {
+    && {
+      &.red--btn {
+      }
+    }
+  }
+
+  span {
+    && {
+      &.red--btn {
+      }
+    }
+  }
+}
+
+/* good */
+.btn {
+  a {
+  }
+
+  span {
+  }
+
+  && {
+    a {
+    }
+
+    span {
     }
   }
 }
