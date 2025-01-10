@@ -1670,7 +1670,7 @@ Prefer to use the simplest selectors possible that will not overmatch.
 }
 ```
 
-#### If overmatching is a problem, use specific type selectors, child/sibling combinators, and/or pseudo-classes.
+#### If overmatching is a problem, use specific type selectors, child/sibling combinators, `:where:, and/or pseudo-classes.
 
 Being very precise with type selectors, combinators, and pseudo-classes can negate overmatching.
 
@@ -1698,6 +1698,9 @@ Being very precise with type selectors, combinators, and pseudo-classes can nega
         }
       }
     }
+  }
+
+  > :where(a) {
   }
 }
 ```
