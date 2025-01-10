@@ -2021,19 +2021,7 @@ This makes it easy to understand the state's purpose and effect.
 However, sometimes it may be preferable to define states on the top-level node and cascade down changes to inner content. Perhaps to conform to a styling API.
 
 ```css
-/* avoid */
-.btn {
-  svg {
-    path {
-    }
-  }
-
-  && {
-    svg:focus {
-    }
-  }
-}
-
+/* avoid - state above fragment */
 .btn {
   svg {
     && {
@@ -2046,7 +2034,20 @@ However, sometimes it may be preferable to define states on the top-level node a
   }
 }
 
-/* good */
+/* acceptable - state defined on top-level element */
+.btn {
+  svg {
+    path {
+    }
+  }
+
+  && {
+    svg:focus {
+    }
+  }
+}
+
+/* good - state defined nested under the affected content after other rules */
 .btn {
   svg {
     path {
