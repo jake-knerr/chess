@@ -1334,40 +1334,6 @@ div {
 }
 ```
 
-#### Global rules can use additional selectors like class selectors, but they must be contained within a `:where` pseudo-class function. The specificity of a global rule must not be greater than a type selector.
-
-It is acceptable for a rule to have a specificity of multiple type selectors.
-
-> Why? Global rules can be useful to prevent redefining the same styles over and over, but their specificity must remain low so components can predictably override them.
-
-```css
-/* avoid */
-div.error {
-}
-
-input[type="email"] {
-}
-
-div#logo {
-}
-
-/* acceptable */
-div {
-  &:where(.error) {
-  }
-}
-
-input {
-  &:where([type="email"]) {
-  }
-}
-
-div {
-  &:where(#logo) {
-  }
-}
-```
-
 #### Global rules include reset style rules, which normalize the display across different browsers/clients.
 
 In other words, a reset fixes an inconsistent default style among browsers/clients.
@@ -1384,23 +1350,65 @@ body {
 }
 ```
 
-#### (Optional) Globals can be nested within other global definitions.
+#### Global rules can use additional selectors like attribute selectors, but they must be contained within a `:where` pseudo-class function. The specificity of a global rule must not be greater than a type selector.
+
+It is acceptable for a rule to have a specificity of multiple type selectors, but do not use the class attribute selector (too confusing).
+
+> Why? Global rules can be useful to prevent redefining the same styles over and over, but their specificity must remain low so components (class selectors) can predictably override them.
+
+```css
+/* avoid */
+div {
+  &:where(.error) {
+  }
+}
+
+div.error {
+}
+
+input[type="email"] {
+}
+
+div#logo {
+}
+
+/* acceptable */
+input {
+  &:where([type="email"]) {
+  }
+}
+
+div {
+  &:where(#logo) {
+  }
+}
+```
+
+#### (Optional) Globals can be nested and style complex structure.
 
 As long as the specificity is just simple selectors, this is permissible.
 
-> Why? This way, the global rules are more easily identified.
+> Why can this be useful? One can create styled documents using simple HTML tags without adding classes all over the document. If more complexity is required, use components.
 
 ```css
 /* acceptable */
-html,
-body {
-  margin: 0;
+table {
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  table-layout: fixed;
+  width: 100%;
 
-  /* nested globals */
-  a {
+  :where(thead) {
+    font-weight: bold;
+
+    :where(tr) {
+      border-bottom: 2px solid #fff;
+    }
   }
 
-  div {
+  :where([data-format="overflow-text"]) {
+    text-overflow: unset;
+    white-space: normal;
   }
 }
 ```
@@ -1910,7 +1918,7 @@ Prefer to use the simplest selectors possible that will not overmatch.
 
 In other more simple terms, a state is for anything that may vary either when created or in realtime due to user interaction.
 
-They should not be used for default styling.
+They should not be used for default styling. For changes to default styling, see the section titled "Composites".
 
 > If a rule is dynamic and applied indeterminately — it could be due to user interaction like a click — then a state is appropriate.
 
@@ -2167,8 +2175,6 @@ See the examples below.
 
 > Why use composites? When creating a composite prevents defining significant amounts of redundant styling. Do not abuse the concept for the same reasons we avoid treacherous class hierarchies when programming.
 
-> Wht not just use states instead? Composites are defined externally from the super component in a new file. Being in a new file can be useful when creating a new Javascript-based component, creating new components based on a library, or when the new component is changed so much that it is a fundamentally different component. Otherwise, if building a component from scratch, prefer states.
-
 ```css
 /* composed component */
 .btn {
@@ -2216,6 +2222,42 @@ See the examples below.
 
 /* good - composite class selector before composed component's defining rule */
 .fancy-btn.btn {
+}
+```
+
+#### Composites are preferred over using states:
+
+- **The composite is changing the default styling of the super component.**
+- **The composite is changing the default structure of the super component.**
+- **New styles must be added to a new file rather than the original file where the super component is defined.**
+- **Or, the new component is fundamentally different than the super component.**
+
+Creating a composite or adding more states to a component is a judgment call.
+
+```css
+/* state is more appropriate */
+.btn {
+  && {
+    &:focus {
+      background: red;
+    }
+  }
+}
+
+/* composite is more appropriate */
+.clown-btn.btn {
+  background: url("clown.png");
+
+  a {
+    &:hover {
+    }
+  }
+
+  && {
+    &.selected--btn {
+      background: url("fireworks.png");
+    }
+  }
 }
 ```
 
