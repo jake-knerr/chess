@@ -2016,6 +2016,8 @@ They should not be used for default styling. For changes to default styling, see
 
 This makes it easy to understand the state's purpose and effect.
 
+> Why? The structure and state styling will read in a top-down manner instead of forcing the user to jump around the component's definition.
+
 However, sometimes it may be preferable to define states on the top-level node and cascade down changes to inner content. Perhaps to conform to a styling API.
 
 ```css
