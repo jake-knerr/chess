@@ -558,12 +558,12 @@ For example, https://validator.w3.org/ (HTML) and https://jigsaw.w3.org/css-vali
 
 #### Rules for how to arrange multiple values:
 
-- **When a node has multiple attributes, prefer to arrange them in alphabetical order.**
-- **When an attribute has multiple values, prefer to arrange them in alphabetical order.**
+- **When a node has multiple attributes, arrange them in any order.**
+- **When an attribute has multiple values, prefer to arrange them in any order.**
 
 These are defaults. Other rules in this document may specify more specific attribute ordering.
 
-> Why? Alphabetical order provides a predictable and searchable structure.
+> Why? Creating specific ordering rules creates a lot of overhead for very little gained.
 
 ```html
 <!-- discouraged -->
@@ -2103,7 +2103,7 @@ For clarity, prefer to define such states on the top-level element.
 }
 ```
 
-#### In HTML, prefer to write state classes after other classes. If multiple states are applied, prefer to sort them by the name of the states alphanumerically, left-to-right.
+#### In HTML, prefer to write state classes after other classes. If multiple states are applied, there is no need to sort them.
 
 ```css
 /* component */
@@ -2120,8 +2120,7 @@ For clarity, prefer to define such states on the top-level element.
 
 ```html
 <!-- 
-  discouraged - states listed before defining rule and selected--btn listed before
-  error--btn
+  discouraged - states listed before defining rule
 -->
 <div class="selected--btn error--btn btn"></div>
 
