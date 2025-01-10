@@ -1307,9 +1307,9 @@ This section contains style rules that are applied to elements across the entire
 
 **Global styles are applied to elements across the entire document.**
 
-A global is not intended to be applied to specific content. When creating styling intended for specific content, use components, which are detailed later in the section titled "Components."
+A global is not intended to be applied to specific content that will definitely only appear once in the application. When creating styling intended for such content, use components, which are detailed later in the section titled "Components."
 
-Globals are useful to prevent declaring the same styles repeatedly.
+Globals are useful to prevent declaring the same styles repeatedly and for repeated default styling.
 
 > Why only permit type, or universal selectors in globals? Since globals apply default styling document-wide, more specific styling should easily override them. Type, attribute, and universal selectors have low CSS specificity; class based rules defined later in the document can easily override them.
 
