@@ -1957,7 +1957,7 @@ They should not be used for default styling. For changes to default styling, see
 
 #### States that use pseudo-classes do not require a unique class name.
 
-> Why? An additional class does not help target the content and creates complexity.
+> Why? An additional class does not help target the content and creates complexity for no advantage.
 
 ```css
 /* component */
@@ -2016,6 +2016,8 @@ They should not be used for default styling. For changes to default styling, see
 
 This makes it easy to understand the state's purpose and effect.
 
+However, sometimes it may be preferable to define states on the top-level node and cascade down changes to inner content. Perhaps to conform to a styling API.
+
 ```css
 /* avoid */
 .btn {
@@ -2058,7 +2060,7 @@ This makes it easy to understand the state's purpose and effect.
 
 #### If a state changes multiple parts of the inner structure, move the state definition to a shared ancestor element.
 
-For clarity, prefer to define such states on the defining node.
+For clarity, prefer to define such states on the top-level element.
 
 > Why? this makes it easier to see the complete effect of applying a state.
 
