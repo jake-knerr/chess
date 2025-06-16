@@ -1992,7 +1992,7 @@ They should not be used for default styling. For changes to default styling, see
 
 > Specificity problems when using multiple states? Consider creating a new state instead.
 
-#### Define states nested under the content that they are applied to, after any other rules. If a state must target multiple parts of the inner structure, define the state on a shared ancestor element (if available) or the top-level node.
+#### Define states nested under the content that they are applied to, after any other rules. If a state can target multiple parts of the inner structure, define the state on a shared ancestor element (if available) or the top-level node.
 
 > Why? The structure and state styling will read in a top-down manner instead of forcing the user to jump around the component's definition and and prevents duplicating selectors..
 
@@ -2032,48 +2032,6 @@ They should not be used for default styling. For changes to default styling, see
     && {
       :focus {
       }
-    }
-  }
-}
-```
-
-#### If a state changes multiple parts of the inner structure, move the state definition to a shared ancestor element.
-
-For clarity, prefer to define such states on the top-level element.
-
-> Why? this makes it easier to see the complete effect of applying a state.
-
-```css
-/* avoid */
-.btn {
-  a {
-    && {
-      &.red--btn {
-      }
-    }
-  }
-
-  span {
-    && {
-      &.red--btn {
-      }
-    }
-  }
-}
-
-/* good */
-.btn {
-  a {
-  }
-
-  span {
-  }
-
-  && {
-    a {
-    }
-
-    span {
     }
   }
 }
