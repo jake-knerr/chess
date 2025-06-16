@@ -1087,14 +1087,6 @@ body {
 
 > Why? CHESS already specifies the order of different sections of a document's styles, making `@layer` redundant.
 
-#### For the time being, avoid the Shadow DOM.
-
-Shadow DOM is a great concept, but implementation considerations argue against its use.
-
-> Why? The shadow DOM requires JavaScript, which is unsuitable for many content-focused projects.
-
-> I am building a SPA. Why not use the Shadow DOM? Every element using a shadow DOM requires a style tag or a link to a preloaded stylesheet. Parsing a stylesheet for every component has negative performance implications. A solution named 'adopted stylesheets' aims to fix this problem, but Safari has not implemented it.
-
 #### Avoid becoming obsessive over DRY and reusability with CSS.
 
 These principles taken too far will cause madness.
