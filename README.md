@@ -268,8 +268,6 @@ In this section, _code_ refers to HTML markup and CSS code.
 - **Sentence fragments are permissible if the meaning of the fragment is clear.**
 - **Separate sentences and sentence fragments with semicolons.**
 
-**Otherwise, use formal grammar, e.g., proper verb conjugation, subject-verb agreement, etc. Focus on clarity.**
-
 This rule only applies if it makes sense with regard to one's natural language. This author intends no English language chauvinism.
 
 > Why simplify grammar? Simplifying grammar frees developers from many grammatical debates and decisions. Also, grammatical simplification means that a developer does not have to drift as far from the coding mindset when writing a comment as one would if formal grammar was required. In other words, thinking about formal grammar can throw one's mind out of a coding groove.
@@ -1604,24 +1602,6 @@ However, it still must be applied to HTML content.
 </div>
 ```
 
-#### Rule aggregate selectors should only define a single class selector, with very limited exceptions.
-
-If you find yourself using more than a single class selector per line, nest the rule and use the `&` selector to target the parent class.
-
-There are exceptions to this rule, but they are rare.
-
-```css
-/* avoid - multiple class selectors in a single aggregate selector */
-.btn .btn__icon {
-}
-
-/* good */
-.btn {
-  .btn__icon {
-  }
-}
-```
-
 #### (Optional) Consider adding a namespace prefix to a component's class names to help avoid style collisions with other components, libraries, and any other styling present in the document.
 
 Namespacing via a prefix is particularly useful for component libraries since the styles in a library may be used across large numbers of documents.
@@ -1648,7 +1628,7 @@ Namespacing via a prefix is particularly useful for component libraries since th
 
 Fragments are rules that style a component's child content.
 
-#### Fragments style a component's child/inner content. By default, create a fragment by writing a rule that start begins with the component's name class selector and then use additional selectors to select the child content.
+#### Fragments style a component's child/inner content.
 
 Prefer to use the simplest selectors possible that will not overmatch.
 
@@ -1911,7 +1891,7 @@ Prefer to use the simplest selectors possible that will not overmatch.
     }
 
     /* state */
-    &&:focus {
+    &:focus {
     }
   }
 }
@@ -2012,13 +1992,9 @@ They should not be used for default styling. For changes to default styling, see
 
 > Specificity problems when using multiple states? Consider creating a new state instead.
 
-#### Define states nested under the content that they are applied to, after any other rules.
+#### Define states nested under the content that they are applied to, after any other rules. If a state must target multiple parts of the inner structure, define the state on a shared ancestor element (if available) or the top-level node.
 
-This makes it easy to understand the state's purpose and effect.
-
-> Why? The structure and state styling will read in a top-down manner instead of forcing the user to jump around the component's definition.
-
-However, sometimes it may be preferable to define states on the top-level node and cascade down changes to inner content. Perhaps to conform to a styling API.
+> Why? The structure and state styling will read in a top-down manner instead of forcing the user to jump around the component's definition and and prevents duplicating selectors..
 
 ```css
 /* avoid - state above fragment */
@@ -2200,7 +2176,7 @@ See the examples below.
 }
 ```
 
-#### Composites are preferred over using states:
+#### Scenarios where composites can be preferred over using states:
 
 - **The composite is changing the default styling of the super component.**
 - **The composite is changing the default structure of the super component.**
@@ -2365,7 +2341,7 @@ Extensions may only target the defining rule for nested components.
 
 ### Components - Signals
 
-#### Define signals below extensions.
+#### Define rules that hook into signals below extensions section.
 
 ```css
 .btn {
@@ -2397,7 +2373,7 @@ Extensions may only target the defining rule for nested components.
 
 #### Media and container queries are defined at the bottom of a component's styles.
 
-> Why? Media queries are used to change styles based on the device's screen size. By defining them at the bottom of a component's styles, it is easier to see how the component's styles change based on the screen size.
+> Why? Media queries are used to change styles based on the device's characteristics and settings. By defining them at the bottom of a component's styles, it is easier to see how the component's styles change based on the screen size.
 
 #### Use a mobile-first strategy for media break-points by writing break-points in ascending `min-width:` order.
 
@@ -2496,50 +2472,6 @@ Example - Documentation is useful here because the pseudo-element effect is not 
     .btn:before {
     }
   }
-}
-```
-
-#### If documenting a component's structure, use the following format:
-
-- **Write the type of HTML element next to a open bracket.**
-- **Next, write the component's defining rule class selector.**
-- **Add any structure, and indent to indicate child structure.**
-- **Do not write closing tags.**
-- **For named fragments, add the fragment name after the element type. Drop the component name.**
-- **Add states to the elements that may have them. Drop the component name.**
-- **Use () | \* ? {1} or other simple regex to indicate possible types and repetition.**
-- **Use # for inline comments.**
-
-Display structure comments above the component's defining rule.
-
-```css
-/*
-  <ul list state--list> # list component
-    <button? fragment__> # optional named fragment
-    <div*> # 0 or more divs
-    <button state-two--list>
-*/
-
-.list {
-}
-```
-
-```css
-/*
-  <* red> # component that can be any type
-    <**> # any type repeated 0 or more times
-*/
-
-.red {
-}
-```
-
-```css
-/*
-  <div|li list-item> # component that can be a div or li
-*/
-
-.list-item {
 }
 ```
 
