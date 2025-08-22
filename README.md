@@ -1136,7 +1136,7 @@ The more global a rule is, the earlier it should be declared in the document. Fo
 
 #### Prefer to place `@font-face` rules early in your stylesheets.
 
-> Why? Including font definitions towards the top will start the asynchronous download of the font files sooner rather than later. However, with browser performance becoming better and better, this is not as important as it once was.
+> Why? Including font definitions towards the top will start the asynchronous download of the font files sooner rather than later. However, with browser performance and caching becoming better and better, this is not as important as it once was.
 
 ```css
 @font-face {
@@ -1256,7 +1256,7 @@ Signals do not break encapsulation of style rules because signals are opt-in. St
 
 > Why use signals? Because a signal can be added once in the document and trigger style changes anywhere in the document. Sometimes, adding states for all style changes either does not work or is unwieldy. A good example is themes. If every component needed states to accommodate every theme, the document would be unmanageable.
 
-> Why are they called signals? Because they signal to other style rules that they should change their styles. Think of the document CSS system being a large observer pattern and signals are events.
+> Why are they called signals? Because they _signal_ to other style rules that they should change their styles. Think of the document CSS system being a large observer pattern and signals are events.
 
 ```css
 /* theme example */
@@ -1342,7 +1342,7 @@ body {
 
 #### Global rules can use additional selectors like attribute selectors, but they must be contained within a `:where` pseudo-class function. The specificity of a global rule must not be greater than a type selector.
 
-It is acceptable for a rule to have a specificity of multiple type selectors, but do not use the class attribute selector (too confusing).
+It is acceptable for a rule to have a specificity of multiple type selectors, but do not use the class attribute selector (too confusing because they look like component rules, more later).
 
 > Why? Global rules can be useful to prevent redefining the same styles over and over, but their specificity must remain low so components (class selectors) can predictably override them.
 
@@ -1516,7 +1516,7 @@ The defining rule must be applied to content, even if the defining rule doesn't 
 
 In other words, multiple components cannot be applied to the same content.
 
-> Why? The combining of components' styling leads to confusion.
+> Why? The combining of components' styling leads to confusion and specificity uncertainty.
 
 ```css
 .btn {
@@ -1752,7 +1752,7 @@ In this way, a named fragment is a type of sub-component.
 }
 ```
 
-#### Pseudo-elements are child content and are styled by fragments.
+#### Pseudo-elements are child content and are styled by fragment rules.
 
 ```css
 .btn {
@@ -1877,6 +1877,7 @@ Prefer to use the simplest selectors possible that will not overmatch.
 
 ```css
 .btn {
+  /* states are in && blocks */
   && {
     /* state */
     &.selected--btn {
@@ -1884,6 +1885,33 @@ Prefer to use the simplest selectors possible that will not overmatch.
 
     /* state */
     &:focus {
+    }
+  }
+}
+```
+
+#### Define states inside a double `&&` block.
+
+> Why? This ensures the necessary specificity and provides an indented block that makes state code more readable.
+
+```css
+/* avoid */
+.btn {
+  &&.selected--btn {
+  }
+}
+
+/* avoid */
+.btn {
+  .selected--btn {
+  }
+}
+
+/* good */
+.btn {
+  && {
+    /* state */
+    &.selected--btn {
     }
   }
 }
@@ -1948,33 +1976,6 @@ They should not be used for default styling. For changes to default styling, see
 .btn {
   && {
     &:focus {
-    }
-  }
-}
-```
-
-#### Define states inside a double `&&` block.
-
-> Why? This ensures the necessary specificity and provides an indented block that makes state code more readable.
-
-```css
-/* avoid */
-.btn {
-  &&.selected--btn {
-  }
-}
-
-/* avoid */
-.btn {
-  .selected--btn {
-  }
-}
-
-/* good */
-.btn {
-  && {
-    /* state */
-    &.selected--btn {
     }
   }
 }
@@ -2045,9 +2046,7 @@ They should not be used for default styling. For changes to default styling, see
 ```
 
 ```html
-<!-- 
-  discouraged - states listed before defining rule
--->
+<!-- discouraged - states listed before defining rule -->
 <div class="selected--btn error--btn btn"></div>
 
 <!-- preferred -->
@@ -2077,7 +2076,7 @@ See the examples below.
 > Why use composites? When creating a composite prevents defining significant amounts of redundant styling. Do not abuse the concept for the same reasons we avoid treacherous class hierarchies when programming.
 
 ```css
-/* composed component */
+/* component to be composed (composed component) */
 .btn {
   & > span:first-child {
   }
@@ -2417,8 +2416,8 @@ Example - Documentation is useful here because the pseudo-element effect is not 
 
 ```css
 .btn {
-  /* ripple effect */
   && {
+    /* ripple effect */
     .btn:before {
     }
   }
