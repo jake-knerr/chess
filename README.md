@@ -1,6 +1,6 @@
 # CHESS <!-- omit in toc -->
 
-_CSS and HTML Encompassing Style Sccystem_ (CHESS) is a set of style and design rules for frontend component-based web development.
+_CSS and HTML Encompassing Style System_ (CHESS) is a set of style and design rules for frontend component-based web development.
 
 The goals of CHESS include:
 
